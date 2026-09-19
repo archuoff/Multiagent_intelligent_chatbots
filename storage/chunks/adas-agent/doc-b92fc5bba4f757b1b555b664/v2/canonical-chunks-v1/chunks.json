@@ -1,0 +1,1881 @@
+{
+  "policy_version": "canonical-chunks-v1",
+  "chunks": [
+    {
+      "chunk_id": "chk_945c7f6f18f02c42e8a9b8e5",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_1a2fe9975200453a8a2cdee925b7d401",
+        "cell_38d1b24a700b4ef3ae524b7e3b8255f6",
+        "cell_e1b0cbfc7ab7437c88f7e76207c679d2",
+        "cell_600ca02bd6654c96be70b71a2fd8b98d",
+        "cell_91b8f462dc3a4594bd28d3c28110017b",
+        "cell_4ba2ce5c352f47e9a47bf7ef50578af8"
+      ],
+      "content_text": "COLOUR NAME: COLOUR NAME | SOLID: SOLID | METALLIC: METALLIC | COLOUR CODE: COLOUR CODE",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: COLOUR NAME: COLOUR NAME | SOLID: SOLID | METALLIC: METALLIC | COLOUR CODE: COLOUR CODE",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 1,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_ecb704c28a89352c08230284",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_3ab00a1a0da7470ab0cb0274b4509db1",
+        "cell_65ea05ae578c44f5a151dfe5d1468a89",
+        "cell_8fc7c251906142f5a1b29131dc14aa60",
+        "cell_ab078881c6a6423a8c3040b1b4463418",
+        "cell_928bccfa364549c7bd7f7ff8095869d5",
+        "cell_ccc3be7aa24e47e6b5f126d2f768731c"
+      ],
+      "content_text": ": CORE | COLOUR NAME: Fuji White (solid) | SOLID: X | COLOUR CODE: 0NER",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : CORE | COLOUR NAME: Fuji White (solid) | SOLID: X | COLOUR CODE: 0NER",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 2,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_76726bb020c073b813f9fe61",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_7c270aa1c1fd4ef5ae082d2b3dcb0ed5",
+        "cell_bad6b04a632d44b6bd75238ece6b9f0e",
+        "cell_13bd763d7c5d4f52918e182e89b4d123",
+        "cell_54e1747646a748638a3bdcb9f00b26e4",
+        "cell_93d1d5d9c2c048f79de912e95b1ee6f3"
+      ],
+      "content_text": ": Lovina Black (gloss) | SOLID: X | METALLIC: 8PWV",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : Lovina Black (gloss) | SOLID: X | METALLIC: 8PWV",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 3,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_c047c7bf40ff04065501e6ad",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_615de237eaed450e9a328d5b5b5a919d",
+        "cell_fe5c92ed5d604910a82c536245edb338",
+        "cell_3c98c6e063c647f98e6b09b4c17637d6",
+        "cell_76e8dfdb052b4b5d9743423e47d587ec",
+        "cell_19f320fe2dd644638aaf5b6eb58f913b"
+      ],
+      "content_text": ": Santorini Black | SOLID: X | METALLIC: 8PAB",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : Santorini Black | SOLID: X | METALLIC: 8PAB",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 4,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_a79e2f534a043b63b5f6acc4",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_0419623e794c49cbb80ee8cd6fd36a9b",
+        "cell_d2511b36b3634cdd9bc2031522d46985",
+        "cell_e9515208b7d548bd80a74de3c13aa084",
+        "cell_1385e9a00e594a2baf341eaa8d0dc5ef",
+        "cell_04d78e098c6e486796b386146e43dfa1",
+        "cell_785c8e0ff6774ac9a976eec472b6e3c3"
+      ],
+      "content_text": ": ADDITIONAL | COLOUR NAME: Ostuni pearl white(gloss) | METALLIC: X | COLOUR CODE: 8NCZ",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : ADDITIONAL | COLOUR NAME: Ostuni pearl white(gloss) | METALLIC: X | COLOUR CODE: 8NCZ",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 5,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_4b9beb73c8905e8a5f08a44c",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_05cf7c2ad7b84d07a3060102e7f4509c",
+        "cell_fd3f5ad526774516bef96e703fbee218",
+        "cell_133fe5c717184079a1c35004c52b340b",
+        "cell_c0b3a3b143d54d3f9469d0f049f55fa7",
+        "cell_99020ea692854edbb20d8b4459fd157c"
+      ],
+      "content_text": ": Corinthian Bronze (gloss) | SOLID: X | METALLIC: 8BCF",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : Corinthian Bronze (gloss) | SOLID: X | METALLIC: 8BCF",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 6,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_97c5588add74304e6e64f20c",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_fb0226b2a45946a19c4e427d9a73469e",
+        "cell_5b644785558141388cac98c5358a1162",
+        "cell_836c511cde7a4bd2b337f06b0f6dae7e",
+        "cell_4dcc0754385949049167afce7a22eb6b",
+        "cell_39c723d337fa421abf4701a2596feb80"
+      ],
+      "content_text": ": Charente Grey (gloss) | SOLID: X | METALLIC: 8LRP",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : Charente Grey (gloss) | SOLID: X | METALLIC: 8LRP",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 7,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_9881a0b01991946aca9a326a",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_5f775771185241b088f049ff4a3186c3",
+        "cell_d773a134d377430c992a481b51f14098",
+        "cell_c1852d41a8dc4d08bff31fb8a3173ed7",
+        "cell_4a863fdef1cf4fc3b68f0b70553fd7c6",
+        "cell_bd3e680b2b4345d7adee7da6b11f7822"
+      ],
+      "content_text": ": Shifen Pearl Silver (gloss) | SOLID: X | METALLIC: 8MPE",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : Shifen Pearl Silver (gloss) | SOLID: X | METALLIC: 8MPE",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 8,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_0e4a246116ab8b9036c59a19",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_39db92fe3abf42f7b5a461c91e03ca5a",
+        "cell_c6fd104b617e435ab8d2923b5a17b226",
+        "cell_93e67d8a26634abb919bd0b4b87a2f14",
+        "cell_f003c5ff3cd248ceaadf031c15df3d6d",
+        "cell_f9d972b9e5ba46078ea909d239c61545"
+      ],
+      "content_text": ": Silicon Silver Satin | SOLID: X | METALLIC: 8MFS",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : Silicon Silver Satin | SOLID: X | METALLIC: 8MFS",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 9,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_f66613a1040ca80f7d360159",
+      "chunk_type": "table_row",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "table_6e27b29e94dd471b94472ab7b5a5d718",
+      "source_node_ids": [
+        "row_c86059fdaa5c43d6a6d02277f775c6b8",
+        "cell_25d976efda754759a99b13be2cf85a61",
+        "cell_29d3a0f4da104f938bc4f5c797bbde3b",
+        "cell_626122cda5574d9c93433089c96197a8",
+        "cell_87ccb563575141f7a98d79fd70ab6d12",
+        "cell_36582eb7696f4b739596ba2a9b510eb8"
+      ],
+      "content_text": ": CONTRAST | COLOUR NAME: Narvik Black (gloss)(solid) | SOLID: X | COLOUR CODE: 0PEC",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor > Table 479 > Table 479\nContent: : CONTRAST | COLOUR NAME: Narvik Black (gloss)(solid) | SOLID: X | COLOUR CODE: 0PEC",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor",
+          "Table 479"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 479",
+        "header_context": [
+          " ",
+          "COLOUR NAME",
+          "SOLID",
+          "METALLIC",
+          "COLOUR CODE"
+        ],
+        "row_index": 10,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unlabelled_field",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_6cddc52edac4a4d7fb546baa",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_599205c1019e4e6e8bd8492a851a7a7d",
+        "node_873efc4c65cc420ea62027206bcaba07",
+        "node_f2dd28a1ef3642b581ef81bc3eb3eee1",
+        "node_faad5c2b7e8946f4ba9c19a6766f1dc7",
+        "node_b9a59bbd42ca45259f7fa5ad6c24e015",
+        "node_08d9e1dd93404adab283498ea95caab1",
+        "node_25f29ab54bd243a4b5934f377bf08af1",
+        "node_25b05135e67949bda15b42bfadd3ca5f",
+        "node_6134d88e3ec441edad3185989e970e60",
+        "node_6e40777290e547858d58be4d0f3314c4",
+        "node_da80142c8dac4ef593c072631d8cfa11",
+        "node_98d61ac274c0411282fa4abd71731f7f",
+        "node_4427fc9482b448a692612e01d8d58aa1",
+        "node_7455f292adb0403bb33a0ed9bcb570bf",
+        "node_013bf1c1b4cd43e09c1b8c7eb6e4d0d9",
+        "node_d1c96295f5314ed6853746a0f7f51e53",
+        "node_7b307e695636422099a8a3c95f5f3b9c",
+        "node_25c8680769aa4ed797cd8a275a0bd66d",
+        "node_1ffd5c7d6aad47fdb2f19d3793f5d89d",
+        "node_e66614157093430f86b80fa556716f3a",
+        "node_ff4b3f2f54d24852bf8fb4c060057193",
+        "node_c5870b36b3554d8cac5c1a91709db810",
+        "node_01ca2acd38e2444f96336098ff0070b3",
+        "node_3ab08279d91947dbb664eaf0acc1bf63",
+        "node_2546a4b0a75d45e5aa0c45497f4abb46",
+        "node_b32ae9f16d4e494c9323b2db4f4c5d1e",
+        "node_ecb6d3acdbbd416981c9c252516440b9",
+        "node_44e2066d9a2a4e4f89bff234f371c51b",
+        "node_8f6adb0d9bc14fff9263f938b250a24e",
+        "node_6c2984e2f57b4b03ac203ab7c10da98c",
+        "node_7f07cea4a1c3456ca6dbf3c0a65733e2",
+        "node_7de9ede27bb24ab29936a60dbc871d01",
+        "node_7e33c5a3490643eca71c0583ca2056f8",
+        "node_c657a8ea686c4a288252811792c2456d"
+      ],
+      "content_text": "EE ADAS Ultrasonic Mechanical Integration\nIntroduction\nPurpose\nComment00105316\nThe purpose of this specification is to provide design, packaging and body engineers the mechanical integration and positional requirements for the AAD Level 2+ & Level 3 ultrasonic sensors low speed manuevaring.\nScope\nComment00105317\nThis standard applies to Jaguar Land Rover (JLR) vehicles which use ultrasonic sensors for Low Speed Manoeuvring (LSM) applications.\nRevision History\nComment00105318\n[October 2022 / Version 1 / pgote]\nTerminology\nAcronyms / Abbreviations\nComment00105319\nDefinitions\nComment00359140\nthe sensor's 180º Field of View refers to the semisphere centered at the sensor's membrane that would represent the FoV of the sensor if the sensor's FoV was 180º for the Vertical and Horizontal directions.\nRequirements\nPositional Overview\nComment00110751\nThe positional overview of Ultrasonic sensors for low speed manoeuvring (LSM) is shown below.\nIntegration Requirements\nSensor Position\nVehicle Level\nDimensional parameters - vehicle level\nThe dimensional variation analysis shall be performed for the dimensional parameters of the sensors such as Z position and beta angle with respect to vehicle co-ordinate system.\nBeta angle - vehicle level\nVertical angles between the sensor and the ground plane (β-angle) shall be in the range of +/- 3º with respect to nominal value considering vehicle co-ordinate system.\nThe Z position tolerance - vehicle level\nThe Z position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering vehicle co-ordinate system\nSensor Level\nUSS axis system\nUSS axis system\nDimensional parameters - sensor level",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: EE ADAS Ultrasonic Mechanical Integration\nIntroduction\nPurpose\nComment00105316\nThe purpose of this specification is to provide design, packaging and body engineers the mechanical integration and positional requirements for the AAD Level 2+ & Level 3 ultrasonic sensors low speed manuevaring.\nScope\nComment00105317\nThis standard applies to Jaguar Land Rover (JLR) vehicles which use ultrasonic sensors for Low Speed Manoeuvring (LSM) applications.\nRevision History\nComment00105318\n[October 2022 / Version 1 / pgote]\nTerminology\nAcronyms / Abbreviations\nComment00105319\nDefinitions\nComment00359140\nthe sensor's 180º Field of View refers to the semisphere centered at the sensor's membrane that would represent the FoV of the sensor if the sensor's FoV was 180º for the Vertical and Horizontal directions.\nRequirements\nPositional Overview\nComment00110751\nThe positional overview of Ultrasonic sensors for low speed manoeuvring (LSM) is shown below.\nIntegration Requirements\nSensor Position\nVehicle Level\nDimensional parameters - vehicle level\nThe dimensional variation analysis shall be performed for the dimensional parameters of the sensors such as Z position and beta angle with respect to vehicle co-ordinate system.\nBeta angle - vehicle level\nVertical angles between the sensor and the ground plane (β-angle) shall be in the range of +/- 3º with respect to nominal value considering vehicle co-ordinate system.\nThe Z position tolerance - vehicle level\nThe Z position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering vehicle co-ordinate system\nSensor Level\nUSS axis system\nUSS axis system\nDimensional parameters - sensor level",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_e7fec69610339ba7bba80b19",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_8f6adb0d9bc14fff9263f938b250a24e",
+        "node_6c2984e2f57b4b03ac203ab7c10da98c",
+        "node_7f07cea4a1c3456ca6dbf3c0a65733e2",
+        "node_7de9ede27bb24ab29936a60dbc871d01",
+        "node_7e33c5a3490643eca71c0583ca2056f8",
+        "node_c657a8ea686c4a288252811792c2456d",
+        "node_32896a41cafb4226a3d166444400e159",
+        "node_1176a04035224ee58d07110e11232d23",
+        "node_5903eb457d5049e5bc6f3f7540289c29",
+        "node_be3c627ee1564be983b819896a18e645",
+        "node_f7e984b40d164439818c59f05443821b",
+        "node_544b16c0c6ec425ab063bd5de71d436d",
+        "node_0bf38c0465584cffa1a0058db2952a0a",
+        "node_ebc46c25d27b40a39e06b8d81fd084ed",
+        "node_c322bf34eed7431c979d13243a85e3fe",
+        "node_4b592950fcac4e17bf56a243b84bbef8",
+        "node_b4defc58f7ea4035a4be636868a9d163",
+        "node_47545a59c5c44013ba534b2dabf5f880"
+      ],
+      "content_text": "The Z position tolerance - vehicle level\nThe Z position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering vehicle co-ordinate system\nSensor Level\nUSS axis system\nUSS axis system\nDimensional parameters - sensor level\nThe dimensional variation analysis shall be performed for the dimensional parameters of the sensors such as X,Y,Z positions as well as alpha, beta and gamma angles with respect to sensor co-ordinate system within the bumper subsystem.\nX position tolerance - sensor level\nThe X position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nY position tolerance - sensor level\nThe Y position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nZ position tolerance - sensor level\nThe Z position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nBeta angle tolerance - sensor level\nThe beta angle tolerance of the sensor shall be in the range of +/- 3º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nAlpha angle tolerance - sensor level\nThe alpha angle tolerance of the sensor shall be in the range of +/- 2.5º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nEpsilon angle tolerance - sensor level",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: The Z position tolerance - vehicle level\nThe Z position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering vehicle co-ordinate system\nSensor Level\nUSS axis system\nUSS axis system\nDimensional parameters - sensor level\nThe dimensional variation analysis shall be performed for the dimensional parameters of the sensors such as X,Y,Z positions as well as alpha, beta and gamma angles with respect to sensor co-ordinate system within the bumper subsystem.\nX position tolerance - sensor level\nThe X position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nY position tolerance - sensor level\nThe Y position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nZ position tolerance - sensor level\nThe Z position tolerance of the sensor shall be equal to ± 5 mm with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nBeta angle tolerance - sensor level\nThe beta angle tolerance of the sensor shall be in the range of +/- 3º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nAlpha angle tolerance - sensor level\nThe alpha angle tolerance of the sensor shall be in the range of +/- 2.5º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nEpsilon angle tolerance - sensor level",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_8f6adb0d9bc14fff9263f938b250a24e",
+          "node_6c2984e2f57b4b03ac203ab7c10da98c",
+          "node_7f07cea4a1c3456ca6dbf3c0a65733e2",
+          "node_7de9ede27bb24ab29936a60dbc871d01",
+          "node_7e33c5a3490643eca71c0583ca2056f8",
+          "node_c657a8ea686c4a288252811792c2456d"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_02991be8cc8c59b0a2280ed2",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_4b592950fcac4e17bf56a243b84bbef8",
+        "node_b4defc58f7ea4035a4be636868a9d163",
+        "node_47545a59c5c44013ba534b2dabf5f880",
+        "node_4a4ceca01408481f96ad7c6519ab73fb",
+        "node_c292f2d2e868435e924ad70b506ad82b",
+        "node_d3029b18f27043daa0818b4b35f66ac2",
+        "node_70765d2476c9418ab8973bbd085364cb",
+        "node_393d67f411364f5ebba13eae5ab051b2",
+        "node_a29054dd00cd476fb85189272af641f5",
+        "node_e5ba4ecf3a1440a69e41e5afe2dbbc21",
+        "node_f1bd2b24157c45d5a28a0ede8ffa28d2",
+        "node_bf4271e5f9b04ab1a77828146a017dd2",
+        "node_71f12241e73d4d6b8e1361c1420f6536",
+        "node_8daf48645c544a3cba71ef8d03e09137",
+        "node_e947e3d4ac684b118c92f5118da6f6d6",
+        "node_4bae96fb4a0642b0b5eb0b4982629fd2",
+        "node_36de5d68663e47fc8071e981fd43c698",
+        "node_634a1644531544f4a1487b4ab24ae3e0",
+        "node_9cb2b2bb00f8407cb619a45103ef96a1",
+        "node_363853866a9f44feac0cef40cc302b1c"
+      ],
+      "content_text": "Alpha angle tolerance - sensor level\nThe alpha angle tolerance of the sensor shall be in the range of +/- 2.5º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nEpsilon angle tolerance - sensor level\nThe epsilon angle tolerance of the sensor shall be in the range of +/- 2º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nSensor Flushness and DCR\nsensor flushness value\nThe flushness of the USS along with its tolerance shall comply with DRJLR.BP.7039 Ver02 (i.e. design rule for USS sensor integration geometry).\nDCR compression\nThe DCR compression shall be in the range of 0.8mm to 1mm\nComment00360120\nCompression shall be evenly distributed around the DCR.\nIntegration of Ultrasonic sensors\nComment00357012\nFigure: Mechanical interfaces that affect sensor position on the vehicle.\nIf it’s relevant for some applications, it’s recommended to locate the sensors in the upper part of the bumper, which provides better stability due to direct connection with the body. Grilles, finishers or styling features with moulded-in sensor latches, located in the upper part of the bumpers introduce less risk in overall tolerance than finishers with separate sensor holders.\nImpact of bumper geometries\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions of any part of the bumper's geometry.\nRequirement01024789\nThe ultrasonic sensor integration shall ensure that the sensor's 180º Field of View is clear of obstructions from vehicle surfaces with a slope of less than 45º with respect to the sensor's X axis.\nComment00359087",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Alpha angle tolerance - sensor level\nThe alpha angle tolerance of the sensor shall be in the range of +/- 2.5º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nEpsilon angle tolerance - sensor level\nThe epsilon angle tolerance of the sensor shall be in the range of +/- 2º with respect to nominal value considering sensor co-ordinate system within the bumper subsystem.\nSensor Flushness and DCR\nsensor flushness value\nThe flushness of the USS along with its tolerance shall comply with DRJLR.BP.7039 Ver02 (i.e. design rule for USS sensor integration geometry).\nDCR compression\nThe DCR compression shall be in the range of 0.8mm to 1mm\nComment00360120\nCompression shall be evenly distributed around the DCR.\nIntegration of Ultrasonic sensors\nComment00357012\nFigure: Mechanical interfaces that affect sensor position on the vehicle.\nIf it’s relevant for some applications, it’s recommended to locate the sensors in the upper part of the bumper, which provides better stability due to direct connection with the body. Grilles, finishers or styling features with moulded-in sensor latches, located in the upper part of the bumpers introduce less risk in overall tolerance than finishers with separate sensor holders.\nImpact of bumper geometries\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions of any part of the bumper's geometry.\nRequirement01024789\nThe ultrasonic sensor integration shall ensure that the sensor's 180º Field of View is clear of obstructions from vehicle surfaces with a slope of less than 45º with respect to the sensor's X axis.\nComment00359087",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_4b592950fcac4e17bf56a243b84bbef8",
+          "node_b4defc58f7ea4035a4be636868a9d163",
+          "node_47545a59c5c44013ba534b2dabf5f880"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_2f04fe82dc2bf9a6b1eb66c6",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_634a1644531544f4a1487b4ab24ae3e0",
+        "node_9cb2b2bb00f8407cb619a45103ef96a1",
+        "node_363853866a9f44feac0cef40cc302b1c",
+        "node_7df2dc38935049f0bc8a04b96a676b9c",
+        "node_3995c8d6ba3040d7bc8c68ab7b8828cb",
+        "node_37e413e97d6a43c5a4ad05cec8836d43",
+        "node_3ff589483402471baf25b703bee4c3d8",
+        "node_1ee7acfebf8b4e1eb9f81cd0bad4c28d",
+        "node_87df36ef4c2f412e8d3c715cd1fcc016",
+        "node_d92198d6a20c4e0cbf58ca7b93bf5751",
+        "node_8bafcaa8575c4f738a22e2ae2e538b5b",
+        "node_d7556a273041469e9f36b30879c3a5db",
+        "node_22db03628e934fabb1720ac90d3f8ea5",
+        "node_d598e872b0204aaeb4da831001d24da0",
+        "node_9db44c914aff4948bcd3548596cc772f",
+        "node_2a377b608a9b43c589ff7033591a8862",
+        "node_1a755949c3374cda8c20ee74caacde37"
+      ],
+      "content_text": "Requirement01024789\nThe ultrasonic sensor integration shall ensure that the sensor's 180º Field of View is clear of obstructions from vehicle surfaces with a slope of less than 45º with respect to the sensor's X axis.\nComment00359087\nExample of non compliance with Requirement01024789: a surface with a slope of less than 45º impacts the sensor's 180º FoV\nRequirement01017189\nThe supplier shall review the sensor position layout and bumper design provided by JLR and provide assessment on any risks identified.\nNOTE: this requirement covers the need to have an early assessment from the supplier, in the role or technical expert, as a sign off for the design phase.\nComment00357237\n[RQ_340] For vehicles with same wheelbase and steering geometry, a common sensor layout shall be used in order to maintain the same configuration settings required by the ECU.\nCommodity strategy\nWhere the vehicle program includes variants that introduce modifications affecting the sensor's field of view, the ultrasonic sensor integration shall be agreed with the supplier.\nMovable vehicle parts influence on sensor FOV\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions by any vehicle moving parts in the entire range of their movement.\nComment00357238\nExample of \"vehicle moving parts\" are: Headlamp cleaners, wheels on the steering axles, doors and deployable side steps (DODS integration), active spoiler, Tailgate.\nVehicle accessories consideration\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions from any accessory listed in the accessory vigenette.",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Requirement01024789\nThe ultrasonic sensor integration shall ensure that the sensor's 180º Field of View is clear of obstructions from vehicle surfaces with a slope of less than 45º with respect to the sensor's X axis.\nComment00359087\nExample of non compliance with Requirement01024789: a surface with a slope of less than 45º impacts the sensor's 180º FoV\nRequirement01017189\nThe supplier shall review the sensor position layout and bumper design provided by JLR and provide assessment on any risks identified.\nNOTE: this requirement covers the need to have an early assessment from the supplier, in the role or technical expert, as a sign off for the design phase.\nComment00357237\n[RQ_340] For vehicles with same wheelbase and steering geometry, a common sensor layout shall be used in order to maintain the same configuration settings required by the ECU.\nCommodity strategy\nWhere the vehicle program includes variants that introduce modifications affecting the sensor's field of view, the ultrasonic sensor integration shall be agreed with the supplier.\nMovable vehicle parts influence on sensor FOV\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions by any vehicle moving parts in the entire range of their movement.\nComment00357238\nExample of \"vehicle moving parts\" are: Headlamp cleaners, wheels on the steering axles, doors and deployable side steps (DODS integration), active spoiler, Tailgate.\nVehicle accessories consideration\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions from any accessory listed in the accessory vigenette.",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_634a1644531544f4a1487b4ab24ae3e0",
+          "node_9cb2b2bb00f8407cb619a45103ef96a1",
+          "node_363853866a9f44feac0cef40cc302b1c"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_8ba79b143897c5dc2c89bc70",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_2a377b608a9b43c589ff7033591a8862",
+        "node_1a755949c3374cda8c20ee74caacde37",
+        "node_048efbcf9ac0417f96222f2d282b2d76",
+        "node_c2c0187f9d354f92817a3d7beb5ed5cf",
+        "node_a01d332c895e4c6b9b0c437a8fc7351a",
+        "node_7ada957486fb464690affb6afd0f01a4",
+        "node_a588f9cd7b4848768401ee5d63baea65",
+        "node_c5e9e53407c44cfaa813bf123228f61f",
+        "node_1b3fa17e65be41cf89e472b19ca7683d",
+        "node_907a6aba79014bb8a7ee01f1bdfbae5e",
+        "node_f17f0cd43a4d48568434c6fc79c44186",
+        "node_57b3f3c35c3541f7903e515fb1c42977",
+        "node_f54d0e0b8afe499b9cbce56fbd1245fd",
+        "node_29338d20e83e4ddaa7cb6a3143fa7766",
+        "node_d0afcb9d35134471a7bab4856cf5a0a5"
+      ],
+      "content_text": "Vehicle accessories consideration\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions from any accessory listed in the accessory vigenette.\nNOTE: This requirement does not apply to accessories used in the event of vehicle breakdown (in particular to towing eyes and towing ropes)\nComment00360122\nExample of accesories are: towbar, winch, spare wheel cover, lamp guards, bike carriers.\nRequirement01014344\nThe supplier shall provide asessment for any accesory or moveable part that affects the field of view, delivering a document with final statement and suggested actions.\nIntegration near openings and cavities\nThe ultrasonic sensor integration shall ensure that the sensor's 180º FoV has a clearance of minimum 3mm, in addition to the build tolerances, from any openings or cavities of the bumper. NOTE: Any deviation to this requirement shall be agreed by the supplier.\nRequirement01014360\nThe supplier shall provide asessment on the risks derived from any openings or cavities formed by vehicle structures that interfere with the sensors field of view within 180 degrees, delivering a document with final statement and suggested actions.\nComment00357243\nOpenings or cavities formed by surrounding surfaces could create conditions for multiple reflections resulting in an extended and undesired return path of ultrasonic waves. Sensor integration shall aim to eliminate known factors contributing to false detection caused by integration of sensors in such areas.\nVicinity of hot air sources\nDescription",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Vehicle accessories consideration\nThe ultrasonic sensor integration shall ensure that the sensor's field of view is clear of obstructions from any accessory listed in the accessory vigenette.\nNOTE: This requirement does not apply to accessories used in the event of vehicle breakdown (in particular to towing eyes and towing ropes)\nComment00360122\nExample of accesories are: towbar, winch, spare wheel cover, lamp guards, bike carriers.\nRequirement01014344\nThe supplier shall provide asessment for any accesory or moveable part that affects the field of view, delivering a document with final statement and suggested actions.\nIntegration near openings and cavities\nThe ultrasonic sensor integration shall ensure that the sensor's 180º FoV has a clearance of minimum 3mm, in addition to the build tolerances, from any openings or cavities of the bumper. NOTE: Any deviation to this requirement shall be agreed by the supplier.\nRequirement01014360\nThe supplier shall provide asessment on the risks derived from any openings or cavities formed by vehicle structures that interfere with the sensors field of view within 180 degrees, delivering a document with final statement and suggested actions.\nComment00357243\nOpenings or cavities formed by surrounding surfaces could create conditions for multiple reflections resulting in an extended and undesired return path of ultrasonic waves. Sensor integration shall aim to eliminate known factors contributing to false detection caused by integration of sensors in such areas.\nVicinity of hot air sources\nDescription",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_2a377b608a9b43c589ff7033591a8862",
+          "node_1a755949c3374cda8c20ee74caacde37"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_176c68fc6eea54b6d1a40620",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_29338d20e83e4ddaa7cb6a3143fa7766",
+        "node_d0afcb9d35134471a7bab4856cf5a0a5",
+        "node_b732b13ebb8e4fc093574242e0dc345a",
+        "node_431512112a184b538747f8a804631d2f",
+        "node_28c595b076364f458f9bb589718093b7",
+        "node_c1008bc0356d41ab9ade2a57fc5f4d96",
+        "node_fc65618c2f5244a18030793018e5fc24",
+        "node_e16b83f6fd424b92ba267704f891fd96",
+        "node_1f6521172b2c4ea6846da3604fdc22d5",
+        "node_9d586bdeaa4e46cb9f8731b396c6f5b7",
+        "node_aba8380ac2a045cf8e948f1f55dd9bf7",
+        "node_ff027d2595e64501922dd0b0c2e84c10",
+        "node_007a68f6229f4be1b07642608ee5675f",
+        "node_dd99727dd07b4d28a55fc4bf650cb322",
+        "node_9a84d92a641b4e9ead09933284fdc712"
+      ],
+      "content_text": "Vicinity of hot air sources\nDescription\nThe purpose of this requirement is to eliminate known factors contributing to false detection caused by refraction. Refraction is a phenomenon taking place when a wave passes from one medium to another, resulting in a change of its direction. It also applies to ultrasonic waves traveling across a boundary created by cold and hot air areas. NOTE: General guidelines contained herein help to minimize the risk of unwanted reflections, but are not exhaustive due to the nature of the phenomenon. Additional tests on representative vehicles are recommended.\nRear exhaust pipe\nDescription\nReflections from exhaust gases are likely to happen if they accumulate in the field of view of the sensors. Contributing factors are windless weather, vehicle not moving or slow backward driving.\nMinimum distance of the sensor\nSensor direction relative to exhaust pipe\n-\nFront grille and air intakes\nDescription\nHot air pushed out of the engine compartment through the front grilles or air intakes produces hot air accumulation in the bumper vicinity. This may lead to unwanted reflections of ultrasonic waves and change their propagation path. This is particularly important if the correct system integration was achieved by use of near field filters or similar feature, which minimizes the influence of the vehicle’s own geometry on the echo received by the sensors.\nPositioning in heat sources vicinity\nThe ultrasonic sensor integration shall ensure that the sensor is placed in a volume where the air temperature is kept below 95ºC while in operation.\nComment00357013",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Vicinity of hot air sources\nDescription\nThe purpose of this requirement is to eliminate known factors contributing to false detection caused by refraction. Refraction is a phenomenon taking place when a wave passes from one medium to another, resulting in a change of its direction. It also applies to ultrasonic waves traveling across a boundary created by cold and hot air areas. NOTE: General guidelines contained herein help to minimize the risk of unwanted reflections, but are not exhaustive due to the nature of the phenomenon. Additional tests on representative vehicles are recommended.\nRear exhaust pipe\nDescription\nReflections from exhaust gases are likely to happen if they accumulate in the field of view of the sensors. Contributing factors are windless weather, vehicle not moving or slow backward driving.\nMinimum distance of the sensor\nSensor direction relative to exhaust pipe\n-\nFront grille and air intakes\nDescription\nHot air pushed out of the engine compartment through the front grilles or air intakes produces hot air accumulation in the bumper vicinity. This may lead to unwanted reflections of ultrasonic waves and change their propagation path. This is particularly important if the correct system integration was achieved by use of near field filters or similar feature, which minimizes the influence of the vehicle’s own geometry on the echo received by the sensors.\nPositioning in heat sources vicinity\nThe ultrasonic sensor integration shall ensure that the sensor is placed in a volume where the air temperature is kept below 95ºC while in operation.\nComment00357013",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_29338d20e83e4ddaa7cb6a3143fa7766",
+          "node_d0afcb9d35134471a7bab4856cf5a0a5"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_17db2c860dcdc27097ed4470",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_007a68f6229f4be1b07642608ee5675f",
+        "node_dd99727dd07b4d28a55fc4bf650cb322",
+        "node_9a84d92a641b4e9ead09933284fdc712",
+        "node_8ec22929365f418786611ef8a63be416",
+        "node_92b719c3932744619c807410d7a6663c",
+        "node_22d2f01b86ce48dba7fdef311a58c4c2",
+        "node_32af6a1168df41ddb47b46219c3afa0e",
+        "node_671aeb2fca20410aba3a3040d4db4a2f",
+        "node_44fb4bf37c6e45bdb48d028f91ffc961",
+        "node_96f7fc03ea644fd3b2f0b2d9c6b60ee3",
+        "node_94c98b8420e04fbf9da3895790bf921d",
+        "node_a1982cb99cbb41bca09d66ee4e81f85e",
+        "node_e0266e1f7f154b82ad9097bf29e6bcc0",
+        "node_78a6dbf1ae66488495c890f6f280bace",
+        "node_950fb31cd0174110b33f8542287155c4",
+        "node_1b10cf076e9e40baa87fa74fe8ebffe7",
+        "node_77d3fa61f62945459c3d09eea070768d",
+        "node_45bd36a72d244abb875d94af1320318a",
+        "node_42e3983a2e16457f9cd65a925aaf6d8d",
+        "node_543d48abbfbe4cfb8b728e808d8ad24c"
+      ],
+      "content_text": "Positioning in heat sources vicinity\nThe ultrasonic sensor integration shall ensure that the sensor is placed in a volume where the air temperature is kept below 95ºC while in operation.\nComment00357013\nImpact of hot air should be minimized. Alternative sensor positions or other means of keeping them away from heat sources should be considered.\nVehicle Zones\nComment00321943\nThe USS sensor can be considered under the following package zone (as defined in STJLR.00.5164):\nMechanical design\nSensor holder\nWater management\nWater drainage\nWater drainage is necessary to ensure proper operation of sensors. Residual water has a tendency to flow upward in narrow gaps due to capillary action. This may cause unwanted coupling between the sensor housing and its membrane. When water residues freeze and expand, additional pressure on the sensor housing may be generated resulting in sensor deactivation or false detections.\nSensor integration with holder\nThe holder design and sensor integration shall guarantee no gap condition between the sensor housing and the DCR in the range of expected tolerances.\nDrainage hole location\nThe sensor holder shall comprise an aperture, which prevents water accumulation and ensures it can freely drain away from DCR area.\nComment00361985\nThe drainage aperture shall be as close as possible to the decopling ring.\nThis location is convenient to evacuate water that may accumulate in the DCR vicinity after situations like a pressure wash.\nDrainage hole",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Positioning in heat sources vicinity\nThe ultrasonic sensor integration shall ensure that the sensor is placed in a volume where the air temperature is kept below 95ºC while in operation.\nComment00357013\nImpact of hot air should be minimized. Alternative sensor positions or other means of keeping them away from heat sources should be considered.\nVehicle Zones\nComment00321943\nThe USS sensor can be considered under the following package zone (as defined in STJLR.00.5164):\nMechanical design\nSensor holder\nWater management\nWater drainage\nWater drainage is necessary to ensure proper operation of sensors. Residual water has a tendency to flow upward in narrow gaps due to capillary action. This may cause unwanted coupling between the sensor housing and its membrane. When water residues freeze and expand, additional pressure on the sensor housing may be generated resulting in sensor deactivation or false detections.\nSensor integration with holder\nThe holder design and sensor integration shall guarantee no gap condition between the sensor housing and the DCR in the range of expected tolerances.\nDrainage hole location\nThe sensor holder shall comprise an aperture, which prevents water accumulation and ensures it can freely drain away from DCR area.\nComment00361985\nThe drainage aperture shall be as close as possible to the decopling ring.\nThis location is convenient to evacuate water that may accumulate in the DCR vicinity after situations like a pressure wash.\nDrainage hole",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_007a68f6229f4be1b07642608ee5675f",
+          "node_dd99727dd07b4d28a55fc4bf650cb322",
+          "node_9a84d92a641b4e9ead09933284fdc712"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_e62d024b0db7b78383ec4c0d",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_77d3fa61f62945459c3d09eea070768d",
+        "node_45bd36a72d244abb875d94af1320318a",
+        "node_42e3983a2e16457f9cd65a925aaf6d8d",
+        "node_543d48abbfbe4cfb8b728e808d8ad24c",
+        "node_c187bf088b554184a54c3b97279529b5",
+        "node_8e12ef66193442008f9af916a92342de",
+        "node_82c8a3b5e501449d85a7c1952ffffd44",
+        "node_a37b660cc9a44b0bb3178c0c3ac365e5",
+        "node_dcc88e7f291d4a708c2d5800676021cd",
+        "node_6dc72b559d564161a623768f4640c7b1",
+        "node_9f379efc420c4e0db1e925d6e539372a",
+        "node_337f02b0ce6c4d849214a494b0f4b685",
+        "node_5d951e86fa714ccf8f3aa4390fb62dbe",
+        "node_f9c468eb9502410fa80a373135e64343",
+        "node_2283111bd57c486fb9c31cf1ee1c9931",
+        "node_163e71f79f384ba2bfa5e58727a49a8f"
+      ],
+      "content_text": "Comment00361985\nThe drainage aperture shall be as close as possible to the decopling ring.\nThis location is convenient to evacuate water that may accumulate in the DCR vicinity after situations like a pressure wash.\nDrainage hole\nThe geometry of the drainage hole shall create a cut perpendicular to the ground plane of the vehicle and large enough to fully fit a square with a side of: [shall] minimum 4 mm (including tolerances) [Desirable] 5 mm (including tolerances)\nDrainage hole clearance\nThe area under the drainage hole shall provide a clearance of: minimum 5 mm Required due to possible water accumulation at the sensor (despite the presence of drainage hole), caused by barriers in the form of other attachment parts. The above requirements shall be met on an assembled vehicle. Any technological limitations compromising location of drainage hole and its desired geometry for a given design concept, shall be reported by the sensor holder manufacturer followed by the sensor supplier and ADAS team assessment.\nDrainage hole geometry\n[RQ_413] In order to facilitate undisturbed water flow, the acceptable size of burrs around the edge of the drainage hole shall measure: less than 0.2 mm\nPoka-yoke features\nAll sensor holders shall comprise poka-yoke features or similar measures to ensure that sensor and sensor holders cannot be mis-fitted.\nSensor holder Materials\nDescription\nThis section contains materials requirements for the sensor holder and installation area and explains related limitations.\nMaterial recommendations\nThe mechanical interface of the sensor to the bumper shall be made of PP material.",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Comment00361985\nThe drainage aperture shall be as close as possible to the decopling ring.\nThis location is convenient to evacuate water that may accumulate in the DCR vicinity after situations like a pressure wash.\nDrainage hole\nThe geometry of the drainage hole shall create a cut perpendicular to the ground plane of the vehicle and large enough to fully fit a square with a side of: [shall] minimum 4 mm (including tolerances) [Desirable] 5 mm (including tolerances)\nDrainage hole clearance\nThe area under the drainage hole shall provide a clearance of: minimum 5 mm Required due to possible water accumulation at the sensor (despite the presence of drainage hole), caused by barriers in the form of other attachment parts. The above requirements shall be met on an assembled vehicle. Any technological limitations compromising location of drainage hole and its desired geometry for a given design concept, shall be reported by the sensor holder manufacturer followed by the sensor supplier and ADAS team assessment.\nDrainage hole geometry\n[RQ_413] In order to facilitate undisturbed water flow, the acceptable size of burrs around the edge of the drainage hole shall measure: less than 0.2 mm\nPoka-yoke features\nAll sensor holders shall comprise poka-yoke features or similar measures to ensure that sensor and sensor holders cannot be mis-fitted.\nSensor holder Materials\nDescription\nThis section contains materials requirements for the sensor holder and installation area and explains related limitations.\nMaterial recommendations\nThe mechanical interface of the sensor to the bumper shall be made of PP material.",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_77d3fa61f62945459c3d09eea070768d",
+          "node_45bd36a72d244abb875d94af1320318a",
+          "node_42e3983a2e16457f9cd65a925aaf6d8d",
+          "node_543d48abbfbe4cfb8b728e808d8ad24c"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_6650c6d457ce56189ee30230",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_337f02b0ce6c4d849214a494b0f4b685",
+        "node_5d951e86fa714ccf8f3aa4390fb62dbe",
+        "node_f9c468eb9502410fa80a373135e64343",
+        "node_2283111bd57c486fb9c31cf1ee1c9931",
+        "node_163e71f79f384ba2bfa5e58727a49a8f",
+        "node_7794481f1cc0458e908fb98c97cb343c",
+        "node_1855c03bf2734cb18d84f6bfa1083128",
+        "node_332a88e7308a4a8da5a389ef9fbc0188",
+        "node_50c2bfbfcce949928db49b453cdbfb3c",
+        "node_d6717b0cf5f5425bba15710477acc8fe",
+        "node_6bdedd77405048e6a32c94f7189b4255",
+        "node_793ebe2f74944703937e02b4b77b206d",
+        "node_97c155ee9a8d41cf8281442028654ea1",
+        "node_05848117f7654975bbd183d7de2fe920",
+        "node_905c383ed30b48ea9616a469fb49fc9a",
+        "node_21f5decf5f9d4f129f0dd0043dbaf973",
+        "node_3c07d9fbd74b478684e54d70acbfba28",
+        "node_f8515036e8fd4a7bb09a0f9aa352af23",
+        "node_b4807fec9a0f49ba8688fa4fd94ee023",
+        "node_ec8200d3ab9f4ab599b3c8e4af2880aa",
+        "node_744b696b9de248b49e1141332048df0b",
+        "node_3aa014f723e341f8bfeddf190c01e675",
+        "node_7bef8ec71ca84983b87e1bb8c19c18c3",
+        "node_71e30ac4dab24a61864d5920d9e1c5e4"
+      ],
+      "content_text": "Sensor holder Materials\nDescription\nThis section contains materials requirements for the sensor holder and installation area and explains related limitations.\nMaterial recommendations\nThe mechanical interface of the sensor to the bumper shall be made of PP material.\nNOTE: The use of any other material is not allowed without previous acceptance from the supplier.\nComment00357266\nAccording to lessons learnt with previous USS systems, the use of the following materials in the mechanical interface of the sensor shouldn't affect the sensor performance.\nComment00357258\nFollowing materials are not recommended to use:\nHard materials or non-elastomeric modified thermoplastics such as pure amorphous plastics (like PC or PC-blends) and metallic components are not recommended for use due to their unfavourable acoustical properties\nRequired material properties\nSelected material should have the following properties:\nRequirement00874368\nThe USS holder shall be attached to the bumper in the position and orientation defined in the bumper CAD design.\nProcess related\nDescription\nThis section contains mechanical design requirements related to manufacturing and assembly processes.\nProcess related\nMechanical load onto the sensor housing shall be less than or equal to 75N after completion of the assembly process.\nMechanical load on sensor membrane\nNo mechanical load shall be present on the sensor membranes during and after assembly process (in particular twisting or lateral force)\nNo damage to decoupling ring\nThe sensor fitment shall avoid causing any damage to the DCR (for example by burrs or sharp edges).",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Sensor holder Materials\nDescription\nThis section contains materials requirements for the sensor holder and installation area and explains related limitations.\nMaterial recommendations\nThe mechanical interface of the sensor to the bumper shall be made of PP material.\nNOTE: The use of any other material is not allowed without previous acceptance from the supplier.\nComment00357266\nAccording to lessons learnt with previous USS systems, the use of the following materials in the mechanical interface of the sensor shouldn't affect the sensor performance.\nComment00357258\nFollowing materials are not recommended to use:\nHard materials or non-elastomeric modified thermoplastics such as pure amorphous plastics (like PC or PC-blends) and metallic components are not recommended for use due to their unfavourable acoustical properties\nRequired material properties\nSelected material should have the following properties:\nRequirement00874368\nThe USS holder shall be attached to the bumper in the position and orientation defined in the bumper CAD design.\nProcess related\nDescription\nThis section contains mechanical design requirements related to manufacturing and assembly processes.\nProcess related\nMechanical load onto the sensor housing shall be less than or equal to 75N after completion of the assembly process.\nMechanical load on sensor membrane\nNo mechanical load shall be present on the sensor membranes during and after assembly process (in particular twisting or lateral force)\nNo damage to decoupling ring\nThe sensor fitment shall avoid causing any damage to the DCR (for example by burrs or sharp edges).",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_337f02b0ce6c4d849214a494b0f4b685",
+          "node_5d951e86fa714ccf8f3aa4390fb62dbe",
+          "node_f9c468eb9502410fa80a373135e64343",
+          "node_2283111bd57c486fb9c31cf1ee1c9931",
+          "node_163e71f79f384ba2bfa5e58727a49a8f"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_8c38ce0017cd04226eedcd96",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_744b696b9de248b49e1141332048df0b",
+        "node_3aa014f723e341f8bfeddf190c01e675",
+        "node_7bef8ec71ca84983b87e1bb8c19c18c3",
+        "node_71e30ac4dab24a61864d5920d9e1c5e4",
+        "node_da68db23f63e42c7b96136ce4c5b5701",
+        "node_614d037df4e64f30adb7a847a6e39cdb",
+        "node_fc7828d6439c4f7b9492643f2a39a4fb",
+        "node_1d0a3845af7948d2b1f59f0b09ce8f13",
+        "node_e5332c4d4873403f9e887121c0f975ac",
+        "node_05858136cbb04638bac90375647fb788",
+        "node_cdb3be7fb98e4b949229075c5cb8c2ac",
+        "node_34e8c15c526841eda7fa0882ab7a2f16",
+        "node_1468c4801d99467988634bd61c3189c9",
+        "node_99f3048b3e5b460782a8ad9b35444783",
+        "node_68f377f6fe6a4b45bb40b6762e9d47aa",
+        "node_30562731027c44e2aa8e0a315e25bd2f",
+        "node_f43a6de117a34fbcb1418dbf46b715b3",
+        "node_5a448092374b47d4bc4141184879daf8",
+        "node_cb3025bd466e48c69fefdb91f9fbde5e",
+        "node_742efbe8960a4e1bb4172c4a765a7f52"
+      ],
+      "content_text": "Mechanical load on sensor membrane\nNo mechanical load shall be present on the sensor membranes during and after assembly process (in particular twisting or lateral force)\nNo damage to decoupling ring\nThe sensor fitment shall avoid causing any damage to the DCR (for example by burrs or sharp edges).\nNOTE: fitment comprises the sensor holder, the bumper and whatever means used to attach the holder to the bumper.\nDurability\nSensor holder\nSensor Retention Force\nThe sensor and relevant mechanical interfaces shall remain securely held within the holder when a force of 70 N < F1 < 75 N is applied for 2 seconds and 3 times as per TPJLR 18.201\nSensor disengagement force\nThe sensor holder and relevant mechanical interfaces shall ensure that the sensor disengages from the holder if the axial push force is greater or equal than 75 N applied on the sensor membrane face as per TPJLR 18.201\nSensor unlatching force\nThe sensor and relevant mechanical interfaces shall remain securely held within the holder when a pulling force on its harness of 35 N < F2 < 45 N is applied for 2 seconds and 3 times as per TPJLR 18.201\nNumber of insertion cycles\nThe sensor holder shall withstand a minimum of 5 sensor insertion and removal cycles without being damaged, losing its mechanical properties or causing damage to the sensor.\nFastening\nHolder detachment force\n[RQ_520] The chosen fastening method shall ensure that the sensor holder is securely attached to the installation surface upto a detaching force of greater than or equal to 150 N.\nPainting Requirements\nMembrane Coating",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Mechanical load on sensor membrane\nNo mechanical load shall be present on the sensor membranes during and after assembly process (in particular twisting or lateral force)\nNo damage to decoupling ring\nThe sensor fitment shall avoid causing any damage to the DCR (for example by burrs or sharp edges).\nNOTE: fitment comprises the sensor holder, the bumper and whatever means used to attach the holder to the bumper.\nDurability\nSensor holder\nSensor Retention Force\nThe sensor and relevant mechanical interfaces shall remain securely held within the holder when a force of 70 N < F1 < 75 N is applied for 2 seconds and 3 times as per TPJLR 18.201\nSensor disengagement force\nThe sensor holder and relevant mechanical interfaces shall ensure that the sensor disengages from the holder if the axial push force is greater or equal than 75 N applied on the sensor membrane face as per TPJLR 18.201\nSensor unlatching force\nThe sensor and relevant mechanical interfaces shall remain securely held within the holder when a pulling force on its harness of 35 N < F2 < 45 N is applied for 2 seconds and 3 times as per TPJLR 18.201\nNumber of insertion cycles\nThe sensor holder shall withstand a minimum of 5 sensor insertion and removal cycles without being damaged, losing its mechanical properties or causing damage to the sensor.\nFastening\nHolder detachment force\n[RQ_520] The chosen fastening method shall ensure that the sensor holder is securely attached to the installation surface upto a detaching force of greater than or equal to 150 N.\nPainting Requirements\nMembrane Coating",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_744b696b9de248b49e1141332048df0b",
+          "node_3aa014f723e341f8bfeddf190c01e675",
+          "node_7bef8ec71ca84983b87e1bb8c19c18c3",
+          "node_71e30ac4dab24a61864d5920d9e1c5e4"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_792587b463cf0d4c826e6056",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_30562731027c44e2aa8e0a315e25bd2f",
+        "node_f43a6de117a34fbcb1418dbf46b715b3",
+        "node_5a448092374b47d4bc4141184879daf8",
+        "node_cb3025bd466e48c69fefdb91f9fbde5e",
+        "node_742efbe8960a4e1bb4172c4a765a7f52",
+        "node_84226aa186514892bfdf487b3bed9d72",
+        "node_2bd292ac6a014b9d9b6e4433b88381f0",
+        "node_898a4138e21245f38fdce0ecd8c88644",
+        "node_f97410b7133041408d4837878e518457",
+        "node_705b057b316440fbab0bd3c5919fca9e",
+        "node_1d34b1e0540743c0b4f0d9f94456aa2f",
+        "node_b404001cf65348ccbd2e1dae82891381",
+        "node_2eddcc96b63d43b4bfb657274d72bd1f",
+        "node_070dc8afd0d3427eadd139d179866182",
+        "node_16d53b6308b84ebe9a8b7296e04080ad",
+        "node_45205cfd70964aba91f2ecc7946c1ad4",
+        "node_1d132484b11440eebd6aaadabee3292a",
+        "node_6ef785f248fd4cdf90aa4a5701526e88",
+        "node_729ca375dcbc4fbca8a41eb0c90d3b89",
+        "node_7910492e0edd4963b98b45828f1b4c68",
+        "node_4d5cf1daf2674f278a74fe2aeb26d56c",
+        "node_6a54145abffc4449be8a06089d1c3e2e",
+        "node_6515fca3d6e64e5c9fb09dccbee9033c",
+        "node_fa967d065a414963925662b27473798e",
+        "node_504ee9aa9c5b4325a369b1f0275fda46",
+        "node_fe3b00c0fdf4409b9a0fcc8efcfefde6",
+        "node_3505105bc80d446a82c7f6a837c937cd"
+      ],
+      "content_text": "Fastening\nHolder detachment force\n[RQ_520] The chosen fastening method shall ensure that the sensor holder is securely attached to the installation surface upto a detaching force of greater than or equal to 150 N.\nPainting Requirements\nMembrane Coating\n[RQ_530] The sensor membrane coating shall meet the requirements for exterior painted parts referred in STJLR.51.5241.\nThis requirement applies to standard coatings offered or developed by the sensor supplier or integrator (powder coating, body colour paints) and those provided by any other paint shop chosen.\nComment00358658\nThere are two situations where we need the supplier to deliver unpainted sensors that will be painted under the control of JLR,\nunder both situations the paint process shall comply with the following requirements.\nRequirement00874366\nThe USS primed sensor shall be exposed to temperatures less or equal to 95ºC while painting.\nRequirement00724593\nThe USS primed sensor shall be painted without decoupling ring​.\nRequirement00724606\nThe USS primed sensor painting process shall prevent paint on surfaces other than the aluminium cap of the sensor​.\nComment00358857\nRequirement01019395\nDuring the painting process, the axial forces to the sensor housing shall be <= 25N to avoid damage to the sensor.\nRequirement00744944\nThe USS maximum painting thickness shall be less than or equal to 150 microns.\nRequirement01041830\nThe paint process shall ensure that the sensor hole maintains a diameter of >= 18.0mm after bumper painting.\nStandard OEM Colors Requirements\nSSA Requirement00249967\nThe supplier shall provide painted sensors in accordance with the colour palette required by the OEM.\nRequirement01024558",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Fastening\nHolder detachment force\n[RQ_520] The chosen fastening method shall ensure that the sensor holder is securely attached to the installation surface upto a detaching force of greater than or equal to 150 N.\nPainting Requirements\nMembrane Coating\n[RQ_530] The sensor membrane coating shall meet the requirements for exterior painted parts referred in STJLR.51.5241.\nThis requirement applies to standard coatings offered or developed by the sensor supplier or integrator (powder coating, body colour paints) and those provided by any other paint shop chosen.\nComment00358658\nThere are two situations where we need the supplier to deliver unpainted sensors that will be painted under the control of JLR,\nunder both situations the paint process shall comply with the following requirements.\nRequirement00874366\nThe USS primed sensor shall be exposed to temperatures less or equal to 95ºC while painting.\nRequirement00724593\nThe USS primed sensor shall be painted without decoupling ring​.\nRequirement00724606\nThe USS primed sensor painting process shall prevent paint on surfaces other than the aluminium cap of the sensor​.\nComment00358857\nRequirement01019395\nDuring the painting process, the axial forces to the sensor housing shall be <= 25N to avoid damage to the sensor.\nRequirement00744944\nThe USS maximum painting thickness shall be less than or equal to 150 microns.\nRequirement01041830\nThe paint process shall ensure that the sensor hole maintains a diameter of >= 18.0mm after bumper painting.\nStandard OEM Colors Requirements\nSSA Requirement00249967\nThe supplier shall provide painted sensors in accordance with the colour palette required by the OEM.\nRequirement01024558",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_30562731027c44e2aa8e0a315e25bd2f",
+          "node_f43a6de117a34fbcb1418dbf46b715b3",
+          "node_5a448092374b47d4bc4141184879daf8",
+          "node_cb3025bd466e48c69fefdb91f9fbde5e",
+          "node_742efbe8960a4e1bb4172c4a765a7f52"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_cd4e2508750a5cbaef855735",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_6a54145abffc4449be8a06089d1c3e2e",
+        "node_6515fca3d6e64e5c9fb09dccbee9033c",
+        "node_fa967d065a414963925662b27473798e",
+        "node_504ee9aa9c5b4325a369b1f0275fda46",
+        "node_fe3b00c0fdf4409b9a0fcc8efcfefde6",
+        "node_3505105bc80d446a82c7f6a837c937cd",
+        "node_ca139387063f48f28a640bf5705d3841",
+        "node_1971cb6f7a6a4642b6382f930ed65967",
+        "node_221fdb0942334f938e061a24f76162c2",
+        "node_db032e7caf964e9382a3f8fe66eb4487",
+        "node_1bd33ccccf8a4d299304b2b696679304",
+        "node_54054ec7a88344a0b0d3f55259cd940f",
+        "node_4bc7eb853f2147a0aebf8058aa8a7113",
+        "node_ca8c0bdee50944cc9f064a243ba82d92",
+        "node_11d1a59ab5ab42c593fb9e1b42a7e593",
+        "node_f50a95b7d2db4e0fb04c46241ef0d416",
+        "node_ade0d5f0138c4d0395e00daadd4850d7",
+        "node_f0dd80b36a514a8e882a0b5007b5019e",
+        "node_0107a6736c964456a852f8cde3e8c610",
+        "node_dc8e987a8c574d61aed44c9199458e9f",
+        "node_c8455a57d68b42239be931db79243573",
+        "node_7f7768fcb02c438ab63b4942592b7be9",
+        "node_e39d141bff744bd6b037c189f8f00426",
+        "node_b9464b9bf943470e8b7dd435341edc17",
+        "node_610e015fe1cc433c811549c3e92e6d74"
+      ],
+      "content_text": "Requirement01041830\nThe paint process shall ensure that the sensor hole maintains a diameter of >= 18.0mm after bumper painting.\nStandard OEM Colors Requirements\nSSA Requirement00249967\nThe supplier shall provide painted sensors in accordance with the colour palette required by the OEM.\nRequirement01024558\nThe painted sensors provided by the supplier shall include the following palette\nCustom OEM Colors Requirements\nSSA Requirement00249968\nUpon completion of the RFQ process, the supplier is expected to provide unpainted sensor samples for JLR/SVO internal evaluation.\n2D simulation (sensor positioning)\nUSS coverage layout\nThe ultrasonic sensor integration shall provide a coverage around the vehicle that is optimized for autonomous parking features.\nNOTE: Optimal coverage is confirmed when the coverage plot is accepted by NVIDIA and the supplier.\nUSS coverage assessment\nThe supplier shall provide assessment on the simulation of the ultrasonic sensor coverage that results from the sensor poses, and provide a written statement of acceptance.\nSensor Positioning Guidelines\nFront USS Positioning\nThe front USS Y position and alpha angle shall be packaged according to constraints defined.\nRear USS Positioning\nThe rear USS Y position and alpha angle shall be packaged according to constraints defined.\nRequirement01017202\nThe ultrasonic sensor integration shall be done according to the Supplier Integration Guidelines.\nNOTE: Any deviation from the supplier integration guidelines for USS positioning shall get the acceptance from the USS supplier.\nUSS positioning deviations from mounting guidelines",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Requirement01041830\nThe paint process shall ensure that the sensor hole maintains a diameter of >= 18.0mm after bumper painting.\nStandard OEM Colors Requirements\nSSA Requirement00249967\nThe supplier shall provide painted sensors in accordance with the colour palette required by the OEM.\nRequirement01024558\nThe painted sensors provided by the supplier shall include the following palette\nCustom OEM Colors Requirements\nSSA Requirement00249968\nUpon completion of the RFQ process, the supplier is expected to provide unpainted sensor samples for JLR/SVO internal evaluation.\n2D simulation (sensor positioning)\nUSS coverage layout\nThe ultrasonic sensor integration shall provide a coverage around the vehicle that is optimized for autonomous parking features.\nNOTE: Optimal coverage is confirmed when the coverage plot is accepted by NVIDIA and the supplier.\nUSS coverage assessment\nThe supplier shall provide assessment on the simulation of the ultrasonic sensor coverage that results from the sensor poses, and provide a written statement of acceptance.\nSensor Positioning Guidelines\nFront USS Positioning\nThe front USS Y position and alpha angle shall be packaged according to constraints defined.\nRear USS Positioning\nThe rear USS Y position and alpha angle shall be packaged according to constraints defined.\nRequirement01017202\nThe ultrasonic sensor integration shall be done according to the Supplier Integration Guidelines.\nNOTE: Any deviation from the supplier integration guidelines for USS positioning shall get the acceptance from the USS supplier.\nUSS positioning deviations from mounting guidelines",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_6a54145abffc4449be8a06089d1c3e2e",
+          "node_6515fca3d6e64e5c9fb09dccbee9033c",
+          "node_fa967d065a414963925662b27473798e",
+          "node_504ee9aa9c5b4325a369b1f0275fda46",
+          "node_fe3b00c0fdf4409b9a0fcc8efcfefde6",
+          "node_3505105bc80d446a82c7f6a837c937cd"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_7a1fa4c919ebf15a984e61aa",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_7f7768fcb02c438ab63b4942592b7be9",
+        "node_e39d141bff744bd6b037c189f8f00426",
+        "node_b9464b9bf943470e8b7dd435341edc17",
+        "node_610e015fe1cc433c811549c3e92e6d74",
+        "node_d7658559ed5f4db687a11d7e0b47959b",
+        "node_faaffce440da4c438cca9265a0abacaf",
+        "node_47101d862db04ba28f70c197b0a21477",
+        "node_03dd28c2ec824d4881b650869693f4ee",
+        "node_7dc2b8a1d8a8474aae1213a6f904fe01",
+        "node_fe0a2712640b4d1182e0d7ee0ecace37",
+        "node_2485eafd447949fa9947ccb771b56063",
+        "node_bba4e988555c4b708dd2e7ed4f79b806",
+        "node_e3697ecca2a847ddac18c7a06d6a0dc6"
+      ],
+      "content_text": "Requirement01017202\nThe ultrasonic sensor integration shall be done according to the Supplier Integration Guidelines.\nNOTE: Any deviation from the supplier integration guidelines for USS positioning shall get the acceptance from the USS supplier.\nUSS positioning deviations from mounting guidelines\nIn case of any deviation of the final sensor positioning with respect to the supplier mounting guidelines, the supplier shall review the deviation and provide an evaluation report of the risks derived.\nNOTE: final sensor position includes the tolerances.\nComment00357758\nThe integration guidelines provided by supplier will include a graph reflecting the allowed pitch angles for the sensor as a function of the sensor height, this is a useful tool that functional package will use to guide the discussions with the design team, however the design constraints and manufacturing tolerances will likely force the sensor to deviate under some situations from the recomended positioning. The final assessment from the supplier as technical expert is required to evaluate the possible risks of those deviations and raise the required corrective actions.\nHeight and beta angle based positioning\nThe sensor's nominal position across the whole suspension height range shall be within the green zone of the height vs beta angle graph shared by the supplier as part of the integration guidelines.\nRequirement01017223\nThe sensor's final position across the whole suspension height range considering the manufacturing tolerances shall be within the green and yellow zones of the height vs beta angle graph shared by the supplier as part of the integration guidelines.\nRequirement01017224",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Requirement01017202\nThe ultrasonic sensor integration shall be done according to the Supplier Integration Guidelines.\nNOTE: Any deviation from the supplier integration guidelines for USS positioning shall get the acceptance from the USS supplier.\nUSS positioning deviations from mounting guidelines\nIn case of any deviation of the final sensor positioning with respect to the supplier mounting guidelines, the supplier shall review the deviation and provide an evaluation report of the risks derived.\nNOTE: final sensor position includes the tolerances.\nComment00357758\nThe integration guidelines provided by supplier will include a graph reflecting the allowed pitch angles for the sensor as a function of the sensor height, this is a useful tool that functional package will use to guide the discussions with the design team, however the design constraints and manufacturing tolerances will likely force the sensor to deviate under some situations from the recomended positioning. The final assessment from the supplier as technical expert is required to evaluate the possible risks of those deviations and raise the required corrective actions.\nHeight and beta angle based positioning\nThe sensor's nominal position across the whole suspension height range shall be within the green zone of the height vs beta angle graph shared by the supplier as part of the integration guidelines.\nRequirement01017223\nThe sensor's final position across the whole suspension height range considering the manufacturing tolerances shall be within the green and yellow zones of the height vs beta angle graph shared by the supplier as part of the integration guidelines.\nRequirement01017224",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_7f7768fcb02c438ab63b4942592b7be9",
+          "node_e39d141bff744bd6b037c189f8f00426",
+          "node_b9464b9bf943470e8b7dd435341edc17",
+          "node_610e015fe1cc433c811549c3e92e6d74"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_223744201ebf7ebf8e0ca123",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "document_d5a5aa1cbc584c0ebcf80251d73ab5af",
+      "source_node_ids": [
+        "node_2485eafd447949fa9947ccb771b56063",
+        "node_bba4e988555c4b708dd2e7ed4f79b806",
+        "node_e3697ecca2a847ddac18c7a06d6a0dc6",
+        "node_46736051a3ff4105bbb0ae2476faffef",
+        "node_cea41fcca5fd46a38182532f0943d09f",
+        "node_c65f9ebd88684487b90bc021017d427e",
+        "node_b75a74556eb646c7af58ee8b0460bac5",
+        "node_27336ae5782e46bc9914de4eb79f5c6f",
+        "node_81303ff74db94a8595a4424d9e72445a",
+        "node_99973da2f3ba4b24a74dcb1742039b2f",
+        "node_79cd0d3bfe7243e58ef5f5be1b59f81a",
+        "node_4538b102a8c34b7eaa6b8faba9dfb9c8",
+        "node_8345f01f3ec14308a2db6a8886205586",
+        "node_f8c305e777a94b669d1f07cee28aa02d",
+        "node_d4544322d582486dad9177ce30c22b4a",
+        "node_ffd7b49264c24f4eb3981a543fa37a0e",
+        "node_2bd9aa3bc2844ae5811db4c2d20a302c",
+        "node_8dbc8fb9037742cbb158b767ecb7cd8d"
+      ],
+      "content_text": "Requirement01017223\nThe sensor's final position across the whole suspension height range considering the manufacturing tolerances shall be within the green and yellow zones of the height vs beta angle graph shared by the supplier as part of the integration guidelines.\nRequirement01017224\nAny deviation that causes the sensor's final position to be in a red zone of the height vs beta angle graph shall be agreed with and accepted by the supplier.\nComment00358578\npositive Beta angles will provide better detection performance in presence of ground clutter than negative beta angles,\nPositive beta angles will be preferred over negative beta angles,\nin terms of the graph, it is preferred to package the sensors in the left side of the green zone.\nHeight and beta angle assessment\nThe supplier shall review the relation between the final height and final beta angle and evaluate the risk derived, providing a written statement of acceptance.\nNOTE: final height and final beta angle include the tolerances\nUSS positioning around license plate\nThe minimum distance of the USS(considering centre of USS membrane) particularly at position S9/S10 , S3/S4 shall be 40 mm and 60 mm from the vertical and horizontal sides of license plate respectively as shown in the figure below.\nRequirement01053946\nFor any sensor located at 40 mm and 60 mm from the vertical and horizontal sides of license plate respectively (measured from the centre of USS membrane), the distance in the X direction from the sensor membrane to the furthest point of the license plate shall be ≤ 20 mm.\nAppendix\nRelated Documents\nFollowing documents are listed for reference only:",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Requirement01017223\nThe sensor's final position across the whole suspension height range considering the manufacturing tolerances shall be within the green and yellow zones of the height vs beta angle graph shared by the supplier as part of the integration guidelines.\nRequirement01017224\nAny deviation that causes the sensor's final position to be in a red zone of the height vs beta angle graph shall be agreed with and accepted by the supplier.\nComment00358578\npositive Beta angles will provide better detection performance in presence of ground clutter than negative beta angles,\nPositive beta angles will be preferred over negative beta angles,\nin terms of the graph, it is preferred to package the sensors in the left side of the green zone.\nHeight and beta angle assessment\nThe supplier shall review the relation between the final height and final beta angle and evaluate the risk derived, providing a written statement of acceptance.\nNOTE: final height and final beta angle include the tolerances\nUSS positioning around license plate\nThe minimum distance of the USS(considering centre of USS membrane) particularly at position S9/S10 , S3/S4 shall be 40 mm and 60 mm from the vertical and horizontal sides of license plate respectively as shown in the figure below.\nRequirement01053946\nFor any sensor located at 40 mm and 60 mm from the vertical and horizontal sides of license plate respectively (measured from the centre of USS membrane), the distance in the X direction from the sensor membrane to the furthest point of the license plate shall be ≤ 20 mm.\nAppendix\nRelated Documents\nFollowing documents are listed for reference only:",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [
+          "node_2485eafd447949fa9947ccb771b56063",
+          "node_bba4e988555c4b708dd2e7ed4f79b806",
+          "node_e3697ecca2a847ddac18c7a06d6a0dc6"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_d1c56ac1d1864629c66896c5",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "node_3167c590d0e64fab87c85c78ea1ba4d2",
+      "source_node_ids": [
+        "node_f203fa492bff4a52a6846a2b481ef1c3",
+        "node_ef9dbe989fde4dbda9dad988d482f178",
+        "node_4a0d8026d0904e02b4ee46a3d0f779cc",
+        "node_2b935dfc138b4cb9b9a6865e9c13fc91",
+        "node_68058dcf201b451092f25fb54591e383"
+      ],
+      "content_text": "PP (Daplen EE109AE)\nPBT+PC (Covestro Makroblend KU2-7912/4\nPP (sabic PPcompund 7251U)\nPP (sabic PPcompund 7536)\nPP (Hifax TKC 461X BLACK)",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: PP (Daplen EE109AE)\nPBT+PC (Covestro Makroblend KU2-7912/4\nPP (sabic PPcompund 7251U)\nPP (sabic PPcompund 7536)\nPP (Hifax TKC 461X BLACK)",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_efb281bd435c7215d8b72bf6",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "node_f840e91910f64a89b818d2a75a3a95c1",
+      "source_node_ids": [
+        "node_e7c7a0b806f0454898a23b03855d36ad",
+        "node_c627b3b8f6f0431089a77e0e971a62aa",
+        "node_027f2b409f934c43ac6c7fd9f9f5aa4e",
+        "node_506f7bb8102e4dc48950b430b647e5d2",
+        "node_becfb647762344769ba038186114518d"
+      ],
+      "content_text": "Metals\nPC, PC-blends\nUnmodified PC+PBT\nABS, ABS blends\nASA",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Metals\nPC, PC-blends\nUnmodified PC+PBT\nABS, ABS blends\nASA",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_e2bf946156a45a8bc1a2c186",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "node_cb728b6885144dab927a30668562f2b0",
+      "source_node_ids": [
+        "node_5ba0ac97c1234b8791ca6ea20cdce1c9",
+        "node_3a15a9ba57d8453ebecc28b28cddfb00"
+      ],
+      "content_text": "Young’s modulus 1.3 GPa – 2 GPa\nGlass fibre content < 5%",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Young’s modulus 1.3 GPa – 2 GPa\nGlass fibre content < 5%",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_5abc59c5b8e0ead67df3fe8d",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "node_d6cabc61477444ceb403b9d1651e3355",
+      "source_node_ids": [
+        "node_3e300763b02047c1924bd3b13e19996b",
+        "node_579cafd35b3d488c94bf9c977fbd18c9"
+      ],
+      "content_text": "One is for those colours that are not part of the standard colour palette of the vehicle programs, or that even being part of the standard palette the expected build volumes are not enough to request the colour to be painted by the supplier, in those cases the sensors will be painted directly by JLR or by a third party.\nThe other is the use in servicing as replacement sensors, these will have to be painted at the workshop to match the colour of the bumper area where it is installed.",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: One is for those colours that are not part of the standard colour palette of the vehicle programs, or that even being part of the standard palette the expected build volumes are not enough to request the colour to be painted by the supplier, in those cases the sensors will be painted directly by JLR or by a third party.\nThe other is the use in servicing as replacement sensors, these will have to be painted at the workshop to match the colour of the bumper area where it is installed.",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_c6c5206314aad6ecf6872f14",
+      "chunk_type": "narrative",
+      "document_id": "doc-b92fc5bba4f757b1b555b664",
+      "agent_id": "adas-agent",
+      "source_type": "docx",
+      "source_version": "v2",
+      "parent_node_id": "node_8d6630e8b3644c82aeb2e98fc688c428",
+      "source_node_ids": [
+        "node_35c01c7eede94d39a768a86cb8d827e6"
+      ],
+      "content_text": "Classification: Internal",
+      "embedding_text": "Document: Design rule for PDC sensor\nContext: Design rule for PDC sensor > Design rule for PDC sensor\nContent: Classification: Internal",
+      "metadata": {
+        "breadcrumbs": [
+          "Design rule for PDC sensor",
+          "Design rule for PDC sensor"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    }
+  ],
+  "rejected": [
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_ae7b245496d64637ba17982727617f16",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_83253b1726c54301a1365835ce83c463",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_5fb3215a493c49c7988add985c3c2b3b",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_4ca6efe794c947d8951a8bf10a327d8a",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_4fda67c48efe416bb1d9a2a6dacf6a30",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_af15ed4d5618496e90f2538cf6df7e5c",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_b6b243fc4d62430dbb4ee262c65b8557",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_9f6edf9cb06a4619ab676aee64a13e9c",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_6f01066cb7004e82835412e32b79c22c",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_601fc6401ef9420c88cbb21a28e741c1",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_6b698031183c40058b941feac35ed521",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_96956fb1e9de43c890bc19ee076c3488",
+      "severity": "error"
+    },
+    {
+      "reason": "Table is marked incomplete or conflicting and requires review.",
+      "node_id": "table_cad883060e22434b921ae0d156185c4b",
+      "severity": "error"
+    }
+  ]
+}

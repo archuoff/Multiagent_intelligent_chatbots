@@ -1,0 +1,3012 @@
+{
+  "policy_version": "canonical-chunks-v1",
+  "chunks": [
+    {
+      "chunk_id": "chk_3442538552391152bffaca0b",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_84404294aaa74a23bd27d3d75ba203b6",
+        "cell_8ed97f0df46840238a4fbbd8751f3082",
+        "cell_2be523bb697b43169157fca0a8e4c100",
+        "cell_46606390ab4a4672b3752218864df6be",
+        "cell_cb7d3f228f84495eb04f302f8bb9adc4"
+      ],
+      "content_text": "Property, Test Condition: Rheological Properties",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Rheological Properties",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 2,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_5b6f0e7dc53e54d8bb592b4a",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_8b10a350e7df40849857ccbc22f283b3",
+        "cell_6d7f87db9fcb4f8da2ff247360ad3961",
+        "cell_45fd6056c90443b4be446237c0dbd3cc",
+        "cell_a9c2d2217e62413aa28dd5672edb3314",
+        "cell_e52dc23d6a054387b8679146cc2ecbef"
+      ],
+      "content_text": "Property, Test Condition: Melt Volume Rate 220 °C/10 kg | Standard: ISO 1133 | Unit: cm³/10 min | Values: 5",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Melt Volume Rate 220 °C/10 kg | Standard: ISO 1133 | Unit: cm³/10 min | Values: 5",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 3,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_726b2b1e3f3425d9dee44db5",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_e24a0185f3bd40c98f9e5025a4046204",
+        "cell_f1e3dab60d9c4dbab2d850ac53a39bf5",
+        "cell_2e5995ddd35a455da132eecfe43e806c",
+        "cell_7355f407a1aa42e59609f9eff5bd729d",
+        "cell_463c7d550c244d37af8088b4e952f150"
+      ],
+      "content_text": "Property, Test Condition: Mechanical Properties",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Mechanical Properties",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 4,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_d7e838463f5f3b28a6fc9b8c",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_8e60a412ea1a44d4b6897c1c9b68e23e",
+        "cell_0886417b97e74d9faa3e71914a6b0203",
+        "cell_2233151542e541359db8c83379e80578",
+        "cell_5a51ba18edef4e49875a2583e3060169",
+        "cell_b95b6aab171b43f2b83a6f566e1ef272"
+      ],
+      "content_text": "Property, Test Condition: Tensile Modulus | Standard: ISO 527 | Unit: MPa | Values: 2500",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Tensile Modulus | Standard: ISO 527 | Unit: MPa | Values: 2500",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 5,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_869617d85c00d34902ce3950",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_100b94f8217e41b7889c0a2365b2303c",
+        "cell_d0bdaddd9e0940928855d143c5f5fc95",
+        "cell_8aa90f1384a94ca6a48085c6c7ead716",
+        "cell_97499680512b4e1d9d8ba372dc17a37b",
+        "cell_96bd71f9e1694737ade2dcd15f1c1b7e"
+      ],
+      "content_text": "Property, Test Condition: Tensile Stress at Yield, 23 °C | Standard: ISO 527 | Unit: MPa | Values: 54",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Tensile Stress at Yield, 23 °C | Standard: ISO 527 | Unit: MPa | Values: 54",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 6,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_35c472238e8fe67897ac16d2",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_9423474ad9484273a89acd275c9018c0",
+        "cell_cb24bc5e73f24a56adb31e94923dbf5b",
+        "cell_622331158fb445fd9e960075ba498683",
+        "cell_6e86e73c06674bd0af7b14e14746d280",
+        "cell_9bcd024849b4475ab3ff8325cb64857d"
+      ],
+      "content_text": "Property, Test Condition: Tensile Strain at Yield, 23 °C | Standard: ISO 527 | Unit: % | Values: 3.4",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Tensile Strain at Yield, 23 °C | Standard: ISO 527 | Unit: % | Values: 3.4",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 7,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_fa25c779e50b5c2fc170f29a",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_7714d22ade3b49d180f515f0cf4cc6fa",
+        "cell_7d72b1677ec644f5b556c0b0381e7eac",
+        "cell_b99e94f3844640509ab6442804ffeb25",
+        "cell_4a18526cea694704bbda170900571eb3",
+        "cell_0705fdc62a3a4e23af8879f1dd0f462d"
+      ],
+      "content_text": "Property, Test Condition: Nominal Strain at Break, 23 °C | Standard: ISO 527 | Unit: % | Values: 8",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Nominal Strain at Break, 23 °C | Standard: ISO 527 | Unit: % | Values: 8",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 8,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_add83a7a6155f5a860909679",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_93bc272e6ae8479cabf1de634e2a2803",
+        "cell_1075a0956a27434cb71134dd1d0fd40e",
+        "cell_ee43a996094044438e7917b30527d77f",
+        "cell_2628994de735430eb31165f0b9513fd4",
+        "cell_16cf944a85564244a20b737442181a17"
+      ],
+      "content_text": "Property, Test Condition: Tensile Creep Modulus (1000h) | Standard: ISO 899 | Unit: MPa | Values: 1250",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Tensile Creep Modulus (1000h) | Standard: ISO 899 | Unit: MPa | Values: 1250",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 9,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_71b969da9ca52e0287650af3",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_a0b025a821f84e9c8cfd85bfe45331fc",
+        "cell_0067c60df4b04a7295f13cafe54bcd5d",
+        "cell_68240ca2aad746f782debc446f9f06e4",
+        "cell_2eda99b6ff494ea0960868586ff3e206",
+        "cell_a5bfb7805cca40c69a13a5948f4e81c9"
+      ],
+      "content_text": "Property, Test Condition: Flexural Strength, 23 °C | Standard: ISO 178 | Unit: MPa | Values: 80",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Flexural Strength, 23 °C | Standard: ISO 178 | Unit: MPa | Values: 80",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 10,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_372f248ac2f364eadb97f9a8",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_b0da543b17ec46559be90ada9aea7cb1",
+        "cell_e5e4cdc7cda84dd48fb2a7d74625239c",
+        "cell_66bd311f0b78463d83c7d483facd6e8b",
+        "cell_828e088b8051457a8520b643f438b24a",
+        "cell_7b998a97c527419e910d9f2e0478083a"
+      ],
+      "content_text": "Property, Test Condition: Charpy Notched Impact Strength, 23° C | Standard: ISO 179/1eA | Unit: kJ/m² | Values: 15",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Charpy Notched Impact Strength, 23° C | Standard: ISO 179/1eA | Unit: kJ/m² | Values: 15",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 11,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_6cabd5d264120443a9cf7a25",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_29bff255518746b78a22911636c0ace2",
+        "cell_ca5ea1d6fd0b41878ad491ac253860a0",
+        "cell_8f11246864f646f69008aa27c9589ed8",
+        "cell_3eb4008c8ee6426e99056b92b8c3a176",
+        "cell_19cff64814dc40c2b1602b2600a5b0d1"
+      ],
+      "content_text": "Property, Test Condition: Charpy Notched Impact Strength, -30 °C | Standard: ISO 179/1eA | Unit: kJ/m² | Values: 4",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Charpy Notched Impact Strength, -30 °C | Standard: ISO 179/1eA | Unit: kJ/m² | Values: 4",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 12,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_bc878a06a3dca3ac35079835",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_abebf2de3bd04af5abb48bde88365dec",
+        "cell_c804472be4f9426190acc10a5a8b5166",
+        "cell_9b5a669a2bbc4af9a315b4b01f35b7ed",
+        "cell_3d4ea987ffdc490994478f5b20143b13",
+        "cell_0844670ac6fd4d59be6a60956b6e70d6"
+      ],
+      "content_text": "Property, Test Condition: Hardness, Ball Indentation | Standard: ISO 2039-1 | Unit: MPa | Values: 85",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Hardness, Ball Indentation | Standard: ISO 2039-1 | Unit: MPa | Values: 85",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 13,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_5c6a70d894e535a1563520a8",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_cde4b5f660fd40ac8ff5f4274faf7bd4",
+        "cell_b264590c32ca46569ae8ab45df7bb207",
+        "cell_578cfa3a60e448ee9f3ec55e8e9b6302",
+        "cell_49abf3710e17424f906d495e01e7cb8f",
+        "cell_5f295558608c46ed804822efcec35459"
+      ],
+      "content_text": "Property, Test Condition: Thermal Properties",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Thermal Properties",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 14,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_83218f2cc1cae76dc760c9d3",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_95473bdb8cbb4f878c15e949ce86eeb6",
+        "cell_cf5d5b44ae594a52ba3a30f4c70915d7",
+        "cell_8d78e67c60c9469ab91cd81cc59f74d6",
+        "cell_6c322abb719e4296930391ac72b56485",
+        "cell_921c2ae0fb7a4b11824003c319332115"
+      ],
+      "content_text": "Property, Test Condition: Vicat Softening Temperature VST/B/50 (50N, 50 °C/h) | Standard: ISO 306 | Unit: °C | Values: 104",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Vicat Softening Temperature VST/B/50 (50N, 50 °C/h) | Standard: ISO 306 | Unit: °C | Values: 104",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 15,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_0dc3678c04d527e84c8b5510",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_d5250e2e24d841b1b49777ecffd45c2a",
+        "cell_b82d94ec25f84050bbc337f3384578c7",
+        "cell_79d32a37571a4faea9c05b6d0fb1a09c",
+        "cell_7c1fa0efd0c643c7a3443a7b778dc302",
+        "cell_8c3c79e79d81455fa60e40b2ebe9bf91"
+      ],
+      "content_text": "Property, Test Condition: Vicat Softening Temperature, VST/A/50 (10N, 50 °C/h) | Standard: ISO 306 | Unit: °C | Values: 113",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Vicat Softening Temperature, VST/A/50 (10N, 50 °C/h) | Standard: ISO 306 | Unit: °C | Values: 113",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 16,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_61c51bf2907d4ac2104a1b5f",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_1268b92e6dbe4a0e84688b384b2e9eda",
+        "cell_93c60b7257044c4cb7267b57c378cfb9",
+        "cell_ca3df0937e7449f0a636f13ed14813b0",
+        "cell_b273f093bfad4ce6a331adc26de3fa7a",
+        "cell_35aa3deff5e644ca9be4b7a6bf21ed20"
+      ],
+      "content_text": "Property, Test Condition: Heat Deflection Temperature A; (annealed 4 h/80 °C; 1.8 MPa) | Standard: ISO 75 | Unit: °C | Values: 103",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Heat Deflection Temperature A; (annealed 4 h/80 °C; 1.8 MPa) | Standard: ISO 75 | Unit: °C | Values: 103",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 17,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_cfeff971a97577cc632b9152",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_5049a4f6f98b403596f0ec1879bf7304",
+        "cell_793ad31f10ee4c2faeaaf34c5257593d",
+        "cell_804d0cbc625e445eaae97bb8dc793e77",
+        "cell_21fd2bb627dd4f68a69f00c04b703529",
+        "cell_f177ac7de5af4e64863eb46b8122d68a"
+      ],
+      "content_text": "Property, Test Condition: Heat Deflection Temperature B; (annealed 4 h/80 °C; 0.45 MPa) | Standard: ISO 75 | Unit: °C | Values: 106",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Heat Deflection Temperature B; (annealed 4 h/80 °C; 0.45 MPa) | Standard: ISO 75 | Unit: °C | Values: 106",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 18,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_c6f03d2adc3a98e925253f43",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_2715ef12e11a4feeac435b947eb681bf",
+      "source_node_ids": [
+        "row_8b5d4d52620846a1afc4788a483d5572",
+        "cell_b78fa037f7194738b153c7b0b9b2acb2",
+        "cell_07e20a4fb1cf4d24a5da0399105eb68a",
+        "cell_9135aaf64474486ab76915eacc5ad32a",
+        "cell_74bf2bde727d4536a9849ba06e69f023"
+      ],
+      "content_text": "Property, Test Condition: Coefficient of Linear Thermal Expansion | Standard: ISO 11359 | Unit: 10-6/°C | Values: 80 - 110",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1 > Table 1 > Table 1\nContent: Property, Test Condition: Coefficient of Linear Thermal Expansion | Standard: ISO 11359 | Unit: 10-6/°C | Values: 80 - 110",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 1,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 19,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_9b64774962ec1c49f95f6a3e",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_be8dd6beed3443d98b55eb9826d53d78",
+        "cell_6808f00a16544e8b81802e8356ab96c4",
+        "cell_9102e65b71ae46ba82228a1db1fd052a",
+        "cell_4ec08444aad84988bfb23e61791f08c2",
+        "cell_98ffe8cbf8a5462db4033c5fee229711"
+      ],
+      "content_text": "Property, Test Condition: Thermal Conductivity | Standard: DIN 52612-1 | Unit: W/(m K) | Values: 0.17",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Thermal Conductivity | Standard: DIN 52612-1 | Unit: W/(m K) | Values: 0.17",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 2,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_642cb46142e52ae61f1bf999",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_8f7156214f21493e85c24dfff880147d",
+        "cell_b9b5f475b1f146b494fbfd51bdd22093",
+        "cell_e36df3dedd4a4242a17af825cb944cc6",
+        "cell_d64c127ee598469eb4763e8b46c1453b",
+        "cell_ebd15c5b1b6e45fc8195b5a07ad37a31"
+      ],
+      "content_text": "Property, Test Condition: Electrical Properties",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Electrical Properties",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 3,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_913c6120cdf9ca8a1dfa3d1f",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_a2b7d63a0b044c1d96ba416350ff10f3",
+        "cell_d7c5dd18fcb449e88c55990efc819abc",
+        "cell_a24620a429284adfb2efe344204ce103",
+        "cell_8005e9a5eb174c5c90098a79e49e63fb",
+        "cell_ee58f6922c1e4b8b83ffe35110655524"
+      ],
+      "content_text": "Property, Test Condition: Relative Permittivity (100 Hz) | Standard: IEC 60250 | Unit: - | Values: 3.9",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Relative Permittivity (100 Hz) | Standard: IEC 60250 | Unit: - | Values: 3.9",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 4,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_5b9334c2d7d97d6ad6ee09ed",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_c24bada510414495b60aeb70acc6474a",
+        "cell_e0fb44f8989043a98668ede01b61b5ac",
+        "cell_7d1682081f86414c9881c1c3fdb19f5d",
+        "cell_0932d4bf8fa948d6813d37735f56feb1",
+        "cell_64fd36db612f4ecca4ffc1a05052312e"
+      ],
+      "content_text": "Property, Test Condition: Relative Permittivity (1 MHz) | Standard: IEC 60250 | Unit: - | Values: 3.5",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Relative Permittivity (1 MHz) | Standard: IEC 60250 | Unit: - | Values: 3.5",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 5,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_4d4a854eb7bf550aa41cb812",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_f462f51e7add4140acd3bcad2d59008b",
+        "cell_65a6ffc3ab7d415eba3c7b499408bada",
+        "cell_31d9e0fe68d04d05b88cd794e8f65615",
+        "cell_072ca682630840a29a75c656b7b47273",
+        "cell_d09cdb8b23504ac0bf90f0e98f04e916"
+      ],
+      "content_text": "Property, Test Condition: Dissipation Factor (100 Hz) | Standard: IEC 60250 | Unit: 10--44 | Values: 90",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Dissipation Factor (100 Hz) | Standard: IEC 60250 | Unit: 10--44 | Values: 90",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 6,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_d826889d48ee623b06c0a246",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_3778b309b48e4f928abd6d32aa537825",
+        "cell_17828ba7a4a34e9397856df0ee9ddd6a",
+        "cell_a223222a6e0a4a0d97dcf1883211278f",
+        "cell_710c9affa66e4e608b21bffcfb2a8163",
+        "cell_4e6e4c7d95294bd0adb9cbd2370fb0dd"
+      ],
+      "content_text": "Property, Test Condition: Dissipation Factor (1 MHz) | Standard: IEC 60250 | Unit: 10--44 | Values: 330",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Dissipation Factor (1 MHz) | Standard: IEC 60250 | Unit: 10--44 | Values: 330",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 7,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_3197831561f2ac8a71b6248a",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_34161a79451f44f291e206ffdc75ebdf",
+        "cell_85f38a51bc0247b89d69f84c9830e134",
+        "cell_9b6a1a96145d4141927519509235ed66",
+        "cell_c937589c4c274254a7dc5958a23bf429",
+        "cell_065b1ff1c0b848fdacd2cbfc0fcca9e6"
+      ],
+      "content_text": "Property, Test Condition: Volume Resistivity | Standard: IEC 60093 | Unit: Ohm*m | Values: 101122",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Volume Resistivity | Standard: IEC 60093 | Unit: Ohm*m | Values: 101122",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 8,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_14d2d17b24dafb71a6244073",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_9f3e3c21d04c467c8fa0fb361eb933d0",
+        "cell_1d14bf6a547e49d3a9f1814cd2ec9591",
+        "cell_72a8c9dd718f40598a62caa09090d4a9",
+        "cell_c1288a726147497d9b604a9d642a233f",
+        "cell_b08ebba47a8544b293d57f751bb8cdbe"
+      ],
+      "content_text": "Property, Test Condition: Surface Resistivity | Standard: IEC 60093 | Unit: Ohm | Values: 101133",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Surface Resistivity | Standard: IEC 60093 | Unit: Ohm | Values: 101133",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 9,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_0e1994c3cbc252a3874ab4ce",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_be2c6edc128243cd9638a868b0a20ba5",
+        "cell_7f909658b4774cb080dfe95e32d081cc",
+        "cell_bc2df2699659413494030cc74d158f44",
+        "cell_5769231c5716486ab2817411ba4fafd1",
+        "cell_02add273b87442c2b32f8f6d68a5b57c"
+      ],
+      "content_text": "Property, Test Condition: Other Properties",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Other Properties",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 10,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_4af8660b05db586d56c08184",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_6cbc3689a8c045a9b2fbd6b11c69fda7",
+        "cell_0652c98549e049098cdb5b85c79416ac",
+        "cell_b3f80b1663bf40cc9cbe97755917d370",
+        "cell_7d4340e9edc84553ac0986ca45f5e578",
+        "cell_32346f64cb8243198b8f877a2479124e"
+      ],
+      "content_text": "Property, Test Condition: Density | Standard: ISO 1183 | Unit: kg/m³ | Values: 1070",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Density | Standard: ISO 1183 | Unit: kg/m³ | Values: 1070",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 11,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_919d1a7c39e6dfdc7f2ca704",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_5a85c31ecae044738aea4a30361d5d66",
+        "cell_896150e4f06542cc93af8eae54431429",
+        "cell_d242d4d04aeb428a8b21253fdd428dc5",
+        "cell_4fa42a9fa1af4860b3e888aeca464dfb",
+        "cell_a8f75d58b0054fb6b89b9b3c13f0e874"
+      ],
+      "content_text": "Property, Test Condition: Water Absorption, Saturated at 23 °C | Standard: ISO 62 | Unit: % | Values: 1.65",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Water Absorption, Saturated at 23 °C | Standard: ISO 62 | Unit: % | Values: 1.65",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 12,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_ee3ac4f476d70928124060cd",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_1d62b54245f04834b14ba1a41bafeb6a",
+        "cell_46e68d439d404be88e83ec8b767bfef9",
+        "cell_4ecc3861da5b4d64b45c37b21dff4b6f",
+        "cell_95d12344159242ba91cca4b0b53dd8d5",
+        "cell_e03d1b11dcd44124b0f7da7c58f1cda7"
+      ],
+      "content_text": "Property, Test Condition: Moisture Absorption, Equilibrium 23 °C/50% RH | Standard: ISO 62 | Unit: % | Values: 0.35",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Moisture Absorption, Equilibrium 23 °C/50% RH | Standard: ISO 62 | Unit: % | Values: 0.35",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 13,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_01a7c8963e26b25c1ebd7fed",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_e016c5f8c5504d77b20fc84e00632bca",
+        "cell_b86af3964b11484cafa6f36c99eb8bd5",
+        "cell_7711a42cd01a4e1895d0a43a925608b5",
+        "cell_ae8ad9084f054b0089918dd069ad1331",
+        "cell_844625305add4aceb7c47fe0f38db642"
+      ],
+      "content_text": "Property, Test Condition: UL94 rating at 1.5 mm thickness | Standard: IEC 60695-11-10 | Unit: - | Values: HB",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: UL94 rating at 1.5 mm thickness | Standard: IEC 60695-11-10 | Unit: - | Values: HB",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 14,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_e485ef7fb45a538b87016986",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_b8496524798945259830e186539bc24f",
+        "cell_8951882f54fc4302a140939c61319f19",
+        "cell_be04021c9aff43faa1f9caade48802de",
+        "cell_0315e0d7b33840d8bf4e152e055c02bb",
+        "cell_1410d27549d242ef8502949a3464d77f"
+      ],
+      "content_text": "Property, Test Condition: Processing",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Processing",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 15,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_05df6682877ec6b020c5878d",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_bf84810ecee94b8184419fad00cc5ddc",
+        "cell_200d2aca418e498ba9cf8b23aadee08b",
+        "cell_7fdf94e9f6124b33a223162c41a4acf6",
+        "cell_b672aad5b31f4b9fbe9f3f615dbef3bd",
+        "cell_6b13d8b4fade419dbace72f3849ec110"
+      ],
+      "content_text": "Property, Test Condition: Melt Temperature Range | Standard: ISO 294 | Unit: °C | Values: 240 - 280",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Melt Temperature Range | Standard: ISO 294 | Unit: °C | Values: 240 - 280",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 16,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_ee791034ea2a9876abf50610",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_2dfa2db4e1bd4131af5739f585e5f643",
+        "cell_ae9d3c02d15b415eae1a374b5feba6cb",
+        "cell_a87169c9b8fe427b89d323fb2f042ea1",
+        "cell_b58225a91c4d46deabd3f341e97b35ad",
+        "cell_cf1a04cec68e42be838c871eeeadea6e"
+      ],
+      "content_text": "Property, Test Condition: Mold Temperature Range | Standard: ISO 294 | Unit: °C | Values: 40 - 80",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Mold Temperature Range | Standard: ISO 294 | Unit: °C | Values: 40 - 80",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 17,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_0f39fb6e00816b066f7bc357",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_a729043fbb764b71925382252ea687f4",
+        "cell_be8407186af9484a911942be1ce08692",
+        "cell_fb410fc70f174895a9fa756365fb5dcd",
+        "cell_2e0fa6e61e4b4284923f37a76888fb64",
+        "cell_9bcd83e4e206475a9f3b2278c258fd3c"
+      ],
+      "content_text": "Property, Test Condition: Drying Temperature | Standard: - | Unit: °C | Values: 80",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Drying Temperature | Standard: - | Unit: °C | Values: 80",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 18,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_98b04889d0c4e4be2eeb583b",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_ac3a79a1a2084ac8bdf4f1463161cba3",
+        "cell_078308fee897496ab1033a275861c193",
+        "cell_62f0ec87fe29484489e3fec9f3f2f3e5",
+        "cell_5b3e890abc614efcbfb67820b011a1a8",
+        "cell_38a5c2d006564dd2b24647c5305c381d"
+      ],
+      "content_text": "Property, Test Condition: Drying Time | Standard: - | Unit: h | Values: 2 - 4",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Drying Time | Standard: - | Unit: h | Values: 2 - 4",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 19,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_5b888f2543af896cc7c17d53",
+      "chunk_type": "table_row",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "table_14738340df284886b2ce391b42bfcad8",
+      "source_node_ids": [
+        "row_7e4568e68fd94fc0bd916883a59cd9c5",
+        "cell_08c1b2e51fc34c59864bf5227de87fe1",
+        "cell_61be8b7cc95649c5afdac2300a72d503",
+        "cell_2b08bac94552466f9ffcf09d6d1e7a62",
+        "cell_8ccea7664a78481fa1ed9228c96f3a9d"
+      ],
+      "content_text": "Property, Test Condition: Molding shrinkage, free, longitudinal | Standard: - | Unit: % | Values: 0.4 - 0.7",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2 > Table 1 > Table 1\nContent: Property, Test Condition: Molding shrinkage, free, longitudinal | Standard: - | Unit: % | Values: 0.4 - 0.7",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": 2,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Property, Test Condition | Standard | Unit | Values"
+        ],
+        "row_index": 20,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "property_test_condition",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "standard",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "unit",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "values",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_06b46e503fc047d490a4126f",
+      "chunk_type": "narrative",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "page_ad306f53fc68485a8c64b98ab0861bda",
+      "source_node_ids": [
+        "paragraph_0ebe09dd0e964530a01365d403b9459e",
+        "title_122fad371df64a6fa69342066cf56136",
+        "paragraph_40bf78f6e8e744eb8c4e0d48ec1e24a7",
+        "title_d47ed83303bf4df3965a880333c407f8",
+        "title_6a22c46649ae4b2e9bd75058132e15f3",
+        "paragraph_1a14b6883c59410591d010c650f5d2b6"
+      ],
+      "content_text": "Luran S 778T Acrylonitrile Styrene Acrylate (ASA)\nDESCRIPTION\nLuran® S 778T is an injection molding grade with enhanced heat resistance and best chemical resistance among the ASA grades.\nFEATURES\nAPPLICATIONS\nHigh softening temperature Radiator grills High chemical resistance Mirror housings Enhanced stiffness Household devices New SPF 30 UV stabilization available Property, Test Condition Standard Unit Values Rheological Properties Melt Volume Rate 220 °C/10 kg ISO 1133 cm³/10 min 5 Mechanical Properties Tensile Modulus ISO 527 MPa 2500 Tensile Stress at Yield, 23 °C ISO 527 MPa 54 Tensile Strain at Yield, 23 °C ISO 527 % 3.4 Nominal Strain at Break, 23 °C ISO 527 % 8 Tensile Creep Modulus (1000h) ISO 899 MPa 1250 Flexural Strength, 23 °C ISO 178 MPa 80 Charpy Notched Impact Strength, 23° C ISO 179/1eA kJ/m² 15 Charpy Notched Impact Strength, -30 °C ISO 179/1eA kJ/m² 4 Hardness, Ball Indentation ISO 2039-1 MPa 85 Thermal Properties Vicat Softening Temperature VST/B/50 (50N, 50 °C/h) ISO 306 °C 104 Vicat Softening Temperature, VST/A/50 (10N, 50 °C/h) ISO 306 °C 113 Heat Deflection Temperature A; (annealed 4 h/80 °C; 1.8 MPa) ISO 75 °C 103 Heat Deflection Temperature B; (annealed 4 h/80 °C; 0.45 MPa) ISO 75 °C 106 Coefficient of Linear Thermal Expansion ISO 11359 10 /°C 80 - 110 -6 Page 1 of 3 Contact us: Phone +1 866 890 6353 INSTY.americas@ineos.com www.ineos-styrolution.com Revision Date: 12/12/2018",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 1\nContent: Luran S 778T Acrylonitrile Styrene Acrylate (ASA)\nDESCRIPTION\nLuran® S 778T is an injection molding grade with enhanced heat resistance and best chemical resistance among the ASA grades.\nFEATURES\nAPPLICATIONS\nHigh softening temperature Radiator grills High chemical resistance Mirror housings Enhanced stiffness Household devices New SPF 30 UV stabilization available Property, Test Condition Standard Unit Values Rheological Properties Melt Volume Rate 220 °C/10 kg ISO 1133 cm³/10 min 5 Mechanical Properties Tensile Modulus ISO 527 MPa 2500 Tensile Stress at Yield, 23 °C ISO 527 MPa 54 Tensile Strain at Yield, 23 °C ISO 527 % 3.4 Nominal Strain at Break, 23 °C ISO 527 % 8 Tensile Creep Modulus (1000h) ISO 899 MPa 1250 Flexural Strength, 23 °C ISO 178 MPa 80 Charpy Notched Impact Strength, 23° C ISO 179/1eA kJ/m² 15 Charpy Notched Impact Strength, -30 °C ISO 179/1eA kJ/m² 4 Hardness, Ball Indentation ISO 2039-1 MPa 85 Thermal Properties Vicat Softening Temperature VST/B/50 (50N, 50 °C/h) ISO 306 °C 104 Vicat Softening Temperature, VST/A/50 (10N, 50 °C/h) ISO 306 °C 113 Heat Deflection Temperature A; (annealed 4 h/80 °C; 1.8 MPa) ISO 75 °C 103 Heat Deflection Temperature B; (annealed 4 h/80 °C; 0.45 MPa) ISO 75 °C 106 Coefficient of Linear Thermal Expansion ISO 11359 10 /°C 80 - 110 -6 Page 1 of 3 Contact us: Phone +1 866 890 6353 INSTY.americas@ineos.com www.ineos-styrolution.com Revision Date: 12/12/2018",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_ed4842bd897a0b3b1a7df0ce",
+      "chunk_type": "narrative",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "page_12c8f2d843d542a89e0d689b22348fde",
+      "source_node_ids": [
+        "paragraph_6bf5357794514a17a527f6778b5b743e",
+        "bullet_b75710c5d7e2471e9f234a1f627a93a9",
+        "paragraph_a05eecfb67324c05a945576415d3dff9",
+        "bullet_35b6d8b337854ccb9edcb910b2264040",
+        "paragraph_fd270f885f20445b878cecc6d0beeef4",
+        "title_a7efd9b69f8e48b08df76407786fe992"
+      ],
+      "content_text": "Luran S 778T Acrylonitrile Styrene Acrylate (ASA) Property, Test Condition Standard Unit Values Thermal Conductivity DIN 52612-1 W/(m K) 0.17 Electrical Properties Relative Permittivity (100 Hz) IEC 60250 - 3.9 Relative Permittivity (1 MHz) IEC 60250 - 3.5\n-4\nDissipation Factor (100 Hz) IEC 60250 10-4 90\n-4\nDissipation Factor (1 MHz) IEC 60250 10-4 330 12 Volume Resistivity IEC 60093 Ohm*m 1012 13 Surface Resistivity IEC 60093 Ohm 1013 Other Properties Density ISO 1183 kg/m³ 1070 Water Absorption, Saturated at 23 °C ISO 62 % 1.65 Moisture Absorption, Equilibrium 23 °C/50% RH ISO 62 % 0.35 UL94 rating at 1.5 mm thickness IEC 60695-11-10 - HB Processing Melt Temperature Range ISO 294 °C 240 - 280 Mold Temperature Range ISO 294 °C 40 - 80 Drying Temperature - °C 80 Drying Time - h 2 - 4 Molding shrinkage, free, longitudinal - % 0.4 - 0.7 Typical values for uncolored products\nSUPPLY FORM",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2\nContent: Luran S 778T Acrylonitrile Styrene Acrylate (ASA) Property, Test Condition Standard Unit Values Thermal Conductivity DIN 52612-1 W/(m K) 0.17 Electrical Properties Relative Permittivity (100 Hz) IEC 60250 - 3.9 Relative Permittivity (1 MHz) IEC 60250 - 3.5\n-4\nDissipation Factor (100 Hz) IEC 60250 10-4 90\n-4\nDissipation Factor (1 MHz) IEC 60250 10-4 330 12 Volume Resistivity IEC 60093 Ohm*m 1012 13 Surface Resistivity IEC 60093 Ohm 1013 Other Properties Density ISO 1183 kg/m³ 1070 Water Absorption, Saturated at 23 °C ISO 62 % 1.65 Moisture Absorption, Equilibrium 23 °C/50% RH ISO 62 % 0.35 UL94 rating at 1.5 mm thickness IEC 60695-11-10 - HB Processing Melt Temperature Range ISO 294 °C 240 - 280 Mold Temperature Range ISO 294 °C 40 - 80 Drying Temperature - °C 80 Drying Time - h 2 - 4 Molding shrinkage, free, longitudinal - % 0.4 - 0.7 Typical values for uncolored products\nSUPPLY FORM",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_1357ac273375970a9c6830bb",
+      "chunk_type": "narrative",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "page_12c8f2d843d542a89e0d689b22348fde",
+      "source_node_ids": [
+        "title_a7efd9b69f8e48b08df76407786fe992",
+        "paragraph_34b3e348571d449489ad8caa214055b6"
+      ],
+      "content_text": "SUPPLY FORM\nLuran® S is delivered in the form of cylindrical or spherical pellets. The bulk density of the pellets is from 0.55 to 0.65 g/cm³. Values may differ for special grades. Standard Packaging unit: 25 kg PE-bag on palette, shrunk or wrapped with PE film. In addition, delivery in larger units of up to 1000 kg (IBC = Intermediate Bulk Container) or silo trucks can be arranged. In dry areas with normal temperature control, Luran S pellets can be stored for relatively long periods of time without any change in mechanical properties. With unstable colors, however, storage over a number of years can give rise to some change in color. Under poor storage conditions, Luran S absorbs moisture, but this can be removed by drying. Page 2 of 3 Contact us: Phone +1 866 890 6353 INSTY.americas@ineos.com www.ineos-styrolution.com Revision Date: 12/12/2018",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 2\nContent: SUPPLY FORM\nLuran® S is delivered in the form of cylindrical or spherical pellets. The bulk density of the pellets is from 0.55 to 0.65 g/cm³. Values may differ for special grades. Standard Packaging unit: 25 kg PE-bag on palette, shrunk or wrapped with PE film. In addition, delivery in larger units of up to 1000 kg (IBC = Intermediate Bulk Container) or silo trucks can be arranged. In dry areas with normal temperature control, Luran S pellets can be stored for relatively long periods of time without any change in mechanical properties. With unstable colors, however, storage over a number of years can give rise to some change in color. Under poor storage conditions, Luran S absorbs moisture, but this can be removed by drying. Page 2 of 3 Contact us: Phone +1 866 890 6353 INSTY.americas@ineos.com www.ineos-styrolution.com Revision Date: 12/12/2018",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 2"
+        ],
+        "overlap_node_ids": [
+          "title_a7efd9b69f8e48b08df76407786fe992"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_d5d3dadd6dac5bec159b315d",
+      "chunk_type": "narrative",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "page_dcea6a19d90f4ac4a1e78fc684408797",
+      "source_node_ids": [
+        "paragraph_ff15d4b3fdf24b338ff797d0f1f0e750",
+        "title_044865fcf5f244e58ce1d19c70281b6c",
+        "paragraph_6f42736b32e242b8a58d46c0a6c80f8d",
+        "title_c11e353e198f411a8631ccf219f01910"
+      ],
+      "content_text": "Luran S 778T Acrylonitrile Styrene Acrylate (ASA)\nPRODUCT SAFETY\nNo adverse effects on the health of processing personnel have been observed where the products are correctly processed and the production areas are suitably ventilated. For styrene, alpha-methylstyrene, acrylonitrile, and butyl acrylate the maximum allowable workplace concentrations must be observed according to the pertaining national regulations. In Germany, the following limit values are valid TRGS 900 (Aug. 2004): styrene, MAK-value: 20 ml/m³; alpha-methylstyrene, MAK-value: 100 ml/m³; acrylonitrile, TRK-value: 3 ml/m³, and butyl acrylate, MAK-value: 2 ml/m³ (1.7.2004). According to EU directive 67/548/EEC, Annex I (2001), acrylonitrile is classified as carcinogenic, category 2 (´substances which should be regarded as if they are carcinogenic to man´). Experience has shown that when Luran® S is processed correctly with appropriate ventilation, the levels are far below the limits mentioned above. Inhalation of the vapors of degradation products which can arise on severe overheating of the materials or during purging out should be avoided. Further information can be found in the Luran S safety data sheets.\nDISCLAIMER",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 3\nContent: Luran S 778T Acrylonitrile Styrene Acrylate (ASA)\nPRODUCT SAFETY\nNo adverse effects on the health of processing personnel have been observed where the products are correctly processed and the production areas are suitably ventilated. For styrene, alpha-methylstyrene, acrylonitrile, and butyl acrylate the maximum allowable workplace concentrations must be observed according to the pertaining national regulations. In Germany, the following limit values are valid TRGS 900 (Aug. 2004): styrene, MAK-value: 20 ml/m³; alpha-methylstyrene, MAK-value: 100 ml/m³; acrylonitrile, TRK-value: 3 ml/m³, and butyl acrylate, MAK-value: 2 ml/m³ (1.7.2004). According to EU directive 67/548/EEC, Annex I (2001), acrylonitrile is classified as carcinogenic, category 2 (´substances which should be regarded as if they are carcinogenic to man´). Experience has shown that when Luran® S is processed correctly with appropriate ventilation, the levels are far below the limits mentioned above. Inhalation of the vapors of degradation products which can arise on severe overheating of the materials or during purging out should be avoided. Further information can be found in the Luran S safety data sheets.\nDISCLAIMER",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 3"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_d16e1e490bf99ff544ab155c",
+      "chunk_type": "narrative",
+      "document_id": "doc-64c1e33716dd8f6df32ec972",
+      "agent_id": "material-net-agent",
+      "source_type": "pdf",
+      "source_version": "v1",
+      "parent_node_id": "page_dcea6a19d90f4ac4a1e78fc684408797",
+      "source_node_ids": [
+        "title_c11e353e198f411a8631ccf219f01910",
+        "paragraph_c5b501b119234b989f1f278e6f4d6378"
+      ],
+      "content_text": "DISCLAIMER\nThe aforementioned data shall constitute the agreed contractual quality of the product sold by INEOS Styrolution at the time of passing of risk. INEOS Styrolution does not make any further warranty, representation or guarantee of any kind, express or implied, regarding the suitability of the product for any particular purpose or application and INEOS Styrolution disclaims all liability in connection therewith. The customer himself is required to verify whether or not the product is suitable for the further processing or application intended and whether or not the product complies with the relevant statutory requirements. Unless explicitly and individually otherwise agreed in writing, INEOS Styrolution's sole and exclusive liability with respect to its products is set forth in INEOS Styrolution's General Terms and Conditions for Sale. Page 3 of 3 Contact us: Phone +1 866 890 6353 INSTY.americas@ineos.com www.ineos-styrolution.com Revision Date: 12/12/2018",
+      "embedding_text": "Document: Styrolution Luran S 778T ASA specification sheet\nContext: Styrolution Luran S 778T ASA specification sheet > Styrolution Luran S 778T ASA specification sheet > Page 3\nContent: DISCLAIMER\nThe aforementioned data shall constitute the agreed contractual quality of the product sold by INEOS Styrolution at the time of passing of risk. INEOS Styrolution does not make any further warranty, representation or guarantee of any kind, express or implied, regarding the suitability of the product for any particular purpose or application and INEOS Styrolution disclaims all liability in connection therewith. The customer himself is required to verify whether or not the product is suitable for the further processing or application intended and whether or not the product complies with the relevant statutory requirements. Unless explicitly and individually otherwise agreed in writing, INEOS Styrolution's sole and exclusive liability with respect to its products is set forth in INEOS Styrolution's General Terms and Conditions for Sale. Page 3 of 3 Contact us: Phone +1 866 890 6353 INSTY.americas@ineos.com www.ineos-styrolution.com Revision Date: 12/12/2018",
+      "metadata": {
+        "breadcrumbs": [
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Styrolution Luran S 778T ASA specification sheet",
+          "Page 3"
+        ],
+        "overlap_node_ids": [
+          "title_c11e353e198f411a8631ccf219f01910"
+        ],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    }
+  ],
+  "rejected": []
+}

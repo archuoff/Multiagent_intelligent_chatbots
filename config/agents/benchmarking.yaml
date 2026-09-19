@@ -1,0 +1,9 @@
+# Stable storage routing for the Benchmarking knowledge agent.
+schema_version: 1
+agent_id: benchmarking
+display_name: Benchmarking Knowledge Assistant
+ui:
+  route: /agents/benchmarking
+storage:
+  incoming_raw_folder: storage/raw/benchmarking-agent
+  qdrant_collection: jlr-benchmarking-chunks

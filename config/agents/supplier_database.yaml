@@ -1,0 +1,9 @@
+# Stable storage routing for the Supplier Database knowledge agent.
+schema_version: 1
+agent_id: supplier_database
+display_name: Supplier Database Knowledge Assistant
+ui:
+  route: /agents/supplier-database
+storage:
+  incoming_raw_folder: storage/raw/supplier-agent
+  qdrant_collection: jlr-supplier-database-chunks

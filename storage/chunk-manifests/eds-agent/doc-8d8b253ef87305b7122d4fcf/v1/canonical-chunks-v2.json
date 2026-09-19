@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "document_id": "doc-8d8b253ef87305b7122d4fcf",
+  "agent_id": "eds-agent",
+  "source_version": "v1",
+  "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+  "chunking_policy_version": "canonical-chunks-v2",
+  "chunk_count": 30,
+  "rejection_count": 0,
+  "status": "ready_for_embedding",
+  "chunk_artifact_path": "chunks\\eds-agent\\doc-8d8b253ef87305b7122d4fcf\\v1\\canonical-chunks-v2\\chunks.json",
+  "artifact_hash": "c954c4026617def543dd0b408302146b306e74fc60a4e758e48b4ea567323675",
+  "created_at": "2026-09-19T15:30:07.020453Z"
+}

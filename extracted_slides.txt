@@ -1,0 +1,653 @@
+====================================================================================================
+data/001_JLR_Team_LE_Grooming_Presentation_20260305.pptx
+====================================================================================================
+--- ppt/slides/slide1.xml ---
+Project
+ 
+Title
+Lead Engineer Clinic
+Expected Business
+ Value
+The system will support smooth and efficient onboarding for new Lead Engineers (LEs) with minimal dependency on manual intervention. Processes will be designed to reduce waiting times, automate routine steps, and ensure consistent onboarding quality as the team grows.
+Why This Can Be a Lighthouse ?
+The solution is differentiating because it uniquely transforms scattered engineering knowledge into instantly searchable, AI‑generated guidance for Lead Engineers.
+Customers would care and pay because it reduces onboarding time, eliminates repetitive queries, and ensures faster, more consistent engineering decisions.
+This project is well‑suited for our AI/ML platform because it leverages structured engineering data, strong domain expertise, and natural language understanding to deliver high‑value insights
+Project Objective
+To elevate the quality and impact of the Lead Engineer role, ensuring seamless program delivery and successful Production Sign-Off (PSW) across all commodities
+Proposed
+ AI Solution
+What we expect AI to read, extract, and output
+ : 
+Identify the question from the “issue description” Pull relevant solution, comments, and actions from the data base.
+Provide a clean, AI-generated answer to the user’s question by matching it with past cases. Suggest relevant lessons learned or similar historical issues.
+Business Problem
+ Statement
+No defined channel for asking questions
+New LEs had no forum to raise queries beyond their project
+No centralized database for Q&amp;A, Lessons Learned (LL), and Knowledge sharing Sessions (KSS), causing repetitive questions
+LE training was theoretical via L&amp;D with no practical exposure
+High dependency on customer/experienced lead engineer
+No cross-project forum for reviewing questions, KSS, and LL
+Limited capture of KSS and LL
+Domain Availability
+Data Availability
+Success Criteria
+Answers become instantly searchable
+Reduces repeated questions
+Ensures knowledge continuity even when people move from teams
+Facilitates faster onboarding
+Creates a single source of truth for procedures, fixes, and best practices
+Target Domain
+Engineering
+Project Owner
+Arvind Udgi
+Amit Saste
+Lighthouse AI Project-Lead Engineer Clinic
+Centralized data repository for 
+Best practices, design rules, bill of design, bill of process etc.
+Question &amp; answers
+Lessons learned from past issues Knowledge‑sharing content
+New Lead Engineer onboarding aids
+Training links
+Customers standards, global regulations
+Product creation and delivery process
+, 
+Programme Module Sub-Team reviews and meetings
+Advanced Product Quality Planning
+Design Failure Mode Effect Analysis
+Evidence Based Engineering Reviews
+
+--- ppt/slides/slide2.xml ---
+2
+End
+End
+User raise questions(input to data base or AI agent)
+    Input to be processed to find the solution in database
+ 
+Solution available ? 
+ 
+Yes
+No
+                      AI agent will direct to SME
+SME to work on the relevant query and update the database if required
+AI agent to extract the output from data base and provide the solution to the user
+Start
+Process flow chart:
+
+--- ppt/slides/slide3.xml ---
+Centralized data repository:
+
+--- ppt/slides/slide4.xml ---
+Q1 – What are the requirements for new LE onboarding (software installation, access, and training links)?
+Chat bot - 
+For the Lead Engineer (LE) role, you’ll need specific software installations, required system accesses, and completion of mandatory training. All relevant links—including software request forms, access requirements, and training modules are available in the LE Onboarding Tracker. (Link to be added)
+Q2 – What is CO/CA in the 
+iCreate
+ release process, and how do I raise it in 3DX?
+Chat bot 
+– CO (Change Order) and CA (Change Action) are required activities in the 
+iCreate
+ release process, especially for P‑releases and items with DCR suffixes. You can find the detailed CO/CA process, along with the link to raise them in 3DX, in the LE Grooming Q&amp;A Tracker.
+ (Link to be added)
+Q3 – What is the process to release service parts in 
+iCreate
+?
+Chat bot 
+– Serviceable components must be released as service parts, either individually or together with the main P‑release, depending on the requirement. You can refer to the 
+iCreate
+ service parts release document, along with supporting references and examples of previously released service parts, which are available in the 
+iCreate
+ system. (Link to be added)
+Q4 – What is a deviation and how can we raise it?
+Chat bot - 
+A deviation is created when a product, process, or service does not meet the defined or approved requirements. You can find the detailed procedure for raising a deviation, along with the required training material, in the LE Grooming Tracker Q&amp;A.
+Q5 – How do I raise a transport request for parts movement between a supplier and JLR?
+Chat bot – 
+To raise a transport request for moving parts between a supplier and JLR, you simply need to send an email to couriers@jaguarlandrover.com with all the required shipment details (such as pickup location, delivery location, part information, quantity, and urgency).
+Proposed AI/ML expectation: Sample questions and answers 
+
+====================================================================================================
+data/002_JLR_Team_Benchmarking_Presentation_20260305.pptx
+====================================================================================================
+--- ppt/slides/slide1.xml ---
+Project
+ 
+Title
+BENCHMARKING
+Expected Business
+ Value
+Tangible outcomes (quantified if possible):
+Faster insights| Higher accuracy| Quality improvement | Smart decisions | Time saving | Cost efficient | Better quality.
+Why This Can Be a Lighthouse ?
+It stands out by combining automated data analysis with real‑time design intelligence, giving a unique engineering advantage.
+It stands out because it uses AI to turn complicated data comparison of different OEM   into quick, useful information.
+Project Objective
+To develop an AI‑enabled benchmarking database that consolidates from Database for engineering and design data into a single, automated comparison sheet, enabling faster, data‑driven decision‑making and one‑stop engineering solutions.
+Proposed
+ AI Solution
+What will the AI solution do at a platform level?
+AI turns raw benchmarking data into actionable insights by automating analysis, pattern detection, and report creation. This saves time and provides Engineer with precise, competitive, and future‑ready engineering solutions.
+Business Problem
+ Statement
+Engineering productivity is impacted by fragmented benchmarking data and manual comparison efforts.
+A centralized benchmarking platform accelerates informed decision‑making for experienced engineers while enabling new engineers to quickly learn, align to standards, and contribute with confidence.
+Domain Availability
+Data Availability
+Success Criteria
+Clear, measurable indicators of success 
+like
+Single‑click AI reports 
+replacing manual multi‑file benchmarking effort.
+Zero duplication 
+of benchmarking tasks across teams.
+Faster decision 
+cycles | High user adoption
+Improved customer satisfaction
+, etc..
+Target Domain
+Engineering
+Cross-Domain
+Project Owner
+Subrat Sethi
+Vaibhav Shinde
+Lighthouse AI Project Template
+What common data sources will be used?
+Excel Database /
+Dedicated Webpage 
+Images/Word file 
+Design Guidelines in Pdf /Word format
+What engineering / manufacturing / service knowledge will be used ?
+Competitor Data
+Design Guideline.
+BOM structures, part genealogy etc.
+
+--- ppt/slides/slide2.xml ---
+Process Flow Chart :
+What we expect from AI tool:
+User will put a query related to the benchmarking and 
+the AI tool will give the expected results based on the query.
+Query Example 1:
+“Give me the comparison 
+between UPPER RAD GRILL”
+Expected Result  : 
+AI tool will analyze the query and access the benchmarking database
+Excel/Benchmarking Webpage
+AI tool will analyze the database and  based on the query it
+can ask/prompt any further Suggestion based on the data available 
+Ex. “
+Compare all OEMs or a specific one? 
+”
+Process Flow : 
+Images are only for R
+epresentation purposes
+User will put the query in AI Agent
+DATABASE:
+ 
+Give me comparison between- 
+Mercedes and Porshe model.
+Based on the Input AI will again analyze the database .
+AI tool will give expected outcome based on query asked
+
+--- ppt/slides/slide3.xml ---
+Process Flow Chart :
+What we expect from AI tool:
+User will put a query related to the benchmarking and 
+the AI tool will give the expected results based on the query.
+Query Example 2:
+“
+How does manufacturing process (injection molding + chrome plating + painting) impact grille weight across OEMs?
+”
+AI tool will analyze the query and access the benchmarking database
+Excel/Benchmarking Webpage
+AI tool will analyze the database and  based on the query it
+can ask/prompt any further Suggestion based on the data available 
+Ex. “
+Compare all OEMs or a specific one? 
+”
+Process Flow : 
+Images are only for R
+epresentation purposes
+User will put the query in AI Agent
+DATABASE:
+ 
+Give me comparison of 
+All OEM
+.
+Based on the Input AI will again analyze the database .
+AI tool will give expected outcome based on query asked
+How does manufacturing process (injection molding + chrome plating + painting) impact grille weight across OEMs?
+Expected Result  : 
+
+====================================================================================================
+data/003_JLR_Team_ADAS_Presentation_20260305.pptx
+====================================================================================================
+--- ppt/slides/slide1.xml ---
+March 2026
+ADAS Sensor FAQs &amp; Case Study
+
+--- ppt/slides/slide2.xml ---
+Project
+ 
+Title
+ADAS Packaging Study
+Expected Business
+ Value
+Faster validation &amp; improved accuracy
+Reduced manual effort in data analysis
+Better decision support &amp; standardized evaluation
+Why This Can Be a Lighthouse ?
+Solves a common operational issue—manual, scattered data analysis.
+Supports multiple teams (Sensors, Fascia, Electrical, CAD) and becomes repeatable with a common template
+Uses a reusable AI approach that reads structured Excel, applies rules, and delivers traceable decisions
+Project Objective
+AI reads the organized Excel‑based ADAS database, design rules, benchmark data for competitor vehicles to generate design validation results and summaries and recommendations for engineer queries
+Proposed
+ AI Solution
+Platform‑level capability:
+AI Input: Excel database (technical specs, benchmarking, design rules) + user query.
+AI Processing: Read database → extract relevant parameters → apply guidelines/rules → compare with benchmark data
+AI Output: Design validation result, benchmark comparison summary, and recommendation/decision support (e.g., recommended detection range)
+Business Problem
+ Statement
+Current process is manual and time‑consuming: open multiple Excel files, search sensor specs, refer to guidelines, do manual competitor comparisons, and prepare feasibility output
+Data is scattered across files; no instant query‑based search; manual data validation required
+Need for consistent, standardized evaluation and to reduce human error in comparisons
+Domain Availability
+Data Availability
+Success Criteria
+Clear, explainable outputs (validation result, comparison summary, recommendations) generated from the Excel knowledge base and guidelines
+Measurable reduction in manual steps (fewer files to open, quicker searches, automated comparisons)
+Adoption across commodities using a common ADAS data template
+Target Domain
+Engineering
+Project Owner
+Amol Jadyar
+Ashpak Bagwan
+Lighthouse AI ADAS Packaging Study
+Centralized data repository for:
+Excel database containing images and technical specifications
+Contents include: PDC technical specs, competitor benchmarking data, PDC sensor &amp; bracket design details, and key design guidelines/considerations
+ADAS sensor packaging guidelines &amp; design considerations (PDC sensor design, bracket design, key design guidelines).
+Vehicle architecture &amp; feasibility inputs (clash studies, DFMEA support, packaging risk assessments)
+
+--- ppt/slides/slide3.xml ---
+3
+Process Flow Chart:
+This flow shows how AI will read, process, and generate outputs from the existing Excel database.
+AI Processing
+Read PDC database
+Identify relevant parameters
+Apply design guidelines/rules
+Compare with benchmark data
+AI Output
+Design validation result
+Benchmark comparison summary
+Recommendation/decision support
+AI Input 
+Excel database (technical specs, benchmarking, design rules)
+User query (example: detection range of PDC sensor)
+Detailed Process Flow
+What is the optimal detection range for the PDC sensor?
+User Query
+⬇
+AI reads Excel database
+⬇
+Extracts range-related parameters
+⬇
+Checks against competitor benchmarking data
+⬇
+Generates feasibility and performance summary
+⬇
+Outputs recommended range
+Expected outcome 
+
+--- ppt/slides/slide4.xml ---
+Parking Distance Control (PDC) Sensor :
+Q1. Where are PDC sensors located in a vehicle?
+Q2. What is the function of a PDC sensor?
+Q3. What are the types of PDC sensors?
+Q4. What is the detection range of a PDC sensor?
+Q5. Can PDC sensors detect all types of objects?
+Q6. What are common reasons for PDC sensor malfunction?
+Q7. What is operating temperature range for PDC sensor?
+Q8. What is the IP protection class used in PDC sensor?
+Q9. What is the fixation strategy used in PDC sensor &amp; it’s bracket assembly?
+Q10. How far should a sensor be placed from the exhaust pipe?
+Q11. What is the field of view (FOV) of a PDC sensor?
+Q12. What are the allowable tolerances for the sensor orientation angles (alpha, beta, and gamma) with respect to the sensor coordinate system?
+Q13. What is the angle between the PDC sensor axis and the exhaust pipe axis?
+Q14. What is the difference between positive and negative angles in a PDC sensor?
+Q15. Which material is recommended for the sensor holder that should not affect sensor performance?
+1. FAQs for ADAS Sensors
+
+--- ppt/slides/slide5.xml ---
+Process Flow Chart:
+This flow shows how AI will read, process, and generate outputs from the existing Excel database.
+Search a query
+Check information in database
+Start
+Is type of Sensor defined
+?
+Yes
+No
+Ask question to define sensor type
+Extract the data according to vehicle
+Check against competitor benchmark data
+Display output - feasibility\performance summary
+End
+
+--- ppt/slides/slide6.xml ---
+Chapter 1 – For AI Developer Team
+Case Study 1:
+Start
+What is the detection range of a PDC sensor?
+ 
+ 
+Search a query here
+Check information in database
+Data will be captured in a standardized format (Excel format.xlsx)
+Collect the available information in database related to the Front PDC Sensor
+
+--- ppt/slides/slide7.xml ---
+Chapter 1 – For AI Developer Team
+Extract the data according to vehicle from database
+Available information in the database about PDC
+Expected outcome
+Based on the query search it will provide the information related to the PDC Sensor detection range
+Case Study 1:
+Output
+
+--- ppt/slides/slide8.xml ---
+Chapter 1 – For AI Developer Team
+Case Study 2:
+Start
+How far should a sensor be placed from the exhaust pipe?
+Search a query here
+Check information in relevant document which is available in database
+Data will be captured in a standardized format.
+Collect the available information in database related to the sensor placed from the exhaust pipe
+Extract the data from database
+
+--- ppt/slides/slide9.xml ---
+Chapter 1 – For AI Developer Team
+Available information in the database about sensor position.
+Expected outcome – Based on the query search. Sensors shall be placed at a minimum distance of 100 mm from the outer end of the exhaust pipe.
+Sensor be placed from the exhaust pipe
+Sensors shall be positioned in such a way, that their membranes are located outside of the area (zone “A” – see example) limited by a closed curve imagined on the surface of the vehicle, where each of the curve’s points is distant from the outer end of the exhaust pipe opening by minimum 100 mm.
+Sensor positions subject to restrictions due to exhaust pipe proximity:
+ 
+1 – Sensors located in the unrestricted area (zone “C”)
+2 – Sensors located in the moderate area(zone “B”) where additional conditions apply
+3 – Outer end of exhaust pipe opening used to define the forbidden area for sensor integration (zone “A”)
+Output
+
+--- ppt/slides/slide10.xml ---
+Chapter 1 – For AI Developer Team
+Case Study 3:
+Start
+Which material is recommended for the sensor holder that should not affect sensor performance?
+Search a query here
+Check information in relevant document which is available in database
+Data will be captured in a standardized format.
+Collect the available information in database related to the sensor placed from the exhaust pipe
+Extract the data from database
+
+--- ppt/slides/slide11.xml ---
+Chapter 1 – For AI Developer Team
+Available information in the database about sensor position.
+Expected outcome – Based on the query search, the system will provide a list of materials that are recommended and not recommended.
+According to lessons learnt with previous USS systems, the 
+use of the following materials in the mechanical interface of the sensor shouldn't affect the sensor performance.
+• PP  (Daplen EE109AE) 
+• PBT+PC (Covestro  Makroblend KU2-7912/4
+• PP (sabic PP compund 7251U)
+• PP (sabic PP compund 7536)
+• PP (Hifax TKC 461X BLACK)
+Following materials are not recommended to use:
+• Metals
+• PC, PC-blends
+• Unmodified PC+PBT
+• ABS, ABS blends
+• ASA
+Hard materials or non-elastomeric modified thermoplastics such as pure amorphous plastics (like PC or PC-blends) and metallic components are not recommended for use due to their unfavorable acoustical properties
+Output
+
+--- ppt/slides/slide12.xml ---
+
+====================================================================================================
+data/005_JLR_Team_EDS_Presentation_20260305.pptx
+====================================================================================================
+--- ppt/slides/slide1.xml ---
+EDS (Engineering Design specification)
+(FY 2025-26)
+13-Mar-2026 
+
+--- ppt/slides/slide2.xml ---
+Project
+ 
+Title
+EDS – Engineering design specification
+Expected Business
+ Value
+Tangible outcomes (quantified if possible):
+Cost reduction | efficiency increased | accelerated learning | collaboration | quality and reliability source| information at single source
+Why This Can Be a Lighthouse ?
+Why is this 
+differentiating
+? – we can bring all data under one roof
+Why would customers 
+care and pay
+? – cost and time saving
+Why is this well-suited for 
+our AI/ML platform &amp; domain strengths
+? – as an engineering service provider , creating a platform which saves time to achieve design is the main USP.
+Project Objective
+To develop a reasoning agent for engineers that will support engineers to optimize design and why certain spec is needed using design guidelines, lesson learnt, and to achieve correct design at first approach 
+Proposed
+ AI Solution
+What will the AI solution do at a platform level?
+Key AI capability:
+Recommendation and Optimization | Risk | validation | Lesson learnt and multiple discussion
+Business Problem
+ Statement
+Currently information is available at different source and takes time to search at every source 
+Even if we find source still, we check with SME to confirm or any deviation in case of doubts
+Engineers with less experience must rely on experienced person to find different source and search them.
+Domain Availability
+Data Availability
+Success Criteria
+Faster response time 
+– Significant reduction in time taken to find engineering answers or documents.
+Reduced dependency on experts 
+– Fewer escalations to senior for routine questions. 
+Cross‑team collaboration 
+– Increase in queries that combine inputs from multiple forums.
+Better reuse of knowledge 
+– Increased usage of past learnings, guidelines
+Target Domain
+Engineering
+Cross-Domain
+Project Owner
+Suraj/Hrishikesh/Moin
+Lighthouse AI – EDS
+What common data sources will be used?
+Ppt, excel/ doc
+JIRA/DOORS/
+reports
+What engineering / manufacturing / service knowledge will be used ?
+BOD/BOP/BOM
+Design rules/regulations/JLR IGETIT
+Material/tooling guidelines/ manufacturing guidelines
+
+--- ppt/slides/slide3.xml ---
+Current Data
+Current database is maintained in PowerPoint format
+.
+EDS – Database
+Current database includes presentation prepared by different engineers based on topics nominated by them.
+https://tatatechnologies.sharepoint.com/:f:/r/sites/JLR_VPD/Shared%20Documents/JLR_VPD/EDS%20VPD%202025-26/03_2025-26%20EDS%20documents/02_SV%20Exterior/03_Completed?csf=1&amp;web=1&amp;e=82bVo5
+
+--- ppt/slides/slide4.xml ---
+Process flow 
+INITIATE
+ – User to put query
+RETRIEVING
+ – Executes search across EDS database
+PLANNING
+- Agent breaks the query
+GRADING
+- self assessment if relevant it will go ahead and if 
+not then it will go back to SME or Originator for improvement
+SYNTHESIZING
+- merges data into structure engineered response
+VALIDATION
+ – check response against EDS constraints
+USR FEEDBACK 
+– it will also improvise any feedback provided for future search
+Start
+End
+Yes
+No
+REVERT – 
+query will go back to SME or originator
+UPDATE DATABASE 
+– if query is relevant then database to be updated else it will be discarded
+End
+
+--- ppt/slides/slide5.xml ---
+How Engineers Should Search
+Encourage 
+Scenario-Based Queries
+. Instead of searching for "Rib Design," they should search by 
+Constraint + Goal
+.
+How to Convey Results
+The agent should never just give a text answer. It must follow this 
+Response Template
+:
+Direct Answer:
+ The specific value or rule.
+Reference:
+ A link to the official guideline document.
+Validation/Risk:
+ "Why" this rule exists (e.g., to prevent sink marks or corrosion).
+Related Forum Wisdom:
+ A link to a past discussion where this exact problem was solved. Lesson learnt or any reports
+EDS - Case study
+
+--- ppt/slides/slide6.xml ---
+EDS- Case study
+Case study-
+Use below examples to "fine-tune" or test your agent. These are designed for the technical depth of a mid-level engineer.
+1: Automotive Plastics &amp; DFM
+Engineer's Search:
+ "What is the recommended rib-to-wall thickness ratio for a Class-A PP-EPDM bumper to avoid sink marks, and does this change if we use 20% talc filler?"
+Agent's Expected Result:
+ 
+"Per 
+EDS Section 3.1 (Plastics)
+, the standard ratio is 0.5. However, for 20% talc-filled PP, the EDS Guideline suggests reducing this to 0.4 due to increased shrinkage. 
+Risk Alert:
+ Exceeding 0.45 on a Class-A surface has historically caused a 15% rejection rate in the XYZ project.
+2:Automotive Plastics &amp; DFM
+Engineer Search:
+ "Determining wall thickness for a PC/ABS instrument panel substrate near the airbag deployment zone. Provide aging impact.“
+Agent Result:
+Direct Answer:
+ Base wall thickness must be 
+2.5mm ± 0.15mm
+.
+Technical Constraint: Per EDS section 4.1
+ In the deployment "hinge" area, thickness must transition to 
+1.2mm via a 3:1 taper
+ to ensure predictable ductile tearing at -30°C.
+Validation:
+ 
+Per EDS Section 6.1.2
+, PC/ABS blends must have &lt;15% recycled content to prevent brittle failure during high-speed deployment after 1,000hrs of heat aging."
+
+--- ppt/slides/slide7.xml ---
+EDS- Case study
+3: Sensor Packaging &amp; Thermal
+Engineer's Search:
+ "What are the clearance requirements for an ultrasonic sensor package near an exhaust heat shield ?”
+Agent's Expected Result:
+ 
+EDS sensor packaging 
+“Position of PDC is based on ground planes and FOV should not have any clash, it also depends on ground plane. 
+EDS exhaust shield 12.2
+ requires 50mm clearance to avoid any thermal damages based on previous project benchmarks. Based on both EDS we can position sensor 50mm away from exhaust nozzle 
+Note:
+ this condition is applicable only for ICE vehicle and not needed in BEV/PHEV/HEV vehicles.
+4: Plastics tooling and material
+Engineer Search:
+ "What is the draft angle for a 30% Glass Filled Nylon interior trim with a leather-grain texture?"
+Agent Result:
+Direct Answer:
+ "Minimum draft angle is 
+3.5° to 5°
+.“
+Constraint Check:
+ "For heavy textures (e.g., Grain Spec K-20), add 1° of draft per 0.02mm of grain depth.“
+Source:
+ EDS Plastics Section 5.2 - Draft Angles
+Lesson Learned:
+ "that using 3° led to scuffing marks in XYZ project; 4.5° is the 'safety' standard for 30% GF."
+
+--- ppt/slides/slide8.xml ---
+
+====================================================================================================
+data/006_JLR_Team_Material_and_NET_Presentation_20260305.pptx
+====================================================================================================
+--- ppt/slides/slide1.xml ---
+Project
+ 
+Title
+Material Data Base
+Expected Business
+ Value
+Tangible outcomes (quantified if possible):
+Cost reduction | Downtime reduction | Quality improvement | Revenue uplift | Productivity gain etc.
+Why This Can Be a Lighthouse ?
+This is valuable because it helps people choose the right material quickly, gives clear reasons behind the choice, and uses our existing data in a way that fits perfectly with our AI/ML strengths and saves time, effort, and cost for the organization.
+Project Objective
+To develop a reasoning agent for engineers that will support engineers to optimize Material selection process and Benchmarking(across programs &amp; commodities).
+Proposed
+ AI Solution
+What will the AI solution do at a platform level?
+Core AI Prompts (What engineers should ask the AI)
+Proactive Follow‑Up Questions the AI Should Ask
+Business Problem
+ Statement
+Consolidated material information is not available across program.
+To do Benchmarking time consumed is more also 
+tedious
+ job to find alternate solution.
+High Dependency on 3Dx and separate 
+ BOM file of individual program.
+Domain Availability
+Data Availability
+Success Criteria
+Clear, measurable indicators of success 
+like
+Easy to benchmark previous Model Years materials and test results.
+Time saving.
+Faster Engineering Decisions
+All the Material database will be consolidated at one location.
+Target Domain
+Engineering
+Manufacturing
+Cross-Domain
+Project Owner
+Akash / Parimal / Sandip / Rahul 
+Lighthouse AI – Material Database
+What common data sources will be used?
+Material details with supplier Technical data sheet.
+Part finish information.
+What engineering / manufacturing / service knowledge will be used ?
+Industry standards, regulations
+Customer standards, 
+BOM info.
+Recyclable material data
+

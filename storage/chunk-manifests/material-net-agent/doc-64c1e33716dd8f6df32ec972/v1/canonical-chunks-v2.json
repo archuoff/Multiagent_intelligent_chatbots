@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "document_id": "doc-64c1e33716dd8f6df32ec972",
+  "agent_id": "material-net-agent",
+  "source_version": "v1",
+  "source_hash": "sha256:f1c6d48db38fdfe52f3bc0fdb4b7022da0b5db73c1aaf141ffe55b9662cba47f",
+  "chunking_policy_version": "canonical-chunks-v2",
+  "chunk_count": 42,
+  "rejection_count": 0,
+  "status": "ready_for_embedding",
+  "chunk_artifact_path": "chunks\\material-net-agent\\doc-64c1e33716dd8f6df32ec972\\v1\\canonical-chunks-v2\\chunks.json",
+  "artifact_hash": "05c9aef97b688899506668b399470e4dbe30e15e641e52921b6b5353d0063c8c",
+  "created_at": "2026-09-19T15:30:14.301946Z"
+}

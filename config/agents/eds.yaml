@@ -1,0 +1,9 @@
+# Stable storage routing for the EDS knowledge agent.
+schema_version: 1
+agent_id: eds
+display_name: EDS Knowledge Assistant
+ui:
+  route: /agents/eds
+storage:
+  incoming_raw_folder: storage/raw/eds-agent
+  qdrant_collection: jlr-eds-chunks

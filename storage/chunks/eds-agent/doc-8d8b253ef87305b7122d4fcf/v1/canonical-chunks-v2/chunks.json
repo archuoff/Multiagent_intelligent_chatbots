@@ -1,0 +1,1293 @@
+{
+  "policy_version": "canonical-chunks-v2",
+  "chunks": [
+    {
+      "chunk_id": "chk_0a15539973c6d26b6741a7bc",
+      "chunk_type": "table_row",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "table_282d1f8560564d09a90ebca8ee23aedb",
+      "source_node_ids": [
+        "row_5802379b86aa4b6ea3b65cb6ea6dd024",
+        "cell_e6d1ba73df264b7bb55dea69828bc01a",
+        "cell_50a6c7fcb4354085b0bb721501e1c6c4",
+        "cell_1f29dd4b21e64e579fef7fe4d5e4b84f",
+        "cell_3c20da02a1bb4e5db782eb858acc70c0"
+      ],
+      "content_text": "Issue: 01 | Description: New Document | Date: 31-12-2025 | Owner: Tulin Kale/Vishvajeet Mane",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Change history > Table 1 > Table 1\nContent: Issue: 01 | Description: New Document | Date: 31-12-2025 | Owner: Tulin Kale/Vishvajeet Mane",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Change history",
+          "Table 1"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": 2,
+        "sheet_name": null,
+        "cell_range": null,
+        "table_title": "Table 1",
+        "header_context": [
+          "Issue | Description | Date | Owner"
+        ],
+        "row_index": 2,
+        "part_number": 1,
+        "field_policies": [
+          {
+            "field_name": "issue",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "description",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "date",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          },
+          {
+            "field_name": "owner",
+            "use": "standard",
+            "retrieval_allowed": true,
+            "answer_visible": true,
+            "reason": "No restrictive field policy matched the column name."
+          }
+        ],
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_fe73217babc64402b6a2eeca",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_52498510a8fe4f12a402be7536d0fd27",
+      "source_node_ids": [
+        "text_04b73a5be5cb44b6ad3b3ed612841b21",
+        "text_a74c0e10ddbb4a6bad3f8914aab2bb48",
+        "text_f18bab4f08fb41cfa3af3ab07639092f"
+      ],
+      "content_text": "Carbon Fiber\nTulin Kale & Vishvajeet Mane\nFeb 2025",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Carbon Fiber > Carbon Fiber\nContent: Carbon Fiber\nTulin Kale & Vishvajeet Mane\nFeb 2025",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Carbon Fiber",
+          "Carbon Fiber"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_0a9160922724cb4d134be860",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_39418af16bd74c28ade42ac543cf4408",
+      "source_node_ids": [
+        "text_133b4663f0434d979c4e00db351527e7",
+        "note_6379f5d07abf4ed0a4f452b915b25d0b"
+      ],
+      "content_text": "Change history\n2",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Change history > Change history\nContent: Change history\n2",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Change history",
+          "Change history"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_00ea1b269470cfc9fff53764",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_d5dd2c555e5d48cfb4e25d865e5d4719",
+      "source_node_ids": [
+        "text_0ed5e614eb8b4d04b50d86e20b45c70c",
+        "text_593998c852ee4b12930825edbca4b465",
+        "text_23c24e91adb54902a733f09df67902b7",
+        "text_aeb4ac87d0de4e3197c05ddf95d8b0bc",
+        "text_ab3ae29bcbc64a9ebaca9ccddfb184c7",
+        "text_759772152c8245b9b980214b7c7913f9",
+        "text_dfca4bd1e558471ba44c766b494a8f03",
+        "text_c02dc9aef4fd4f8ea4824c81055df263",
+        "text_9e99aefc5e104f189a3ec75ab28d01db",
+        "text_b352825face04ba292fd108f7377e103",
+        "text_d2d1e3ae766d42aa95b74322b9621c7d",
+        "text_a56065c8e0c64bb1bff81861faf215e3",
+        "text_2881d418c9d844ce877e6cd891cda164",
+        "text_766b2894cb5c4239950d584c273c7490",
+        "text_32d08803c2514ba68e2b8c3966f3b95b",
+        "text_88231feb75b94df7b2ae9603e33fc8a5",
+        "text_6b50d33c89284957b75a9aecd1e8bfb7",
+        "text_7085ff8bfe1040d883cc71c12b0347ef",
+        "text_8fb73ca807bd47108a2a67f8fbe65c64",
+        "text_e25bc39355c446aabce4288451bc2cd3",
+        "text_b30a1e289e2941d5a82bb9acf772312c",
+        "text_115b1f848bb04e2eae02f11b77d31b6e",
+        "text_2cc49648f97c4525931c70ef95c83c8a",
+        "text_94f00de77b6341d1ab0e2b195b2c6464",
+        "text_6b8d9782a71e471e9166ad18920a996d",
+        "note_c2bcfcda928e46ae8184c5815c3530f4"
+      ],
+      "content_text": "3\nINDEX\nCarbon Fibre - Introduction\nCarbon Fiber- History\nCarbon Fiber - Uses in Automotive Industry\nWhy Carbon Fiber is Used in Cars?\nCarbon Fiber Manufacturing Process\nCarbon Fiber Fabric styles\nThree Methods for Creating Carbon Fiber Parts\nCarbon Fiber 3D Printing\nLOCATOR AND FIXING STRATEGY\nDesign Guidelines- Part Thickness\nDesign Guidelines- Fixing Clip distance\nDesign Guidelines- Z Resting\nDesign Guidelines- X Resting\nDesign Guidelines-Minimum Radii\nDesign Guidelines- Edge Condition\nDesign Guidelines- Abruption In Filleting\nDesign Guidelines- Undercut in Tool\nDesign Guidelines- Draft Angle\nDesign Guidelines- Sharpe Condition\nDesign Guidelines- Uneven Edge\nFixing Type\nAssembly Path\nY=0 Section\n3",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > INDEX\nContent: 3\nINDEX\nCarbon Fibre - Introduction\nCarbon Fiber- History\nCarbon Fiber - Uses in Automotive Industry\nWhy Carbon Fiber is Used in Cars?\nCarbon Fiber Manufacturing Process\nCarbon Fiber Fabric styles\nThree Methods for Creating Carbon Fiber Parts\nCarbon Fiber 3D Printing\nLOCATOR AND FIXING STRATEGY\nDesign Guidelines- Part Thickness\nDesign Guidelines- Fixing Clip distance\nDesign Guidelines- Z Resting\nDesign Guidelines- X Resting\nDesign Guidelines-Minimum Radii\nDesign Guidelines- Edge Condition\nDesign Guidelines- Abruption In Filleting\nDesign Guidelines- Undercut in Tool\nDesign Guidelines- Draft Angle\nDesign Guidelines- Sharpe Condition\nDesign Guidelines- Uneven Edge\nFixing Type\nAssembly Path\nY=0 Section\n3",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "INDEX"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_f2abce610d09fbde77ddc6e5",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_d00a9c1245b64be9a75c8bcb210a4028",
+      "source_node_ids": [
+        "text_f4485e766d914e15b27d22ebfb7dcc5d",
+        "text_20be33089b3a49f5b172ae422631dde0",
+        "text_4096e0ef182c42eca35f49b027d1d8e8",
+        "text_e6be0b27647a4a80a0b5e173e3c195eb",
+        "text_12c0064ed96c4c92bd6476e01d7b80d6",
+        "text_1b87c3778ec440a88cf59116ccfbf57f",
+        "text_9e4cd219839f43c8b41635fda13af9e5",
+        "text_2f35b1ffa00143bebda3dce0c3681a0e",
+        "note_74aa781aa2954ba6a8098dfcd37d4d37"
+      ],
+      "content_text": "4\nCarbon Fiber - Introduction\nCarbon Fiber is a polymer and is sometimes known as graphite fiber.\nIt is a very strong material that is also very lightweight.\nCarbon fiber is five-times stronger than steel and twice as stiff.\nThough carbon fiber is stronger and stiffer than steel, it is lighter than steel; making it the ideal manufacturing material for many parts\nCarbon fiber can be thinner than a strand of human hair and gets its strength when twisted together like yarn.\nCarbon fibers are fibers about 5–10 micrometers in diameter. Several thousand carbon fibers are bundled together to form a tow, which may be used by itself or woven into a fabric.\n4",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Carbon Fiber - Introduction\nContent: 4\nCarbon Fiber - Introduction\nCarbon Fiber is a polymer and is sometimes known as graphite fiber.\nIt is a very strong material that is also very lightweight.\nCarbon fiber is five-times stronger than steel and twice as stiff.\nThough carbon fiber is stronger and stiffer than steel, it is lighter than steel; making it the ideal manufacturing material for many parts\nCarbon fiber can be thinner than a strand of human hair and gets its strength when twisted together like yarn.\nCarbon fibers are fibers about 5–10 micrometers in diameter. Several thousand carbon fibers are bundled together to form a tow, which may be used by itself or woven into a fabric.\n4",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Carbon Fiber - Introduction"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_05d9f26e7070524031b6433c",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_b1fc12c1add346f29868c08003213fc6",
+      "source_node_ids": [
+        "text_3870bc922d9340f888d53b0762d0086f",
+        "text_d4a6eaf5bb854adcbd0f0d0c95e31538",
+        "text_9f83d86ab4a2431abed978c25ddba6fa",
+        "text_23d622a870d640e2a81e2f1a764875bc",
+        "text_4c007b275def40838bf2554ffa6e274f",
+        "text_4e390263897049fea43f76f9f8c0449d",
+        "text_3d7d95ca5e4d49a481fb3704c07ef3ff",
+        "note_044a1320eea2490199f40a08c44bb023"
+      ],
+      "content_text": "5\nCarbon Fiber - History\nCarbon fiber dates back to 1879 when Thomas Edison baked cotton threads or bamboo silvers at high temperatures, which carbonized them into an all-carbon fiber filament. By 1958, high-performance carbon fibers were invented just outside of Cleveland, OH. Although they were inefficient, these fibers contained around 20% carbon and had low strength and stiffness properties.\nIn 1963 a new manufacturing process was developed at a British research center, which is where carbon fiber’s strength potential was realized.\nHow is Carbon Fiber Made: An Overview of The Carbon Fiber Manufacturing Process\nCarbon fiber is made from a process that is part chemical and part mechanical. It starts by drawing long strands of fibers and then heating them to a very high temperature without allowing contact to oxygen to prevent the fibers from burning. This is when the carbonization takes place, which is when the atoms inside of the fibers vibrate violently, expelling most of the non-carbon atoms. This leaves a fiber composed of long, tightly inter-locked chains of carbon atoms with only a few non-carbon atoms remaining.\nA typical sequences used to form carbon fibers from polyacrylonitrile involves spinning, stabilizing, carbonizing, treating the surface and sizing.\n5",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Carbon Fiber - History\nContent: 5\nCarbon Fiber - History\nCarbon fiber dates back to 1879 when Thomas Edison baked cotton threads or bamboo silvers at high temperatures, which carbonized them into an all-carbon fiber filament. By 1958, high-performance carbon fibers were invented just outside of Cleveland, OH. Although they were inefficient, these fibers contained around 20% carbon and had low strength and stiffness properties.\nIn 1963 a new manufacturing process was developed at a British research center, which is where carbon fiber’s strength potential was realized.\nHow is Carbon Fiber Made: An Overview of The Carbon Fiber Manufacturing Process\nCarbon fiber is made from a process that is part chemical and part mechanical. It starts by drawing long strands of fibers and then heating them to a very high temperature without allowing contact to oxygen to prevent the fibers from burning. This is when the carbonization takes place, which is when the atoms inside of the fibers vibrate violently, expelling most of the non-carbon atoms. This leaves a fiber composed of long, tightly inter-locked chains of carbon atoms with only a few non-carbon atoms remaining.\nA typical sequences used to form carbon fibers from polyacrylonitrile involves spinning, stabilizing, carbonizing, treating the surface and sizing.\n5",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Carbon Fiber - History"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_2e13bf50b76dd31a3c22b415",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_3d1f600087c44bffbc10a027918d24a9",
+      "source_node_ids": [
+        "text_0c17fd0778694befa0bd787281a28fde",
+        "text_d289d605cfee47a0af5a355c9f42d713",
+        "text_b597976b9f0945839a692577d3d17721",
+        "text_c39f4d9f9ad546edbdea8ec503087aa1",
+        "text_d97790bdd47a443fb7f4857d6dafbd5f",
+        "text_df856bc7c6c6421da27a519976c9761f",
+        "text_14ff4729224d42b798a725e7009c8d59",
+        "text_10314b1ca9664ef2992e8e0b9cb316ff",
+        "text_a07d094091a948cd96c9baf220fe2688",
+        "text_8de2be84246b4befb294826f2328c3d2",
+        "note_78f22841d6c34dec8259ba45982d17be"
+      ],
+      "content_text": "6\nCarbon Fiber - Uses in Automotive Industry\nHood\nSpoiler\nCar Doors\nRoof\nDiffuser\nEnd Caps\nSplitter\nMirror\n6",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Carbon Fiber - Uses in Automotive Industry\nContent: 6\nCarbon Fiber - Uses in Automotive Industry\nHood\nSpoiler\nCar Doors\nRoof\nDiffuser\nEnd Caps\nSplitter\nMirror\n6",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Carbon Fiber - Uses in Automotive Industry"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_79c0be7099c02500b0775a05",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_c451c400c98543ada9629fbd784fb3cf",
+      "source_node_ids": [
+        "text_68c418266b204fab8d5cbe6fa0dfaa05",
+        "text_cc821f061343457ab50405241e437f6d",
+        "text_70b1d12182c14f15a3b7dc099e7e0839",
+        "text_6ec918cb54054f6ba1266576beb590ec",
+        "text_bad198b90a4b4e63a0a5ba570acee299",
+        "text_7b67beb912c24084ad958ff1f03e4546",
+        "note_46dd8c81e7674c7ba4e3d026cf0533ce"
+      ],
+      "content_text": "7\nWhy Carbon Fiber is Used in Cars?\nCarbon fiber is used in cars to lower weight while providing enough strength to withstand the rigors of racing.\nYou’ll notice that supercars and hyper cars the world over place a premium on lowering their weight in addition to increasing engine output and refining their aerodynamic designs — and lowering weight is precisely what carbon fiber is good for in a car.\nCarbon fiber is five times lighter than steel while being less dense than aluminum, which is one of the lightest metals available.\nIn a contest between two otherwise identical cars, the vehicle with carbon fiber parts is likely to outperform the model with parts made from traditional materials, because shedding weight allows it to make the most of its powertrain.\n7",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Why Carbon Fiber is Used in Cars?\nContent: 7\nWhy Carbon Fiber is Used in Cars?\nCarbon fiber is used in cars to lower weight while providing enough strength to withstand the rigors of racing.\nYou’ll notice that supercars and hyper cars the world over place a premium on lowering their weight in addition to increasing engine output and refining their aerodynamic designs — and lowering weight is precisely what carbon fiber is good for in a car.\nCarbon fiber is five times lighter than steel while being less dense than aluminum, which is one of the lightest metals available.\nIn a contest between two otherwise identical cars, the vehicle with carbon fiber parts is likely to outperform the model with parts made from traditional materials, because shedding weight allows it to make the most of its powertrain.\n7",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Why Carbon Fiber is Used in Cars?"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_fa078ce67183c131d6586942",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_e0bec69774c64925bd7dee300ba1f772",
+      "source_node_ids": [
+        "text_6b378c2b917949a4bb3875822fea8009",
+        "text_00e35eab35ef48b2ad50c2eff8696664",
+        "text_94f34045329d4cf282d780eaed554de2",
+        "text_1d3545b7bfe54df9a785978b84e8b4cd",
+        "text_220a892184464252b76405711adaf562",
+        "text_ce2a1d027c474bba9e54377809218a05",
+        "text_3a339fb53114493c9aa98f776ef2188d",
+        "note_6452c41f800e4af2a3dc7dacfb53363b"
+      ],
+      "content_text": "8\nCarbon Fiber Manufacturing Process\nCarbon fiber raw materials from two types of Raw Materials: PAN and pitch.\nPAN Route:\nPolymerization → Spinning → Heat Stabilization (200–300°C) → Carbonization/Graphitization (1000–3000°C) → Final Treatments (Surface Treatment & Sizing) → PAN Fiber\nPitch Route:\nDry Distillation → Spinning → Heat Stabilization (200–300°C) → Carbonization/Graphitization (1000–3000°C) → Final Treatments (Surface Treatment & Sizing) → Pitch Fiber\n8",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Carbon Fiber Manufacturing Process\nContent: 8\nCarbon Fiber Manufacturing Process\nCarbon fiber raw materials from two types of Raw Materials: PAN and pitch.\nPAN Route:\nPolymerization → Spinning → Heat Stabilization (200–300°C) → Carbonization/Graphitization (1000–3000°C) → Final Treatments (Surface Treatment & Sizing) → PAN Fiber\nPitch Route:\nDry Distillation → Spinning → Heat Stabilization (200–300°C) → Carbonization/Graphitization (1000–3000°C) → Final Treatments (Surface Treatment & Sizing) → Pitch Fiber\n8",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Carbon Fiber Manufacturing Process"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_2abbd1787a8e6f2d8fdc8adf",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_334138d1737940e7ac2576e1fceec912",
+      "source_node_ids": [
+        "text_477d5757ba64431a90f647425fc4eb8d",
+        "text_083e44a20fa64d009e1bc727ef57cebf",
+        "text_1bd894ae77aa4ade87bcb5514dd30248",
+        "text_e01a7cc3ff29417baec351a69e43c3a3",
+        "text_effdb0447ee14207b1dbb6c4de9250bc",
+        "text_0131c9f3ac614075b522c0d695f44e3c",
+        "text_703688df9ebc48909af51bddf84be5a3",
+        "text_406b660ea0514bdfa761fa4c2ea7b962",
+        "text_a87f9122b6754000979f1c54112acd39",
+        "text_3808fefe0a3049a29e94cdef7c00c4d0",
+        "text_32eb3585a23846d0aa1ba1b2f10d5abb",
+        "note_1ca58c8893a74332b6b8d0e4e7bbc179"
+      ],
+      "content_text": "9\nCarbon Fiber Fabric styles\nWoven\nMost fabric constructions offer more flexibility for lay-up of complex shapes than straight unidirectional tapes offer. Fabrics used for structural applications use like fibers or strands of the same weight or yield in both the warp (longitudinal) and weft (transverse) directions.\nCarbon Fibers are actually quite small. Fibers are bundled together to make yarns.\nThe Yarns, are in many sizes:–\nSmall Tow: 3K, 12K, 24K\nLarge Tow: Larger than 24K\nCarbon Fiber Tow is the thread used to weave carbon fiber fabrics. This 24K tow (or yarn) is composed of 24,000 individual carbon filaments.\n3K means there are 3,000 filaments per \"tow\". 12K means there are 12,000 filaments per \"tow\".\nUD and 3k weave are more and more popular,\n9",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Carbon Fiber Fabric styles\nContent: 9\nCarbon Fiber Fabric styles\nWoven\nMost fabric constructions offer more flexibility for lay-up of complex shapes than straight unidirectional tapes offer. Fabrics used for structural applications use like fibers or strands of the same weight or yield in both the warp (longitudinal) and weft (transverse) directions.\nCarbon Fibers are actually quite small. Fibers are bundled together to make yarns.\nThe Yarns, are in many sizes:–\nSmall Tow: 3K, 12K, 24K\nLarge Tow: Larger than 24K\nCarbon Fiber Tow is the thread used to weave carbon fiber fabrics. This 24K tow (or yarn) is composed of 24,000 individual carbon filaments.\n3K means there are 3,000 filaments per \"tow\". 12K means there are 12,000 filaments per \"tow\".\nUD and 3k weave are more and more popular,\n9",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Carbon Fiber Fabric styles"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_992a548746bd28d2f07545fa",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_c97584bdfe6941b99cd11809957b0fa5",
+      "source_node_ids": [
+        "text_b7d30386667e4440912103a674a76873",
+        "text_857810989c534c9ca32f0eb7e8c38ad3",
+        "text_fbdda321ef7341d5ba3c7e22f173335d",
+        "text_eff59309066b4b9ab326b441e4478a1c",
+        "note_84d36989c9a24b3fb5def8fa00297f13"
+      ],
+      "content_text": "10\nThree Methods for Creating Carbon Fiber Parts\n1. Wet Lay-Up\nIn wet lay-up, the fiber is cut and laid into the mold then resin is applied via a brush, roller, or spray gun. This method requires the most skills to create high-quality parts, but it is also the least expensive workflow with the lowest requirements to get started with making DIY carbon fiber parts. If you are new to carbon fiber parts manufacturing and not equipped yet, we would recommend starting with wet lay-up hand lamination.\n10",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Three Methods for Creating Carbon Fiber Parts\nContent: 10\nThree Methods for Creating Carbon Fiber Parts\n1. Wet Lay-Up\nIn wet lay-up, the fiber is cut and laid into the mold then resin is applied via a brush, roller, or spray gun. This method requires the most skills to create high-quality parts, but it is also the least expensive workflow with the lowest requirements to get started with making DIY carbon fiber parts. If you are new to carbon fiber parts manufacturing and not equipped yet, we would recommend starting with wet lay-up hand lamination.\n10",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Three Methods for Creating Carbon Fiber Parts"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_a4ee613f4c00432d2a077487",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_aa3137372a6c4ea1b7f775dc82830ca8",
+      "source_node_ids": [
+        "text_1eb40ca64733486cb3b7fc203131d8cb",
+        "text_769340f25c3a431595eb9174db49a047",
+        "text_c9a4112b46a64691a3775789a9534224",
+        "text_1bc01706f8c341108722f98e1d8dafc3",
+        "note_a36fe428d6454101b45c067845e33da9"
+      ],
+      "content_text": "11\nThree Methods for Creating Carbon Fiber Parts\n2. Prepreg Lamination\nWith prepreg lamination, the resin is infused in the fiber ahead. Pre-impregnated sheets are stored cold to inhibit the cure. Plies are then cured into the mold under heat and pressure in an autoclave. This is a more precise and repeatable process because the quantity of resin is controlled but it is also the most expensive technique that is usually used in high-performance applications.\n11",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Three Methods for Creating Carbon Fiber Parts\nContent: 11\nThree Methods for Creating Carbon Fiber Parts\n2. Prepreg Lamination\nWith prepreg lamination, the resin is infused in the fiber ahead. Pre-impregnated sheets are stored cold to inhibit the cure. Plies are then cured into the mold under heat and pressure in an autoclave. This is a more precise and repeatable process because the quantity of resin is controlled but it is also the most expensive technique that is usually used in high-performance applications.\n11",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Three Methods for Creating Carbon Fiber Parts"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_b991d2ad32e3b0976f12e578",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_2656de02b22249f5849925f47c0852bd",
+      "source_node_ids": [
+        "text_a163056d1379429fb920ed92e5a7d952",
+        "text_3f67d29447e8445a80c3610b704b275b",
+        "text_23bdb537c4a6425cb95a12528a299349",
+        "text_46c8df67015c47fda093922e8d578169",
+        "text_f9cd600e513f4666b1a98313830a33e4",
+        "text_c62a1419fa0b495fae0da85182c7f398",
+        "text_4927f0eb5ce44fc0963cb99c56dcff41",
+        "text_133e22537d654d9a9bb9673075c1e97f",
+        "text_f2ee821dde7b4c60888855ff4fa3c59e",
+        "text_753cc9899f864db6bd38c08295de45e0",
+        "text_aabad3d5cda24e87b1ae5e42a5f52bca",
+        "text_7a78d8367d6e4e24a0b6840acb88bc20",
+        "text_4438c7681c864960a280577cc1b7db8a",
+        "text_aab34a06aad84b15bf8d7ee2ae94979d",
+        "text_f7a69166058a4f7b8dc6752970e3e97b",
+        "text_ee5b176ceea447849b0f914f68d2e52d",
+        "text_3e3c0175236d49c581d89dbe7e9ef5ae",
+        "text_5f7f9b300c5c4f1d9d6b79c09500f637",
+        "text_057592383294458eab3da4aec46684ce",
+        "note_8b5f35dee3ac49aa849557973976e7f4"
+      ],
+      "content_text": "12\nThree Methods for Creating Carbon Fiber Parts\nConsumables for vacuum bag processing :\nRelease agent :\nHelp the cured prepreg part come off the tool easily.\nPeel ply (optional):\nIt allows vapors and extra resin pass during curing. After curing, it can be removed to leave a surface ready for bonding or painting.\nBleeder fabric (optional):\nMade of felt or glass fabric, it absorbs extra resin. The amount of bleeder controls resin flow to achieve the desired fiber content.\nRelease film:\nIt stops excess resin flow and lets air and vapors pass through tiny holes to the breather layer above.\nBreather fabric:\nHelps create vacuum and removes air and vapors from the assembly. Thicker breathers are used for high autoclave pressures.\nEdge dam:\nKeeps resin contained and maintains the part’s shape.\nVacuum bag/sealant tape:\nCreates a sealed bag so air can be removed to form a vacuum.\n2. Prepreg Vacuum bag process\nIt is recommended that new consumables are used each time to ensure the manufacture of good quality components.\n12",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Three Methods for Creating Carbon Fiber Parts\nContent: 12\nThree Methods for Creating Carbon Fiber Parts\nConsumables for vacuum bag processing :\nRelease agent :\nHelp the cured prepreg part come off the tool easily.\nPeel ply (optional):\nIt allows vapors and extra resin pass during curing. After curing, it can be removed to leave a surface ready for bonding or painting.\nBleeder fabric (optional):\nMade of felt or glass fabric, it absorbs extra resin. The amount of bleeder controls resin flow to achieve the desired fiber content.\nRelease film:\nIt stops excess resin flow and lets air and vapors pass through tiny holes to the breather layer above.\nBreather fabric:\nHelps create vacuum and removes air and vapors from the assembly. Thicker breathers are used for high autoclave pressures.\nEdge dam:\nKeeps resin contained and maintains the part’s shape.\nVacuum bag/sealant tape:\nCreates a sealed bag so air can be removed to form a vacuum.\n2. Prepreg Vacuum bag process\nIt is recommended that new consumables are used each time to ensure the manufacture of good quality components.\n12",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Three Methods for Creating Carbon Fiber Parts"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_83d779f7993c1699d803efdc",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_f091ee9affe54955aa0374eeb70e1dce",
+      "source_node_ids": [
+        "text_b49cf527d2294ac0a8d51a1e81d5db9c",
+        "text_fdc1da18d36a44ad81e02b0938c814e9",
+        "text_1b6726ea641f442eb687b16b4d03e616",
+        "text_437c371182864b538a8239023f547977",
+        "note_43bff0e6fd5c42a3abda976f7a375ca1"
+      ],
+      "content_text": "13\nThree Methods for Creating Carbon Fiber Parts\n3. Resin transfer molding (RTM)\nWith RTM molding, the dry fiber is inserted into a two-part mold. The mold is clamped shut before forcing the resin into the cavity at high pressure. It is usually automated and used for larger volume manufacturing.\n13",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Three Methods for Creating Carbon Fiber Parts\nContent: 13\nThree Methods for Creating Carbon Fiber Parts\n3. Resin transfer molding (RTM)\nWith RTM molding, the dry fiber is inserted into a two-part mold. The mold is clamped shut before forcing the resin into the cavity at high pressure. It is usually automated and used for larger volume manufacturing.\n13",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Three Methods for Creating Carbon Fiber Parts"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_be25dcb651263673afeea265",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_aa5b443b5aad42ebacbac0c1433953ba",
+      "source_node_ids": [
+        "text_35d0cc3d8cc149d1887a3ae5f0e124ab",
+        "text_326eca6ec02446d7b832452d812312f6",
+        "text_f614744972e14b2098f457e4f0e46a03",
+        "text_056b3ba13ec340488adfd0fc2a86db6d",
+        "text_9ec38c14d5724892a475d8bc036c9103",
+        "note_13a768eed498411d9fa1338fe5644a6d"
+      ],
+      "content_text": "14\nCarbon Fiber 3D Printing\nThere is strong demand for workflows that combine the strength, durability, and ruggedness of traditional carbon fiber parts with the agility, geometric possibilities, and repeatability of 3D printing. It’s therefore not surprising that there are many 3D printing companies that offer carbon fiber 3D printing, with the two currently available processes being printing with chopped fibers or continuous fibers.\nUsing chopped carbon fibers, Nylon 11 CF Powder for the Fuse 1+ 30W selective laser sintering (SLS) industrial 3D printer enables manufacturers to create strong, lightweight, and heat-resistant parts, without relying on traditional overlay or machining methods.\nFormlabs Nylon 11 CF Powder is strong, lightweight, and heat resistant, making it ideal for automotive, aerospace, and manufacturing applications\n14",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Carbon Fiber 3D Printing\nContent: 14\nCarbon Fiber 3D Printing\nThere is strong demand for workflows that combine the strength, durability, and ruggedness of traditional carbon fiber parts with the agility, geometric possibilities, and repeatability of 3D printing. It’s therefore not surprising that there are many 3D printing companies that offer carbon fiber 3D printing, with the two currently available processes being printing with chopped fibers or continuous fibers.\nUsing chopped carbon fibers, Nylon 11 CF Powder for the Fuse 1+ 30W selective laser sintering (SLS) industrial 3D printer enables manufacturers to create strong, lightweight, and heat-resistant parts, without relying on traditional overlay or machining methods.\nFormlabs Nylon 11 CF Powder is strong, lightweight, and heat resistant, making it ideal for automotive, aerospace, and manufacturing applications\n14",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Carbon Fiber 3D Printing"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_484ff4c1e9c8d23e4d8c8b75",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_b94a6098a6e34ed3bb7242c837775b2c",
+      "source_node_ids": [
+        "text_1afdb99cdf2a4e40b60089e81b239ef0",
+        "text_beb5a766d65c44c791c6835780c43c56",
+        "text_a3005faf45524de387c00504dab8cdc7",
+        "text_421cb43a9baa454db45da38732f9b31c",
+        "text_f714c598438f46d99bdb1aef9e029812",
+        "text_e45ee107272e4b2b8de18d1c7254f621",
+        "text_b0350aca91f34627b2d47221cf268560",
+        "text_758b8543082443dc895f9572549c4f99",
+        "text_15c04e747fab4a94b271c28bba2b9c71",
+        "text_eb9155a69c664b19a15aa6fb85651091",
+        "text_2e84953576f4400bb11bdf5f69429c2d",
+        "note_1a91e2864652451fb3685d2545a77877"
+      ],
+      "content_text": "15\nLOCATOR AND FIXING STRATEGY\nY Locators\nX Resting\nX Resting\nSnap\nSnap\nSnap\nZ Resting\nZ Resting\nZ Resting\n15",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > LOCATOR AND FIXING STRATEGY\nContent: 15\nLOCATOR AND FIXING STRATEGY\nY Locators\nX Resting\nX Resting\nSnap\nSnap\nSnap\nZ Resting\nZ Resting\nZ Resting\n15",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "LOCATOR AND FIXING STRATEGY"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_32a847ff25eeb8d5413cbf53",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_075bfd79aebe49a9a60e46578d9ae265",
+      "source_node_ids": [
+        "text_006ab84dc91348abb724cde0d8efa736",
+        "text_70a19959165442c49973e411b984edc8",
+        "text_0a57feacb5ea42fb804a20f1d048e075",
+        "text_d7fce0bdc12e448292b16ba17a49e0fe",
+        "text_7ad19222a3dc472da0315dad2f4c0246",
+        "text_6b607ae47c15479d8a95ac8e6ddd0fd1",
+        "text_f210a4cf468f467fbd4f1df2db883165",
+        "text_2b541fafaa98486599dadc3e12795266",
+        "note_71ac3721dabd4f489b9dee4abc8647b9"
+      ],
+      "content_text": "16\nDesign Guidelines\nPart Thickness\nPart thickness of the carbon fiber : 1 mm to 1.4 mm depends on the requirement.\nFlange thickness can be made to 3mm for fixing with surrounding parts.\nA\nA\nSection A-A\n16",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 16\nDesign Guidelines\nPart Thickness\nPart thickness of the carbon fiber : 1 mm to 1.4 mm depends on the requirement.\nFlange thickness can be made to 3mm for fixing with surrounding parts.\nA\nA\nSection A-A\n16",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_c7e443d622470202b0c40af2",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_e77f10922dcf4a5089ba953177f77128",
+      "source_node_ids": [
+        "text_d3357b911a3d48dbb2abcab9f0606931",
+        "text_2aff8ac18cc34403937848284fc77bc5",
+        "text_0ccaad8d474d4418b3b13f01b58b4b87",
+        "text_390055659f154299b99aba5c30b87679",
+        "note_5c837562590947569fdb1624d70e9140"
+      ],
+      "content_text": "17\nDesign Guidelines\nFixing Clip distance\nFixing clips/positive fixing to be kept at 100-150mm apart from each other.\n17",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 17\nDesign Guidelines\nFixing Clip distance\nFixing clips/positive fixing to be kept at 100-150mm apart from each other.\n17",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_bcdeec4d37e9d0bdb650f29d",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_6b2eee723e264be68b4ea136c3be1ba5",
+      "source_node_ids": [
+        "text_7a5ae72abbe94fdeb063b7e532587ce2",
+        "text_99697146b5fa4839b7fd2ce6fc833e79",
+        "text_869eb1c0ee274673933cd6a23cc98da5",
+        "text_ffd8a4eb501a4741923b954d611dd92a",
+        "text_43e5114f8ff346bebdda5c40951a732b",
+        "text_32f8272f0a1a4ba7874b0fb0e876fb4d",
+        "text_748a7fcc0b064d62bf34e8aab461c278",
+        "note_67046497779a4775b7c22f3e910aa315"
+      ],
+      "content_text": "18\nDesign Guidelines\nZ resting\nZ resting of the part to be provided as per 3-2-1 principle.\nTouching Condition\nPlastic Interface\nCarbon Fiber\n18",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 18\nDesign Guidelines\nZ resting\nZ resting of the part to be provided as per 3-2-1 principle.\nTouching Condition\nPlastic Interface\nCarbon Fiber\n18",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_fc19737dff8e4a90deaf13ef",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_df5b17f726424b42937a4d4e3c058e6b",
+      "source_node_ids": [
+        "text_444b041f81a04440b9d5d202269fa114",
+        "text_32683b412d1a4003b13eb94ed6187b88",
+        "text_32dc7d75155b4487b501c1c000dbe337",
+        "text_2835c778631e42228473b077ed01320a",
+        "text_ae8b00f658454fb780a28fd6fe03e2ad",
+        "text_f7ac903bb53d43d28aed67c1bb1523cc",
+        "text_84cd877169d34790a86d4118e7b15fbd",
+        "text_7221ec25037d47d280489a4eb3126449",
+        "note_517ba5b9731d461e80f19c83c0264cfd"
+      ],
+      "content_text": "19\nDesign Guidelines\nX resting\nX resting of the part to be provided as per 3-2-1 principle.\n** Supplier Requirement: For Carbon fiber parts X support does not rest on the C channel face as the carbon fiber material is stiff it might result the clips to not engage during fixing hence need to keep a gap of 0.5mm instead of resting.\nA\nA\nSection A-A\n19",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 19\nDesign Guidelines\nX resting\nX resting of the part to be provided as per 3-2-1 principle.\n** Supplier Requirement: For Carbon fiber parts X support does not rest on the C channel face as the carbon fiber material is stiff it might result the clips to not engage during fixing hence need to keep a gap of 0.5mm instead of resting.\nA\nA\nSection A-A\n19",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_5a8deac02660887300bd83da",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_c4a54e51cc0843d2bc86c4e3f9872729",
+      "source_node_ids": [
+        "text_55496cd967a644a9846fdaed8c35011f",
+        "text_9eebe1eb58c947c8a77011a2d0a68638",
+        "text_fd8cdf911d924bfbbaf432ee8d6e852a",
+        "text_ea078f00c44c4a13bd75828039728279",
+        "note_ced50a33cb024505a98ea88cc30435db"
+      ],
+      "content_text": "20\nDesign Guidelines\nMINIMUM RADII\nThe minimum radii allowed are 1mm. Lower values may be used only if appropriate DFM has been carried out with the supplier of the component.\n20",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 20\nDesign Guidelines\nMINIMUM RADII\nThe minimum radii allowed are 1mm. Lower values may be used only if appropriate DFM has been carried out with the supplier of the component.\n20",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_c5a19d00ac9f9d5006da88f1",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_9da5693ea4b2480684b01eae4e917c21",
+      "source_node_ids": [
+        "text_b9f1ab0ec54f4f1a954431b38fb0608f",
+        "text_0a6c1a0b30f941c5a21a8bb1492f9d4e",
+        "text_7fec8c87de6c46f2be4f30535ea2a193",
+        "text_f65eae0a9b7745198b4ceb835493f825",
+        "text_3fba34815cb14bb28268dc8d3c79af98",
+        "note_21805610ff0143b99ff0d58d1fde25da"
+      ],
+      "content_text": "21\nDesign Guidelines\nEDGE CONDITION\nThe minimum distance allowed are 3mm. Lower values may be used only if appropriate DFM has been carried out with the supplier of the component.\nFor plastic parts also any hole, slot or similar feature should maintain a minimum edge distance of 3mm.\n21",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 21\nDesign Guidelines\nEDGE CONDITION\nThe minimum distance allowed are 3mm. Lower values may be used only if appropriate DFM has been carried out with the supplier of the component.\nFor plastic parts also any hole, slot or similar feature should maintain a minimum edge distance of 3mm.\n21",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_c098b85402335dc04cb294cb",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_f1ef2152415d4a66be0dd7cbe6ec42fd",
+      "source_node_ids": [
+        "text_20c719a1377845dcb4305bf89c4b2011",
+        "text_afcdff20246d4af9ba78df6530d5974c",
+        "text_fe5c705c6ad249fc9482d30d35861c4a",
+        "text_1923496848ef4795ae7e980158720490",
+        "note_4abb2ac483034ceb952885aa7d1a9ccc"
+      ],
+      "content_text": "22\nDesign Guidelines\nAbruption In Filleting\nYellow highlighted surface has abrupted in filleting\n22",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 22\nDesign Guidelines\nAbruption In Filleting\nYellow highlighted surface has abrupted in filleting\n22",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_f805c910670b9ddfcf751282",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_ab8b2b54d3d24c9cbaf9ff735556ab21",
+      "source_node_ids": [
+        "text_f4b62109e4c24edca90213869e362d5f",
+        "text_ad18a2f834774e76b70afdf234a5b90e",
+        "text_d4fd2887436142ce83cfb9c017034764",
+        "text_b71ec687ab2c4dff84a372047234d61d",
+        "text_3c97ae3246dc439b8182c092e6404997",
+        "note_e7f0ab36763043e5a713660bc30f4993"
+      ],
+      "content_text": "23\nDesign Guidelines\nUndercut in Tool\nIn areas where the molded surface is required to extend beyond the constraints of being visible in the tooling direction to create an undercut or lower molded return surface, additional tooling is required Any Undercut in Main tooling need Separate tool\nProvide sufficient draft for Side tool if it is needed\n23",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 23\nDesign Guidelines\nUndercut in Tool\nIn areas where the molded surface is required to extend beyond the constraints of being visible in the tooling direction to create an undercut or lower molded return surface, additional tooling is required Any Undercut in Main tooling need Separate tool\nProvide sufficient draft for Side tool if it is needed\n23",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_208190c0459cb80aaff5db40",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_1b8f905a472943c2ab56c00b4e60571c",
+      "source_node_ids": [
+        "text_6add7a9188174c84966ee5e4bcbfb605",
+        "text_67a9464137de44e0be3e87d9506a8d62",
+        "text_39e81ae0818048fd9b848596d3aa698e",
+        "note_03bd3bcbaefa4b18962cc1901cf0c404"
+      ],
+      "content_text": "24\nDesign Guidelines\nDraft Angle\n24",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 24\nDesign Guidelines\nDraft Angle\n24",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_221bc4275c42c7d71c9e1010",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_89eae92c812e4e49991a0100ff4ec78d",
+      "source_node_ids": [
+        "text_a98cf345de2d48df858112718f9e6a7a",
+        "text_be0245dc35ba471fb452dea18d30721d",
+        "text_64d6630fc64242298beb1b55d819935d",
+        "note_ef931d69f0a244fb9ca69b71a77f891a"
+      ],
+      "content_text": "25\nDesign Guidelines\nSharpe Condition\n25",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 25\nDesign Guidelines\nSharpe Condition\n25",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_91fecae12736980339c4210d",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_7bfd08b1f98e4d97af4753eb655412d7",
+      "source_node_ids": [
+        "text_af878a33dfde43739a5cd6896fa14410",
+        "text_cec84f720ff74c9d8ddef2b7c833c1c2",
+        "text_8d299475e1b84195a1ed2d8296138efe",
+        "note_135c9187d193450bbf9383f6c2578064"
+      ],
+      "content_text": "26\nDesign Guidelines\nUneven Edge\n26",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Design Guidelines\nContent: 26\nDesign Guidelines\nUneven Edge\n26",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Design Guidelines"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_2ec6ed6736919806544387c2",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_cdbf327d47624863ac7475488b269ff9",
+      "source_node_ids": [
+        "text_ad5f80e7397a4815acb06d22c8fa2f62",
+        "text_7125bfed7b384673a6db4e2509b60b6d",
+        "text_c3d814b17a3d4fc58c1246a4b42ff424",
+        "text_61eb085d16ea4d2d82723dd2e4fe87e7",
+        "text_f83ff078b9bb411ebc541b4398ffa516",
+        "text_50ae0790c49b481f9890bd0f03c79c9a",
+        "note_03e88f312c70498d8cd6b6b04769994a"
+      ],
+      "content_text": "27\nAssembly of Carbon Fiber\nFixing type\nBOLT M6X14 HF HITEMP\nBOLT M6X18 TRUSS SLOT PIL 8\n3M TAPES\n27",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Assembly of Carbon Fiber\nContent: 27\nAssembly of Carbon Fiber\nFixing type\nBOLT M6X14 HF HITEMP\nBOLT M6X18 TRUSS SLOT PIL 8\n3M TAPES\n27",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Assembly of Carbon Fiber"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_055d222b9cc9015e62b39003",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_662f92e3ec934a099519bc832f3af782",
+      "source_node_ids": [
+        "text_65983d59dd2c41a0a2566ba14caf271b",
+        "text_4dc6afca593e458cb48d4938a5296075",
+        "text_a6af26080cd04daebde7049eb7b3fef2",
+        "note_c2b8e49e24004a1d89ba8d93a30e87e3"
+      ],
+      "content_text": "28\nAssembly of Carbon Fiber\nAssembly Path\n28",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Assembly of Carbon Fiber\nContent: 28\nAssembly of Carbon Fiber\nAssembly Path\n28",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Assembly of Carbon Fiber"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    },
+    {
+      "chunk_id": "chk_f0c8a778b507ccd4b4515ba3",
+      "chunk_type": "narrative",
+      "document_id": "doc-8d8b253ef87305b7122d4fcf",
+      "agent_id": "eds-agent",
+      "source_type": "pptx",
+      "source_version": "v1",
+      "parent_node_id": "slide_d9fe1125fff0446888e372493baa1ed6",
+      "source_node_ids": [
+        "text_7a5a6a75417a4525a17c3ad60acc9915",
+        "text_57f20ec3fb744eba9e5587ae79e20148",
+        "text_7327d502e2c9461ba110c9f546764730",
+        "text_385b93e8b2744ce5badb6ac63b38c188",
+        "text_b85b514110b444ac87e39b865b72bfaf",
+        "text_d8bd127ebf8d445792b68670cc577a31",
+        "text_95c4f55f26e741ddb4ce5987ab70177b",
+        "note_2932ec4b53f8416faf6751438746ad57"
+      ],
+      "content_text": "29\nAssembly of Carbon Fiber\nY0 section\nLower Splitter CF\nUpper Splitter\nGrille\nBumper\n29",
+      "embedding_text": "Document: EDS_Carbon Fiber\nContext: EDS_Carbon Fiber > EDS_Carbon Fiber > Assembly of Carbon Fiber\nContent: 29\nAssembly of Carbon Fiber\nY0 section\nLower Splitter CF\nUpper Splitter\nGrille\nBumper\n29",
+      "metadata": {
+        "breadcrumbs": [
+          "EDS_Carbon Fiber",
+          "EDS_Carbon Fiber",
+          "Assembly of Carbon Fiber"
+        ],
+        "overlap_node_ids": [],
+        "references": [],
+        "security_scope": {
+          "classification": "internal",
+          "allowed_groups": [],
+          "allowed_users": [],
+          "tags": []
+        },
+        "source_hash": "sha256:b7d6b438acae8bbf8e7d3e01d3e39cc3bd153e8d9f6c6c3744d244c1208720da",
+        "page_number": null,
+        "slide_number": null,
+        "sheet_name": null,
+        "cell_range": null,
+        "answer_eligible_references": []
+      }
+    }
+  ],
+  "rejected": []
+}

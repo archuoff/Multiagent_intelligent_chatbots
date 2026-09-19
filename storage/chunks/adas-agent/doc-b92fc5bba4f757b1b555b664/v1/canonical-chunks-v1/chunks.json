@@ -1,0 +1,11 @@
+{
+  "policy_version": "canonical-chunks-v1",
+  "chunks": [],
+  "rejected": [
+    {
+      "reason": "Document has blocking extraction or reconciliation errors.",
+      "node_id": null,
+      "severity": "error"
+    }
+  ]
+}

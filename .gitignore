@@ -1,0 +1,13 @@
+# Generated local ingestion artifacts are not source code.
+storage/raw/*
+storage/canonical/*
+storage/manifests/*
+storage/visual-assets/
+!storage/raw/.gitkeep
+!storage/canonical/.gitkeep
+!storage/manifests/.gitkeep
+output/
+storage/qdrant/
+
+# Local credentials and deployment settings must never be committed.
+.env

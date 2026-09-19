@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "document_id": "doc-b92fc5bba4f757b1b555b664",
+  "agent_id": "adas-agent",
+  "source_version": "v1",
+  "source_hash": "sha256:5688ef7f7d3e6091926da739cd331383185c683710771dcd464c609cb589281b",
+  "chunking_policy_version": "canonical-chunks-v1",
+  "chunk_count": 0,
+  "rejection_count": 1,
+  "status": "needs_review",
+  "chunk_artifact_path": "chunks\\adas-agent\\doc-b92fc5bba4f757b1b555b664\\v1\\canonical-chunks-v1\\chunks.json",
+  "artifact_hash": "3b5b352778333448a51952d659994f633d95594aea518f77597ce7a8facd29af",
+  "created_at": "2026-09-19T15:28:00.618504Z"
+}

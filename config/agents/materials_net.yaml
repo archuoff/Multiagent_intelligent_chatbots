@@ -1,0 +1,9 @@
+# Stable storage routing for the Materials and New Edge Technologies knowledge agent.
+schema_version: 1
+agent_id: materials_net
+display_name: Materials and New Edge Technologies Knowledge Assistant
+ui:
+  route: /agents/materials-net
+storage:
+  incoming_raw_folder: storage/raw/material-net-agent
+  qdrant_collection: jlr-materials-net-chunks
