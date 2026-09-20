@@ -11,6 +11,7 @@ class AgentState(TypedDict):
     conversation_history:Annotated[list[dict], add]
 
     intent: str  # Domain_qn/normal_qn/clarification_qn
+    resolved_query: str  # Self-contained, history-resolved version of user_query.
     needs_clarification: bool
     ask_user: str  # The question to ask the user for clarification.
 

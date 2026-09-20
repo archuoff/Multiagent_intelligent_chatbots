@@ -6,7 +6,7 @@ from typing import Any
 import requests
 
 from .state import AgentState
-from .config import AgentConfig, load_all_configs
+from .config import AgentConfig, get_agent_config
 
 logger = logging.getLogger(__name__)
 
@@ -128,8 +128,8 @@ def call_intent_classifier(
     config = _load_config(agent_id)
 
     system_prompt = INTENT_CLASSIFICATION_SYSTEM_PROMPT.format(
-        agent_name=config.name,
-        domain_description=getattr(config, "domain_description", config.name),
+        agent_name=config.display_name,
+        domain_description=config.domain_description,
     )
 
     messages = [{"role": "system", "content": system_prompt}]
@@ -193,9 +193,7 @@ def _fallback_classification(query: str) -> dict[str, Any]:
 
 
 def _load_config(agent_id: str) -> AgentConfig:
-    # TODO: route through AgentFactory's cached configs instead of reloading
-    # from disk on every classification call.
-    return load_all_configs("agents/configs")[agent_id]
+    return get_agent_config(agent_id)
 
 
 def log_classification(
