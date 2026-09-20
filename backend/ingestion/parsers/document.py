@@ -732,7 +732,11 @@ class PdfDocumentParser(SourceParser):
                 if missing_pages:
                     warnings.append(f"Docling omitted {len(missing_pages)} source pages; review recovery output.")
                 fallback = self._fallback.extract(source.file_path)
-                raw_text_index = PdfRawTextIndex(source.file_path) if inspection.has_usable_embedded_text else None
+                raw_text_index = None
+                if inspection.has_usable_embedded_text and fallback.extractor_name != "pymupdf":
+                    raw_text_index = PdfRawTextIndex(source.file_path)
+                elif fallback.extractor_name == "pymupdf":
+                    warnings.append("PDF raw-text position verification skipped because PyMuPDF produced the fallback extraction.")
                 extracted = self._merger.merge(extracted, fallback, raw_text_index=raw_text_index)
                 warnings = [
                     "Docling and local PDF fallback were quality-reconciled page by page.",

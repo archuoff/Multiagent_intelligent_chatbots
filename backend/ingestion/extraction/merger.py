@@ -59,7 +59,8 @@ class ExtractionResultMerger:
             event = self._source_event(page_number, selected_role, primary_score, fallback_score)
             page.reconciliation.append(event)
             reconciliation.append(event)
-            reconciliation.extend(self._merge_page(page, recovery, recovery_role=recovery_role,
+            reconciliation.extend(self._merge_page(page, recovery, base_source=selected_role,
+                recovery_source=self._source_from_recovery_role(recovery_role), recovery_role=recovery_role,
                 raw_text_index=raw_text_index))
             pages[page_number] = page
 
@@ -148,17 +149,19 @@ class ExtractionResultMerger:
         }
 
     # This function reconciles one page or slide before appending recovery evidence.
-    def _merge_page(self, primary: ExtractedPage, fallback: ExtractedPage, *, recovery_role: str = "fallback_recovery",
+    def _merge_page(self, primary: ExtractedPage, fallback: ExtractedPage, *, base_source: str = "docling",
+                    recovery_source: str = "fallback", recovery_role: str = "fallback_recovery",
                     raw_text_index: PdfRawTextIndex | None = None) -> list[dict[str, Any]]:
         events: list[dict[str, Any]] = []
         comparable_text = self._page_text(primary)
         for fallback_block in self._blocks(fallback):
             decision = self._reconciler.compare_text(comparable_text, fallback_block["text"])
             if decision["decision"] == "conflict":
-                decision = self._verify_text_conflict(primary.number, comparable_text, fallback_block, decision, raw_text_index)
+                decision = self._verify_text_conflict(primary, fallback_block, decision, raw_text_index,
+                    base_source=base_source, recovery_source=recovery_source)
             event = {"content_type": "text", "location": primary.number, **decision}
             events.append(event)
-            if decision["decision"] in {"fallback_only", "conflict", "conflict_resolved"} and decision.get("winning_source") != "docling":
+            if decision["decision"] in {"fallback_only", "conflict", "conflict_resolved"} and decision.get("winning_source") != base_source:
                 primary.text_blocks.append({**fallback_block, "extractor_role": recovery_role, "reconciliation": decision})
                 comparable_text = "\n".join((comparable_text, fallback_block["text"])).strip()
         original_text = self._page_text(primary)
@@ -186,34 +189,73 @@ class ExtractionResultMerger:
 
     def _verify_text_conflict(
         self,
-        page_number: int,
-        primary_text: str,
+        base_page: ExtractedPage,
         fallback_block: dict[str, Any],
         decision: dict[str, Any],
         raw_text_index: PdfRawTextIndex | None,
+        *,
+        base_source: str,
+        recovery_source: str,
     ) -> dict[str, Any]:
-        """Uses PDF raw text at the fallback bbox to resolve a conflicting text block."""
+        """Uses PDF raw text at the disputed bbox to resolve a conflicting text block."""
         bbox = fallback_block.get("bbox")
         fallback_text = normalize_text(str(fallback_block.get("text", ""))) or ""
         if raw_text_index is None or not isinstance(bbox, dict) or not fallback_text:
             return decision
+        base_block = self._best_overlapping_block(base_page, bbox)
+        if base_block is None:
+            return {**decision, "verification": {"method": "raw_text_position_skipped", "reason": "No base text block with an overlapping bbox was found."}}
+        base_text = normalize_text(str(base_block.get("text", ""))) or ""
+        if not base_text:
+            return decision
         try:
-            match = raw_text_index.match_candidates(page_number, bbox, primary_text, fallback_text)
+            match = raw_text_index.match_candidates(base_page.number, bbox, base_text, fallback_text)
         except Exception as error:
             return {**decision, "verification": {"method": "raw_text_position_error", "error_type": type(error).__name__}}
         verification = {
             "method": match.method,
             "bbox_used": bbox,
+            "base_bbox_used": base_block.get("bbox"),
             "raw_region_text": match.region_text,
             "candidate_a_matches": match.candidate_a_matches,
             "candidate_b_matches": match.candidate_b_matches,
             "confidence": match.confidence,
         }
         if match.winner == "A":
-            return {**decision, "decision": "conflict_resolved", "winning_source": "docling", "verification": verification}
+            return {**decision, "decision": "conflict_resolved", "winning_source": base_source, "verification": verification}
         if match.winner == "B":
-            return {**decision, "decision": "conflict_resolved", "winning_source": "fallback", "verification": verification}
+            return {**decision, "decision": "conflict_resolved", "winning_source": recovery_source, "verification": verification}
         return {**decision, "verification": verification}
+
+    def _source_from_recovery_role(self, recovery_role: str) -> str:
+        """Maps internal recovery roles to source names used in audit metadata."""
+        return "docling" if recovery_role == "docling_recovery" else "fallback"
+
+    def _best_overlapping_block(self, page: ExtractedPage, bbox: dict[str, Any]) -> dict[str, Any] | None:
+        """Finds the base text block that best overlaps a recovery block bbox."""
+        target = self._normalized_bbox(bbox)
+        if target is None:
+            return None
+        candidates: list[tuple[float, dict[str, Any]]] = []
+        for block in page.text_blocks:
+            block_box = self._normalized_bbox(block.get("bbox"))
+            text = normalize_text(str(block.get("text", "")))
+            if block_box is None or not text:
+                continue
+            overlap = self._overlap_area(target, block_box)
+            if overlap > 0:
+                candidates.append((overlap, block))
+        if candidates:
+            return max(candidates, key=lambda item: item[0])[1]
+        return None
+
+    def _overlap_area(self, first: dict[str, float], second: dict[str, float]) -> float:
+        """Computes bbox overlap area in normalized left/top/width/height space."""
+        left = max(first["left"], second["left"])
+        top = max(first["top"], second["top"])
+        right = min(first["left"] + first["width"], second["left"] + second["width"])
+        bottom = min(first["top"] + first["height"], second["top"] + second["height"])
+        return max(0.0, right - left) * max(0.0, bottom - top)
 
     def _blocks(self, page: ExtractedPage) -> list[dict[str, Any]]:
         """Uses native blocks when available, otherwise treats page text as one recovery block."""
@@ -282,9 +324,12 @@ class ExtractionResultMerger:
         return ("locator", locator)
 
     def _normalized_bbox(self, bbox: Any) -> dict[str, int | float] | None:
-        """Standardizes left/top/right/bottom and left/top/width/height boxes."""
+        """Standardizes x0/y0/x1/y1, left/top/right/bottom, and left/top/width/height boxes."""
         if not isinstance(bbox, dict):
             return None
+        if all(isinstance(bbox.get(key), (int, float)) for key in ("x0", "y0", "x1", "y1")):
+            left, top, right, bottom = bbox["x0"], bbox["y0"], bbox["x1"], bbox["y1"]
+            return {"left": min(left, right), "top": min(top, bottom), "width": abs(right - left), "height": abs(bottom - top)}
         left, top = bbox.get("left"), bbox.get("top")
         if not isinstance(left, (int, float)) or not isinstance(top, (int, float)):
             return None

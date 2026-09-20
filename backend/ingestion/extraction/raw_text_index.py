@@ -132,13 +132,11 @@ class PdfRawTextIndex:
         return words
 
     def _contains_candidate(self, region_text: str, candidate: str) -> bool:
-        """Matches candidate text after normalization and token fallback."""
+        """Matches candidate text as a token sequence, never as a loose substring."""
         region = normalize_text(region_text) or ""
         value = normalize_text(candidate) or ""
         if not region or not value:
             return False
-        if value.casefold() in region.casefold():
-            return True
         region_tokens = self._TOKEN_PATTERN.findall(region.casefold())
         candidate_tokens = self._TOKEN_PATTERN.findall(value.casefold())
         if not candidate_tokens or len(candidate_tokens) > len(region_tokens):

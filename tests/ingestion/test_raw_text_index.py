@@ -41,6 +41,13 @@ class PdfRawTextIndexTests(unittest.TestCase):
         self.assertIsNone(neither.winner)
         self.assertEqual(both.method, "raw_text_position_inconclusive")
 
+    def test_numeric_candidate_does_not_match_inside_larger_token(self):
+        """Boundary-safe matching prevents 80 from matching inside 1980."""
+        index = PdfRawTextIndex(words=[RawPdfWord(1, 10, 10, 50, 20, "1980")])
+        result = index.match_candidates(1, {"x0": 0, "y0": 0, "x1": 60, "y1": 30}, "80", "90")
+        self.assertIsNone(result.winner)
+        self.assertFalse(result.candidate_a_matches)
+
 
 if __name__ == "__main__":
     unittest.main()

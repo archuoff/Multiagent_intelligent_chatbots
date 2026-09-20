@@ -66,7 +66,9 @@ class ReconciliationTests(unittest.TestCase):
     def test_raw_text_index_can_resolve_conflict_to_fallback_block(self):
         """PDF source-position text can approve a conflicting fallback value."""
         primary = ExtractionResult("docling", "primary", pages=[
-            ExtractedPage(1, text="Maximum operating temperature is 90 C for this sensor.")
+            ExtractedPage(1, text="Maximum operating temperature is 90 C for this sensor.",
+                          text_blocks=[{"text": "Maximum operating temperature is 90 C for this sensor.",
+                                        "bbox": {"x0": 0, "y0": 0, "x1": 300, "y1": 20}}])
         ])
         fallback = ExtractionResult("pymupdf", "fallback", pages=[
             ExtractedPage(1, text_blocks=[{"text": "Maximum operating temperature is 80 C for this sensor.",
@@ -91,7 +93,9 @@ class ReconciliationTests(unittest.TestCase):
     def test_raw_text_index_can_resolve_conflict_to_docling_text(self):
         """PDF source-position text can reject an incorrect fallback value."""
         primary = ExtractionResult("docling", "primary", pages=[
-            ExtractedPage(1, text="Maximum operating temperature is 90 C for this sensor.")
+            ExtractedPage(1, text="Maximum operating temperature is 90 C for this sensor.",
+                          text_blocks=[{"text": "Maximum operating temperature is 90 C for this sensor.",
+                                        "bbox": {"x0": 0, "y0": 0, "x1": 300, "y1": 20}}])
         ])
         fallback = ExtractionResult("pymupdf", "fallback", pages=[
             ExtractedPage(1, text_blocks=[{"text": "Maximum operating temperature is 80 C for this sensor.",
@@ -110,7 +114,8 @@ class ReconciliationTests(unittest.TestCase):
         ])
         merged = self.merger.merge(primary, fallback, raw_text_index=raw_index)
         self.assertFalse(merged.requires_review)
-        self.assertEqual(merged.pages[0].text_blocks, [])
+        self.assertEqual(len(merged.pages[0].text_blocks), 1)
+        self.assertEqual(merged.pages[0].text_blocks[0]["text"], "Maximum operating temperature is 90 C for this sensor.")
         self.assertEqual(merged.pages[0].reconciliation[-1]["winning_source"], "docling")
 
     def test_recovery_block_does_not_overwrite_primary_page_text(self):
