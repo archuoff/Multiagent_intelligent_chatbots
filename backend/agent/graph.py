@@ -17,6 +17,8 @@ chat response.
 
 from __future__ import annotations
 
+import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
 from typing import Any, Callable
 
@@ -34,6 +36,8 @@ from backend.retrieval.service import RetrievalService
 
 GraphNode = Callable[[AgentState], dict[str, Any]]
 
+logger = logging.getLogger(__name__)
+
 
 def _default_decompose_node(state: AgentState) -> dict[str, Any]:
     """Splits the resolved query into sub-queries; only reached when requires_decomposition is true."""
@@ -46,20 +50,46 @@ def make_retrieve_node(service: RetrievalService) -> GraphNode:
 
     Runs once per entry in sub_queries when decomposition happened, or once
     on the single resolved_query otherwise -- the same node handles both
-    shapes uniformly. Results are merged by chunk_id (a chunk matching more
-    than one sub-query is kept once) and re-sorted by score.
+    shapes uniformly. When there's more than one query, each retrieve()
+    call is a real network round-trip (embed + Qdrant search), so they run
+    concurrently via a thread pool rather than one after another -- with up
+    to 4 sub-queries, running them sequentially could mean several extra
+    seconds of wait for one user question. A single query skips the thread
+    pool entirely (the common case, no concurrency overhead needed).
+    Results are merged by chunk_id (a chunk matching more than one
+    sub-query is kept once) and re-sorted by score; a failure retrieving
+    for one sub-query is logged and skipped rather than failing the whole
+    response when other sub-queries succeeded.
     """
+
+    def run_one(query_text: str, *, agent_id: str, principal_group_codes: frozenset[str], principal_user_id: str):
+        return service.retrieve(agent_id=agent_id, query_text=rewrite_query(query_text),
+            principal_group_codes=principal_group_codes, principal_user_id=principal_user_id)
 
     def retrieve_node(state: AgentState) -> dict[str, Any]:
         queries = state.get("sub_queries") or [state.get("resolved_query") or state["user_query"]]
         principal_group_codes = frozenset(state.get("principal_group_codes") or [])
         principal_user_id = state.get("principal_user_id", "")
         agent_id = state["agent_id"]
+
+        results = []
+        if len(queries) == 1:
+            results = [run_one(queries[0], agent_id=agent_id, principal_group_codes=principal_group_codes,
+                principal_user_id=principal_user_id)]
+        else:
+            with ThreadPoolExecutor(max_workers=len(queries)) as executor:
+                future_to_query = {executor.submit(run_one, query_text, agent_id=agent_id,
+                    principal_group_codes=principal_group_codes, principal_user_id=principal_user_id): query_text
+                    for query_text in queries}
+                for future in as_completed(future_to_query):
+                    try:
+                        results.append(future.result())
+                    except Exception as error:
+                        logger.error(f"[retrieve_node] Retrieval failed for sub-query {future_to_query[future]!r}: {error}")
+
         seen_chunk_ids: set[str] = set()
         combined_chunks: list[dict[str, Any]] = []
-        for query_text in queries:
-            result = service.retrieve(agent_id=agent_id, query_text=rewrite_query(query_text),
-                principal_group_codes=principal_group_codes, principal_user_id=principal_user_id)
+        for result in results:
             for chunk in result.chunks:
                 if chunk.chunk_id in seen_chunk_ids:
                     continue

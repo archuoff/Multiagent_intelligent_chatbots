@@ -8,6 +8,8 @@ of the graph itself is under test.
 
 from __future__ import annotations
 
+import threading
+import time
 import unittest
 
 from backend.agent.graph import build_agent_graph, make_retrieve_node
@@ -149,14 +151,27 @@ class FakeRetrievalResult:
 
 
 class FakeRetrievalService:
-    """Returns a preconfigured result per query_text so merge/dedupe logic can be tested directly."""
+    """Returns a preconfigured result per query_text so merge/dedupe logic can be tested directly.
 
-    def __init__(self, results_by_query: dict[str, list[FakeRetrievalResultChunk]]) -> None:
+    Thread-safe: retrieve() may be called concurrently once make_retrieve_node
+    runs more than one query through its thread pool.
+    """
+
+    def __init__(self, results_by_query: dict[str, list[FakeRetrievalResultChunk]], *,
+                 delays: dict[str, float] | None = None, errors: dict[str, Exception] | None = None) -> None:
         self.results_by_query = results_by_query
+        self.delays = delays or {}
+        self.errors = errors or {}
         self.calls: list[str] = []
+        self._lock = threading.Lock()
 
     def retrieve(self, *, agent_id, query_text, principal_group_codes, principal_user_id, **_):
-        self.calls.append(query_text)
+        with self._lock:
+            self.calls.append(query_text)
+        if query_text in self.delays:
+            time.sleep(self.delays[query_text])
+        if query_text in self.errors:
+            raise self.errors[query_text]
         return FakeRetrievalResult(self.results_by_query.get(query_text, []))
 
 
@@ -177,8 +192,10 @@ class RetrieveNodeMergeTests(unittest.TestCase):
         })
         node = make_retrieve_node(service)
         result = node(base_state(sub_queries=["spec for A", "spec for B"]))
-        self.assertEqual(service.calls, ["spec for A", "spec for B"])
-        self.assertEqual([c["chunk_id"] for c in result["retrieved_chunks"]], ["c1", "c2"])
+        # Order is not asserted: concurrent execution doesn't guarantee call order,
+        # only that both actually ran.
+        self.assertEqual(sorted(service.calls), ["spec for A", "spec for B"])
+        self.assertEqual({c["chunk_id"] for c in result["retrieved_chunks"]}, {"c1", "c2"})
 
     def test_a_chunk_matching_multiple_sub_queries_is_deduplicated(self):
         service = FakeRetrievalService({
@@ -199,6 +216,28 @@ class RetrieveNodeMergeTests(unittest.TestCase):
         node = make_retrieve_node(service)
         result = node(base_state(sub_queries=["low first", "high second"]))
         self.assertEqual([c["chunk_id"] for c in result["retrieved_chunks"]], ["high", "low"])
+
+    def test_multiple_sub_queries_actually_run_concurrently_not_sequentially(self):
+        """Proves real parallelism, not just correctness: 4 queries that each take
+        ~0.2s finish in well under their sequential sum (~0.8s) when run together."""
+        delay = 0.2
+        queries = ["q1", "q2", "q3", "q4"]
+        service = FakeRetrievalService({q: [FakeRetrievalResultChunk(q, 0.5)] for q in queries},
+            delays={q: delay for q in queries})
+        node = make_retrieve_node(service)
+        start = time.monotonic()
+        node(base_state(sub_queries=queries))
+        elapsed = time.monotonic() - start
+        self.assertLess(elapsed, delay * len(queries) * 0.75, "sub-queries ran sequentially, not concurrently")
+
+    def test_one_sub_query_failing_does_not_lose_the_others_results(self):
+        """A transient failure on one sub-query is logged and skipped, not fatal to the whole response."""
+        service = FakeRetrievalService(
+            {"good query": [FakeRetrievalResultChunk("c1", 0.9)]},
+            errors={"bad query": RuntimeError("Qdrant timeout")})
+        node = make_retrieve_node(service)
+        result = node(base_state(sub_queries=["good query", "bad query"]))
+        self.assertEqual([c["chunk_id"] for c in result["retrieved_chunks"]], ["c1"])
 
 
 if __name__ == "__main__":
