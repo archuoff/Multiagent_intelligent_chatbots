@@ -183,6 +183,7 @@ class DoclingContentAdapter:
     # This function reads Docling's live hierarchy, tables, and pictures into a stable raw contract.
     def _extract_pages(self, document: Any) -> list[ExtractedPage]:
         page_map: dict[int, ExtractedPage] = {number: ExtractedPage(number=number) for number in getattr(document, "pages", {})}
+        page_heights = self._page_heights(document)
         for item in document.iterate_items():
             element, level = item if isinstance(item, tuple) else (item, 0)
             page_number = self._page_number(element)
@@ -192,7 +193,7 @@ class DoclingContentAdapter:
             text = self._element_text(element)
             if text:
                 block = {"text": text, "type": self._element_type(element), "level": level}
-                bbox = self._element_bbox(element)
+                bbox = self._element_bbox(element, page_heights.get(page_number))
                 if bbox:
                     block["bbox"] = bbox
                 page.text_blocks.append(block)
@@ -209,8 +210,21 @@ class DoclingContentAdapter:
             if page_number is None:
                 continue
             page = page_map.setdefault(page_number, ExtractedPage(number=page_number))
-            page.images.append(self._picture_metadata(picture))
+            page.images.append(self._picture_metadata(picture, page_heights.get(page_number)))
         return [page_map[number] for number in sorted(page_map)]
+
+    def _page_heights(self, document: Any) -> dict[int, float]:
+        """Reads each page's height once, used to convert a bottom-left-origin
+        Docling bbox into the same top-left/y-down space PyMuPDF's raw word
+        positions use -- without this, bbox-overlap comparisons could
+        silently check a vertically mirrored region of the page."""
+        heights: dict[int, float] = {}
+        for number, page_item in getattr(document, "pages", {}).items():
+            size = getattr(page_item, "size", None)
+            height = getattr(size, "height", None) if size is not None else None
+            if isinstance(height, (int, float)):
+                heights[int(number)] = float(height)
+        return heights
 
     # Preserve the source structure first; a matrix is only a compatibility recovery.
     def _extract_table(self, table: Any, document: Any) -> dict[str, Any]:
@@ -243,7 +257,7 @@ class DoclingContentAdapter:
             return {"source_table": payload, "warnings": warnings, "requires_review": True}
 
     # This function preserves Docling picture metadata without exporting images or invoking vision models.
-    def _picture_metadata(self, picture: Any) -> dict[str, Any]:
+    def _picture_metadata(self, picture: Any, page_height: float | None = None) -> dict[str, Any]:
         metadata: dict[str, Any] = {"caption": "", "description": "", "classification": "", "bbox": None}
         caption = getattr(picture, "caption", None)
         if caption is not None:
@@ -261,17 +275,12 @@ class DoclingContentAdapter:
                 right = getattr(bbox, "r", None)
                 bottom = getattr(bbox, "b", None)
                 if all(isinstance(value, (int, float)) for value in (left, top, right, bottom)):
-                    metadata["bbox"] = {
-                        "left": min(left, right),
-                        "top": min(top, bottom),
-                        "width": abs(right - left),
-                        "height": abs(bottom - top),
-                    }
-                else:
-                    metadata["bbox"] = None
+                    metadata["bbox"] = self._normalize_docling_bbox(
+                        left, top, right, bottom, getattr(bbox, "coord_origin", None), page_height
+                    )
         return metadata
 
-    def _element_bbox(self, element: Any) -> dict[str, float] | None:
+    def _element_bbox(self, element: Any, page_height: float | None = None) -> dict[str, float] | None:
         """Reads the first Docling provenance bbox for text-level verification."""
         provenance = getattr(element, "prov", None)
         if not provenance:
@@ -285,7 +294,39 @@ class DoclingContentAdapter:
         bottom = getattr(bbox, "b", None)
         if not all(isinstance(value, (int, float)) for value in (left, top, right, bottom)):
             return None
-        return {"left": min(left, right), "top": min(top, bottom), "width": abs(right - left), "height": abs(bottom - top)}
+        return self._normalize_docling_bbox(left, top, right, bottom, getattr(bbox, "coord_origin", None), page_height)
+
+    def _normalize_docling_bbox(
+        self,
+        left: float,
+        top: float,
+        right: float,
+        bottom: float,
+        coord_origin: Any,
+        page_height: float | None,
+    ) -> dict[str, Any]:
+        """Converts a Docling bbox into the same top-left/y-down coordinate
+        space PyMuPDF's raw word positions use, so bbox-overlap comparisons
+        (conflict verification, new-content checks) compare the same physical
+        page region instead of silently mirroring it vertically.
+
+        Docling's PDF-backend provenance is commonly bottom-left-origin
+        (native PDF convention, where a larger y is physically higher on the
+        page); PyMuPDF's `get_text("words")` is top-left-origin (y increases
+        downward). Flipping requires the page height, which is only available
+        when Docling exposes page geometry -- when it isn't, this returns
+        `coord_space: "unknown"` rather than guessing, so callers can skip
+        bbox-based verification instead of trusting a possibly-mirrored box.
+        """
+        origin = str(coord_origin or "").upper()
+        is_bottom_left = "BOTTOM" in origin or (not origin and top > bottom)
+        as_is = {"left": min(left, right), "top": min(top, bottom), "width": abs(right - left), "height": abs(top - bottom)}
+        if not is_bottom_left:
+            return {**as_is, "coord_space": "top_left", "source_coord_origin": origin or "inferred_top_left"}
+        if isinstance(page_height, (int, float)) and page_height > 0:
+            flipped_top = page_height - max(top, bottom)
+            return {**as_is, "top": flipped_top, "coord_space": "top_left", "source_coord_origin": origin or "inferred_bottom_left"}
+        return {**as_is, "coord_space": "unknown", "source_coord_origin": origin or "inferred_bottom_left"}
 
     def _picture_description(self, picture: Any) -> str:
         """Reads Docling picture descriptions from current and deprecated metadata fields."""

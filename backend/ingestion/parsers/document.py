@@ -37,6 +37,7 @@ from backend.ingestion.extraction.docling import DoclingContentAdapter
 from backend.ingestion.extraction.fallbacks import PdfFallbackExtractor
 from backend.ingestion.extraction.fallbacks import DocxFallbackExtractor
 from backend.ingestion.extraction.raw_text_index import PdfRawTextIndex
+from backend.ingestion.extraction.bbox_calibration import audit_axis_agreement
 from backend.ingestion.extraction.pdf_inspector import PdfInspector
 from backend.ingestion.extraction.merger import ExtractionResultMerger
 
@@ -732,12 +733,16 @@ class PdfDocumentParser(SourceParser):
                 if missing_pages:
                     warnings.append(f"Docling omitted {len(missing_pages)} source pages; review recovery output.")
                 fallback = self._fallback.extract(source.file_path)
-                raw_text_index = None
-                if inspection.has_usable_embedded_text and fallback.extractor_name != "pymupdf":
-                    raw_text_index = PdfRawTextIndex(source.file_path)
-                elif fallback.extractor_name == "pymupdf":
-                    warnings.append("PDF raw-text position verification skipped because PyMuPDF produced the fallback extraction.")
+                raw_text_index = self._build_raw_text_index(source.file_path, extracted, inspection, warnings)
                 extracted = self._merger.merge(extracted, fallback, raw_text_index=raw_text_index)
+                if raw_text_index is not None:
+                    if raw_text_index.engine_used and raw_text_index.engine_used == fallback.extractor_name:
+                        warnings.append(
+                            "[verifier_shared_engine] Raw-text position verification used the same "
+                            "library as the fallback extraction for this document; resolutions "
+                            "favoring the fallback are capped at medium confidence."
+                        )
+                    raw_text_index.close()
                 warnings = [
                     "Docling and local PDF fallback were quality-reconciled page by page.",
                     *warnings,
@@ -766,6 +771,13 @@ class PdfDocumentParser(SourceParser):
         suspicious_numeric_count = self._count_nodes_with_attribute(page_nodes, "suspicious_numeric")
         if suspicious_numeric_count:
             warnings.append(f"[pdf_suspicious_numeric] {suspicious_numeric_count} PDF node(s) were excluded from retrieval due to possible numeric/exponent corruption.")
+        low_confidence_count = sum(node.attributes.get("low_confidence_block_count", 0) for node in page_nodes)
+        if low_confidence_count:
+            warnings.append(
+                f"[extraction_confidence] {low_confidence_count} PDF text block(s) could not be verified "
+                "against the source (unresolved conflict, noise heuristic, or position mismatch) and were "
+                "excluded from retrieval; retained in Master JSON for review."
+            )
 
         return CanonicalDocument(
             document_id=document_id,
@@ -824,6 +836,42 @@ class PdfDocumentParser(SourceParser):
             for node in nodes
         )
 
+    def _build_raw_text_index(self, source_path, extracted, inspection, warnings: list[str]) -> PdfRawTextIndex | None:
+        """Builds the PDF raw-text referee, or explains why it isn't available.
+
+        Never trusted blindly: a per-document calibration audit checks that
+        the bboxes we already normalized actually land on their own text
+        before the referee is handed to the merger, so a mis-aimed referee
+        degrades to "unavailable" instead of silently verifying against the
+        wrong region of the page.
+        """
+        if not inspection.has_usable_embedded_text:
+            warnings.append(
+                "[verifier_unavailable] PDF has no usable embedded text layer; "
+                "raw-text position verification is unavailable."
+            )
+            return None
+        try:
+            raw_text_index = PdfRawTextIndex(source_path, engine="auto")
+        except Exception as error:
+            warnings.append(f"[verifier_unavailable] PDF raw-text position verification could not be initialized: {type(error).__name__}.")
+            return None
+        try:
+            calibration = audit_axis_agreement(extracted.pages, raw_text_index)
+        except Exception as error:
+            warnings.append(f"[verifier_unavailable] PDF raw-text position calibration failed: {type(error).__name__}.")
+            raw_text_index.close()
+            return None
+        if not calibration["trust_verification"]:
+            warnings.append(
+                f"[bbox_axis_mismatch] Disabling PDF raw-text position verification for this "
+                f"document: {calibration['low_overlap']} of {calibration['checked']} sampled "
+                f"text blocks did not match their own claimed position in the source text layer."
+            )
+            raw_text_index.close()
+            return None
+        return raw_text_index
+
     # This function builds fallback page nodes from raw pypdf extraction results.
     def _build_fallback_pages(
         self,
@@ -866,7 +914,10 @@ class PdfDocumentParser(SourceParser):
                 if rows
             ]
             self._suppress_duplicate_table_text(text_nodes, table_nodes)
-            children = [*text_nodes, *table_nodes]
+            low_confidence_nodes = self._build_low_confidence_nodes(
+                document_id, source, page_node_id, page_number, extracted_page,
+            )
+            children = [*text_nodes, *table_nodes, *low_confidence_nodes]
             self._flag_suspicious_pdf_numbers(children)
             for child in children:
                 self._set_page_provenance(child, page_number)
@@ -882,6 +933,7 @@ class PdfDocumentParser(SourceParser):
                         "image_count": len(extracted_page.images),
                         "images": extracted_page.images,
                         "reconciliation": extracted_page.reconciliation,
+                        "low_confidence_block_count": len(low_confidence_nodes),
                     },
                     provenance=Provenance(
                         document_id=document_id,
@@ -894,6 +946,56 @@ class PdfDocumentParser(SourceParser):
                 )
             )
         return page_nodes
+
+    def _build_low_confidence_nodes(
+        self,
+        document_id: str,
+        source: IngestionSource,
+        page_node_id: str,
+        page_number: int,
+        extracted_page,
+    ) -> list[CanonicalNode]:
+        """Turns merger-excluded (`retrieval_allowed=False`) text blocks into
+        their own canonical nodes, instead of letting them silently
+        disappear once they're kept out of the merged page text (Finding B):
+        `_text_to_nodes` only ever sees `extracted_page.text`, so a block
+        excluded there would otherwise never reach Master JSON at all. The
+        `LOW_CONFIDENCE_BLOCK` node type is deliberately excluded from
+        `CanonicalChunkBuilder._NARRATIVE_TYPES`, so this content is
+        unchunkable by construction -- the explicit `retrieval_allowed=False`
+        attribute is belt-and-braces, not the only defense.
+        """
+        nodes: list[CanonicalNode] = []
+        for block in extracted_page.text_blocks:
+            if block.get("retrieval_allowed") is not False:
+                continue
+            text = normalize_text(str(block.get("text", ""))) or ""
+            if not text:
+                continue
+            reconciliation = block.get("reconciliation")
+            nodes.append(CanonicalNode(
+                node_id=make_id("low_confidence"),
+                node_type=NodeType.LOW_CONFIDENCE_BLOCK,
+                text=text,
+                attributes={
+                    "retrieval_allowed": False,
+                    "requires_review": True,
+                    "extraction_confidence": (reconciliation or {}).get("confidence_tier"),
+                    "extraction_confidence_reason": (reconciliation or {}).get("confidence_reason"),
+                    "reconciliation": reconciliation,
+                    "extractor_role": block.get("extractor_role"),
+                    "bbox": block.get("bbox"),
+                },
+                provenance=Provenance(
+                    document_id=document_id,
+                    source_type=source.source_type,
+                    version=source.version,
+                    parent_node_id=page_node_id,
+                    page_number=page_number,
+                ),
+                confidence=0.3,
+            ))
+        return nodes
 
     def _flag_suspicious_pdf_numbers(self, nodes: list[CanonicalNode]) -> int:
         """Marks likely PDF exponent-corruption values as review-only retrieval content."""
