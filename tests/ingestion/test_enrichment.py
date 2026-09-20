@@ -240,6 +240,31 @@ class CanonicalEnrichmentTests(unittest.TestCase):
         self.assertEqual(result.chunks, [])
         self.assertEqual(result.rejected[0].node_id, "excel-image")
 
+    def test_image_description_loads_dotenv_before_enabled_check(self):
+        """The VLM enable flag can come from .env, not only preloaded process env."""
+        image = CanonicalNode(node_id="excel-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/excel.png", "ocr_text": "",
+                        "needs_vision_description": True},
+            provenance=Provenance(document_id="doc", source_type=SourceType.XLSX, version="v1",
+                                  parent_node_id="sheet", sheet_name="Radar Sensor"))
+
+        class FakeVisionProvider:
+            deployment = "gpt-4o-vision"
+
+            def describe(self, image_path, *, context):
+                return {"visible_text": "VISIBLE LABEL", "description": "Diagram description.",
+                        "uncertainty": "", "confidence": "high"}
+
+        with patch.object(Path, "is_file", return_value=True):
+            with patch("backend.ingestion.enrichment.image_description.AzureOpenAIVisionDescriptionProvider._load_dotenv_if_available") as load_dotenv:
+                with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "true",
+                                               "JLR_IMAGE_DESCRIPTION_SCOPE": "vision_candidates"}, clear=True):
+                    count = ImageDescriptionEnrichment(FakeVisionProvider()).apply(document([image]))
+
+        load_dotenv.assert_called_once()
+        self.assertEqual(count, 1)
+        self.assertEqual(image.attributes["vlm_transcribed_text"], "VISIBLE LABEL")
+
     def test_pptx_image_only_slide_uses_required_vlm_policy(self):
         """PowerPoint diagram-heavy slides follow the same OCR-failover-to-VLM rule."""
         image = CanonicalNode(node_id="ppt-image", node_type=NodeType.IMAGE,
