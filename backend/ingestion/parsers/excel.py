@@ -151,6 +151,7 @@ class ExcelWorkbookParser(SourceParser):
             version=version,
             agent_id=agent_id,
             parent_node_id=sheet_node_id,
+            regions=regions,
         )
         image_rows = [node.attributes.get("anchor_row") for node in image_nodes if node.attributes.get("anchor_row")]
 
@@ -170,6 +171,7 @@ class ExcelWorkbookParser(SourceParser):
                 "extracted_image_count": len(image_nodes),
                 "formula_error_count": self._sheet_formula_error_count(worksheet),
                 "image_only_row_ranges": self._image_only_row_ranges(image_rows, regions),
+                "image_heavy_region_count": sum(1 for region in regions if region["classification"] == "IMAGE_HEAVY"),
             },
             provenance=Provenance(
                 document_id=document_id,
@@ -255,6 +257,11 @@ class ExcelWorkbookParser(SourceParser):
                 "range": region["range"],
                 "header_depth": region["header_depth"],
                 "source_cells": region["source_cells"],
+                "populated_cell_count": region["populated_cell_count"],
+                "cell_density": region["cell_density"],
+                "image_count": region["image_count"],
+                "image_anchor_rows": region["image_anchor_rows"],
+                "needs_vision_description": region["needs_vision_description"],
             },
             provenance=Provenance(
                 document_id=document_id,
@@ -405,6 +412,7 @@ class ExcelWorkbookParser(SourceParser):
         if not non_empty_rows:
             return []
 
+        image_rows = self._worksheet_image_rows(worksheet)
         groups = self._group_consecutive_rows(non_empty_rows)
         regions: list[dict[str, Any]] = []
         for group in groups:
@@ -418,6 +426,7 @@ class ExcelWorkbookParser(SourceParser):
                 rows=rows,
                 sampled_rows=sampled,
                 max_column=worksheet.max_column,
+                image_rows=image_rows,
             )
             regions.append(region)
         return regions
@@ -446,6 +455,7 @@ class ExcelWorkbookParser(SourceParser):
             extracted_count = int(sheet_node.attributes.get("extracted_image_count") or 0)
             formula_error_count = int(sheet_node.attributes.get("formula_error_count") or 0)
             image_only_ranges = sheet_node.attributes.get("image_only_row_ranges", [])
+            image_heavy_count = int(sheet_node.attributes.get("image_heavy_region_count") or 0)
             if image_count:
                 warnings.append(f"[excel_images] Sheet '{sheet_node.title}' has {image_count} embedded images; {extracted_count} image nodes created.")
             if image_count and extracted_count < image_count:
@@ -454,6 +464,8 @@ class ExcelWorkbookParser(SourceParser):
                 warnings.append(f"[excel_formula_errors] Sheet '{sheet_node.title}' has {formula_error_count} formula error cells preserved for audit and excluded from retrieval text.")
             if image_only_ranges:
                 warnings.append(f"[excel_image_only_rows] Sheet '{sheet_node.title}' has image-anchored rows outside detected cell regions: {', '.join(image_only_ranges[:8])}.")
+            if image_heavy_count:
+                warnings.append(f"[excel_image_heavy_regions] Sheet '{sheet_node.title}' has {image_heavy_count} image-heavy region(s); OCR/VLM enrichment may be needed.")
         return warnings
 
     # This function collects the row numbers that contain at least one non-empty cell.
@@ -493,6 +505,7 @@ class ExcelWorkbookParser(SourceParser):
         rows: list[int],
         sampled_rows: list[list[Any]],
         max_column: int,
+        image_rows: list[int],
     ) -> dict[str, Any]:
         text_heavy_cells = 0
         numeric_cells = 0
@@ -507,10 +520,16 @@ class ExcelWorkbookParser(SourceParser):
                 elif isinstance(value, str) and len(value.strip()) > 24:
                     text_heavy_cells += 1
 
+        total_cells = max(len(rows) * max_column, 1)
+        cell_density = populated_cells / total_cells
         numeric_ratio = numeric_cells / populated_cells if populated_cells else 0.0
         text_ratio = text_heavy_cells / populated_cells if populated_cells else 0.0
+        region_image_rows = [row for row in image_rows if rows[0] <= row <= rows[-1]]
+        image_count = len(region_image_rows)
 
-        if numeric_ratio > 0.25 or self._looks_like_table(sampled_rows):
+        if image_count and (cell_density < 0.08 or populated_cells <= 2):
+            classification = "IMAGE_HEAVY"
+        elif numeric_ratio > 0.25 or self._looks_like_table(sampled_rows):
             classification = "STRUCTURED" if text_ratio < 0.4 else "MIXED"
         else:
             classification = "DOCUMENT_LIKE"
@@ -532,7 +551,7 @@ class ExcelWorkbookParser(SourceParser):
         return {
             "source_cells": [{"coordinate": worksheet.cell(row_number, column_number).coordinate, "value": self._clean_cell_value(worksheet.cell(row_number, column_number).value)} for row_number in rows for column_number in range(1, max_column + 1) if self._clean_cell_value(worksheet.cell(row_number, column_number).value) is not None],
             "row_numbers": rows,
-            "kind": "STRUCTURED_TABLE" if classification in {"STRUCTURED", "MIXED"} else "TEXT_BLOCK",
+            "kind": self._region_kind(classification),
             "classification": classification,
             "range": range_str,
             "header_depth": 1 if columns else 0,
@@ -546,7 +565,20 @@ class ExcelWorkbookParser(SourceParser):
             "notes": self._extract_region_notes(worksheet, rows, title, header_row_index, classification),
             "confidence": 0.92 if classification != "DOCUMENT_LIKE" else 0.78,
             "table_name": self._table_name(title, columns),
+            "populated_cell_count": populated_cells,
+            "cell_density": round(cell_density, 4),
+            "image_count": image_count,
+            "image_anchor_rows": region_image_rows,
+            "needs_vision_description": classification == "IMAGE_HEAVY",
         }
+
+    def _region_kind(self, classification: str) -> str:
+        """Maps region classifications to stable canonical region families."""
+        if classification in {"STRUCTURED", "MIXED"}:
+            return "STRUCTURED_TABLE"
+        if classification == "IMAGE_HEAVY":
+            return "IMAGE_HEAVY"
+        return "TEXT_BLOCK"
 
     # This function checks whether sampled rows show enough repeated column structure to look tabular.
     def _looks_like_table(self, sampled_rows: list[list[Any]]) -> bool:
@@ -743,10 +775,12 @@ class ExcelWorkbookParser(SourceParser):
         version: str,
         agent_id: str,
         parent_node_id: str,
+        regions: list[dict[str, Any]],
     ) -> list[CanonicalNode]:
         nodes: list[CanonicalNode] = []
         for image_index, image in enumerate(getattr(worksheet, "_images", []) or [], start=1):
             metadata = self._excel_image_metadata(image, worksheet.title, image_index)
+            metadata.update(self._image_context_metadata(worksheet, metadata, regions))
             blob = metadata.pop("_blob", None)
             if blob:
                 saved = self._persist_excel_image(blob, metadata["extension"], agent_id, document_id, version,
@@ -771,6 +805,40 @@ class ExcelWorkbookParser(SourceParser):
                 confidence=0.82 if metadata.get("saved_path") else 0.68,
             ))
         return nodes
+
+    def _image_context_metadata(self, worksheet: Any, metadata: dict[str, Any], regions: list[dict[str, Any]]) -> dict[str, Any]:
+        """Adds nearby source context so OCR/VLM image chunks are meaningful."""
+        anchor_row = metadata.get("anchor_row")
+        region = self._region_for_row(anchor_row, regions)
+        needs_vision = bool(region and region.get("classification") == "IMAGE_HEAVY")
+        return {
+            "parent_region_range": region.get("range") if region else None,
+            "parent_region_classification": region.get("classification") if region else None,
+            "nearby_text": self._nearby_row_text(worksheet, anchor_row),
+            "needs_vision_description": needs_vision,
+            "vision_reason": "Image is anchored in an image-heavy Excel region." if needs_vision else "",
+        }
+
+    def _region_for_row(self, row_number: int | None, regions: list[dict[str, Any]]) -> dict[str, Any] | None:
+        """Finds the detected region containing an image anchor row."""
+        if not row_number:
+            return None
+        return next((region for region in regions if row_number in region.get("row_numbers", [])), None)
+
+    def _nearby_row_text(self, worksheet: Any, row_number: int | None, radius: int = 2) -> str:
+        """Collects compact non-empty row context around an image anchor."""
+        if not row_number:
+            return ""
+        parts: list[str] = []
+        for row_index in range(max(1, row_number - radius), min(worksheet.max_row, row_number + radius) + 1):
+            values = [
+                normalize_text(str(value)) or ""
+                for value in self._row_values(worksheet, row_index, worksheet.max_column)
+                if value not in (None, "")
+            ]
+            if values:
+                parts.append(f"Row {row_index}: {' | '.join(values)}")
+        return "\n".join(parts)[:1200]
 
     # This function reads stable metadata and bytes from an openpyxl image object.
     def _excel_image_metadata(self, image: Any, sheet_name: str, image_index: int) -> dict[str, Any]:
@@ -864,6 +932,17 @@ class ExcelWorkbookParser(SourceParser):
         covered = {row for region in regions for row in region.get("row_numbers", [])}
         rows = sorted({row for row in image_rows if row and row not in covered})
         return [self._format_row_range(group) for group in self._group_consecutive_rows(rows)]
+
+    def _worksheet_image_rows(self, worksheet: Any) -> list[int]:
+        """Returns one-based anchor rows for images embedded in a worksheet."""
+        return [
+            row
+            for row in (
+                self._anchor_row(getattr(image, "anchor", None))
+                for image in getattr(worksheet, "_images", []) or []
+            )
+            if row
+        ]
 
     # This function formats consecutive row groups for quality warnings.
     def _format_row_range(self, rows: list[int]) -> str:

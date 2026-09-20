@@ -86,6 +86,29 @@ class ContentPreservationTests(unittest.TestCase):
         self.assertEqual(sheet_node.attributes["embedded_image_count"], 1)
         workbook.close()
 
+    def test_excel_image_heavy_region_marks_images_for_vision(self):
+        """Sparse image-anchored regions carry VLM candidate metadata and nearby context."""
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.title = "Radar Sensor"
+        sheet["A58"] = "Radar Paint Requirement"
+        fake_marker = SimpleNamespace(row=57, col=2)
+        fake_anchor = SimpleNamespace(_from=fake_marker)
+        fake_image = SimpleNamespace(anchor=fake_anchor, width=120, height=80, format="png", path="/xl/media/image1.png")
+        fake_image._data = lambda: b"fake-png"
+        sheet._images.append(fake_image)
+        parser = ExcelWorkbookParser()
+        with patch.object(parser, "_persist_excel_image", return_value=SimpleNamespace(as_posix=lambda: "storage/visual-assets/test.png")):
+            sheet_node = parser._build_sheet_node(document_id="doc", source_type=SourceType.XLSX, version="v1",
+                agent_id="adas-agent", parent_node_id="workbook", sheet_index=0, worksheet=sheet)
+        region_nodes = [node for node in sheet_node.children if node.node_type == NodeType.REGION]
+        image_node = next(node for node in sheet_node.children if node.node_type == NodeType.IMAGE)
+        self.assertEqual(region_nodes[0].attributes["classification"], "IMAGE_HEAVY")
+        self.assertTrue(region_nodes[0].attributes["needs_vision_description"])
+        self.assertTrue(image_node.attributes["needs_vision_description"])
+        self.assertIn("Radar Paint Requirement", image_node.attributes["nearby_text"])
+        workbook.close()
+
     def test_excel_short_notes_are_not_truncated(self):
         """Every short narrative row survives beyond the previous three-note limit."""
         workbook = Workbook()

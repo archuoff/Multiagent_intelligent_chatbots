@@ -125,7 +125,8 @@ class CanonicalEnrichmentTests(unittest.TestCase):
     def test_image_description_adds_inferred_azure_metadata_without_overwriting_ocr(self):
         """Vision descriptions are optional inferred metadata, not source text replacements."""
         image = CanonicalNode(node_id="image", node_type=NodeType.IMAGE,
-            attributes={"saved_path": "", "shape_name": "Picture 5", "ocr_text": "VISIBLE LABEL"},
+            attributes={"saved_path": "", "shape_name": "Picture 5", "ocr_text": "VISIBLE LABEL",
+                        "needs_vision_description": True, "nearby_text": "Radar sensor diagram context."},
             provenance=Provenance(document_id="doc", source_type=SourceType.PPTX, version="v1",
                                   parent_node_id="slide", slide_number=4))
 
