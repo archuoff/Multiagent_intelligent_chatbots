@@ -93,6 +93,8 @@ class CanonicalChunkBuilder:
 
     def _requires_review(self, node: CanonicalNode) -> bool:
         """Prevents conflict-marked or unreadable canonical content from reaching embeddings."""
+        if node.attributes.get("retrieval_allowed") is False:
+            return True
         reconciliation = node.attributes.get("reconciliation")
         events = reconciliation if isinstance(reconciliation, list) else [reconciliation]
         return bool(node.attributes.get("requires_review")) or any(
@@ -132,6 +134,8 @@ class CanonicalChunkBuilder:
         prefix = self._context_prefix(document, entry.breadcrumbs, table.title or "Table")
         chunks: list[EmbeddingChunk] = []
         for row in (child for child in table.children if child.node_type == NodeType.TABLE_ROW):
+            if self._requires_review(row):
+                continue
             values = self._row_text(row, headers)
             if not values:
                 continue

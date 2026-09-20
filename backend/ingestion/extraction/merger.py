@@ -12,6 +12,7 @@ from typing import Any
 
 from backend.ingestion.extraction.contracts import ExtractedPage
 from backend.ingestion.extraction.contracts import ExtractionResult
+from backend.ingestion.extraction.raw_text_index import PdfRawTextIndex
 from backend.ingestion.extraction.reconciliation import ExtractionReconciler
 from backend.ingestion.utils import normalize_text
 
@@ -22,7 +23,8 @@ class ExtractionResultMerger:
     _MIN_TEXT_GAIN_TO_REPLACE = 1.3
 
     # This function merges page-level content by quality, not by extractor priority.
-    def merge(self, primary: ExtractionResult, fallback: ExtractionResult) -> ExtractionResult:
+    def merge(self, primary: ExtractionResult, fallback: ExtractionResult, *,
+              raw_text_index: PdfRawTextIndex | None = None) -> ExtractionResult:
         primary_pages = {page.number: page for page in primary.pages}
         fallback_pages = {page.number: page for page in fallback.pages}
         pages: dict[int, ExtractedPage] = {}
@@ -42,7 +44,7 @@ class ExtractionResultMerger:
                 continue
             if fallback_page is None and primary_page is not None:
                 page = self._copy_page(primary_page)
-                event = self._source_event(page_number, "primary", self._page_score(primary_page), {})
+                event = self._source_event(page_number, "docling", self._page_score(primary_page), {})
                 page.reconciliation.append(event)
                 reconciliation.append(event)
                 pages[page_number] = page
@@ -57,7 +59,8 @@ class ExtractionResultMerger:
             event = self._source_event(page_number, selected_role, primary_score, fallback_score)
             page.reconciliation.append(event)
             reconciliation.append(event)
-            reconciliation.extend(self._merge_page(page, recovery, recovery_role=recovery_role))
+            reconciliation.extend(self._merge_page(page, recovery, recovery_role=recovery_role,
+                raw_text_index=raw_text_index))
             pages[page_number] = page
 
         conflicts = [event for event in reconciliation if event["decision"] == "conflict"]
@@ -107,8 +110,8 @@ class ExtractionResultMerger:
         fallback_has_clear_text_gain = primary_text == 0 < fallback_text or fallback_text >= primary_text * self._MIN_TEXT_GAIN_TO_REPLACE
         fallback_has_more_structure = fallback_score["score"] > primary_score["score"] and fallback_score["tables"] >= primary_score["tables"]
         if fallback_has_clear_text_gain or fallback_has_more_structure:
-            return fallback, primary, "fallback", "primary_recovery", primary_score, fallback_score
-        return primary, fallback, "primary", "fallback_recovery", primary_score, fallback_score
+            return fallback, primary, "fallback", "docling_recovery", primary_score, fallback_score
+        return primary, fallback, "docling", "fallback_recovery", primary_score, fallback_score
 
     def _page_score(self, page: ExtractedPage) -> dict[str, Any]:
         """Scores extractable evidence without assuming one extractor is better."""
@@ -140,19 +143,22 @@ class ExtractionResultMerger:
             "location": location,
             "decision": f"selected_{selected_role}",
             "reason": "Higher-quality page or slide used as merge base.",
-            "primary_score": primary_score,
+            "docling_score": primary_score,
             "fallback_score": fallback_score,
         }
 
     # This function reconciles one page or slide before appending recovery evidence.
-    def _merge_page(self, primary: ExtractedPage, fallback: ExtractedPage, *, recovery_role: str = "fallback_recovery") -> list[dict[str, Any]]:
+    def _merge_page(self, primary: ExtractedPage, fallback: ExtractedPage, *, recovery_role: str = "fallback_recovery",
+                    raw_text_index: PdfRawTextIndex | None = None) -> list[dict[str, Any]]:
         events: list[dict[str, Any]] = []
         comparable_text = self._page_text(primary)
         for fallback_block in self._blocks(fallback):
             decision = self._reconciler.compare_text(comparable_text, fallback_block["text"])
+            if decision["decision"] == "conflict":
+                decision = self._verify_text_conflict(primary.number, comparable_text, fallback_block, decision, raw_text_index)
             event = {"content_type": "text", "location": primary.number, **decision}
             events.append(event)
-            if decision["decision"] in {"fallback_only", "conflict"}:
+            if decision["decision"] in {"fallback_only", "conflict", "conflict_resolved"} and decision.get("winning_source") != "docling":
                 primary.text_blocks.append({**fallback_block, "extractor_role": recovery_role, "reconciliation": decision})
                 comparable_text = "\n".join((comparable_text, fallback_block["text"])).strip()
         original_text = self._page_text(primary)
@@ -170,13 +176,44 @@ class ExtractionResultMerger:
             decision = self._best_table_decision(primary.tables, table)
             event = {"content_type": "table", "location": primary.number, **decision}
             events.append(event)
-            if decision["decision"] in {"fallback_only", "conflict"}:
+            if decision["decision"] == "fallback_only":
                 primary.tables.append(self._annotate_table(table, decision))
         events.extend(self._merge_images(primary, fallback, recovery_role))
         if not primary.notes:
             primary.notes = fallback.notes
         primary.reconciliation.extend(events)
         return events
+
+    def _verify_text_conflict(
+        self,
+        page_number: int,
+        primary_text: str,
+        fallback_block: dict[str, Any],
+        decision: dict[str, Any],
+        raw_text_index: PdfRawTextIndex | None,
+    ) -> dict[str, Any]:
+        """Uses PDF raw text at the fallback bbox to resolve a conflicting text block."""
+        bbox = fallback_block.get("bbox")
+        fallback_text = normalize_text(str(fallback_block.get("text", ""))) or ""
+        if raw_text_index is None or not isinstance(bbox, dict) or not fallback_text:
+            return decision
+        try:
+            match = raw_text_index.match_candidates(page_number, bbox, primary_text, fallback_text)
+        except Exception as error:
+            return {**decision, "verification": {"method": "raw_text_position_error", "error_type": type(error).__name__}}
+        verification = {
+            "method": match.method,
+            "bbox_used": bbox,
+            "raw_region_text": match.region_text,
+            "candidate_a_matches": match.candidate_a_matches,
+            "candidate_b_matches": match.candidate_b_matches,
+            "confidence": match.confidence,
+        }
+        if match.winner == "A":
+            return {**decision, "decision": "conflict_resolved", "winning_source": "docling", "verification": verification}
+        if match.winner == "B":
+            return {**decision, "decision": "conflict_resolved", "winning_source": "fallback", "verification": verification}
+        return {**decision, "verification": verification}
 
     def _blocks(self, page: ExtractedPage) -> list[dict[str, Any]]:
         """Uses native blocks when available, otherwise treats page text as one recovery block."""
@@ -197,7 +234,7 @@ class ExtractionResultMerger:
             match = next((decision for decision in decisions if decision["decision"] == expected), None)
             if match:
                 return match
-        return {"decision": "fallback_only", "reason": "No matching primary table was found on this page or slide."}
+        return {"decision": "fallback_only", "reason": "No matching Docling/base table was found on this page or slide."}
 
     def _annotate_table(self, table: Any, decision: dict[str, Any]) -> Any:
         """Attaches recovery evidence without changing an existing table representation."""
@@ -262,7 +299,7 @@ class ExtractionResultMerger:
     def _summary(self, events: list[dict[str, Any]]) -> dict[str, int]:
         """Counts reconciliation outcomes for parser metadata and operational audit."""
         return {decision: sum(event["decision"] == decision for event in events)
-                for decision in ("selected_primary", "selected_fallback", "duplicate", "near_duplicate", "fallback_only", "conflict")}
+                for decision in ("selected_docling", "selected_fallback", "duplicate", "near_duplicate", "fallback_only", "conflict", "conflict_resolved")}
 
     def _requires_review(
         self,

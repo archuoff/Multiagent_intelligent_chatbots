@@ -7,7 +7,8 @@ from backend.ingestion.extraction.docling import DoclingContentAdapter
 from backend.ingestion.extraction.contracts import ExtractedPage, ExtractionResult
 from backend.ingestion.extraction.merger import ExtractionResultMerger
 from backend.ingestion.models import SourceType
-from backend.ingestion.parsers.document import DoclingCanonicalBuilder
+from backend.ingestion.models import CanonicalNode, NodeType, Provenance
+from backend.ingestion.parsers.document import DoclingCanonicalBuilder, PdfDocumentParser
 from backend.ingestion.validation.quality import CanonicalQualityValidator
 
 
@@ -134,3 +135,31 @@ class StructuredTableTests(unittest.TestCase):
         fallback = ExtractedPage(1, tables=[[["Temperature", ""], ["", "90"]]])
         ExtractionResultMerger()._merge_page(primary, fallback)
         self.assertEqual(len(primary.tables), 1)
+
+    def test_conflicting_table_is_not_appended_as_duplicate_canonical_table(self):
+        """Conflicting fallback tables stay as review events, not second table nodes."""
+        primary = ExtractionResult("docling", "primary", pages=[ExtractedPage(1, tables=[[["Property", "Value"], ["Density", "1.08"]]])])
+        fallback = ExtractionResult("pdfplumber", "fallback", pages=[ExtractedPage(1, tables=[[["Property", "Value"], ["Density", "1.09"]]])])
+        merged = ExtractionResultMerger().merge(primary, fallback)
+        self.assertEqual(len(merged.pages[0].tables), 1)
+        self.assertIn("conflict", [event["decision"] for event in merged.pages[0].reconciliation])
+        self.assertTrue(merged.requires_review)
+
+    def test_pdf_suspicious_numeric_values_are_marked_non_retrievable(self):
+        """Likely superscript-corrupted PDF numbers are preserved but blocked."""
+        node = CanonicalNode(node_id="row", node_type=NodeType.TABLE_ROW,
+            attributes={"semantic_text": "property test condition is Volume Resistivity; values is 101122"},
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1"))
+        count = PdfDocumentParser()._flag_suspicious_pdf_numbers([node])
+        self.assertEqual(count, 1)
+        self.assertTrue(node.attributes["suspicious_numeric"])
+        self.assertFalse(node.attributes["retrieval_allowed"])
+
+    def test_pdf_valid_exponent_values_are_not_marked_suspicious(self):
+        """Already-readable exponent notation should remain retrievable."""
+        node = CanonicalNode(node_id="cell", node_type=NodeType.TABLE_CELL,
+            text="Volume Resistivity 10^12",
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1"))
+        count = PdfDocumentParser()._flag_suspicious_pdf_numbers([node])
+        self.assertEqual(count, 0)
+        self.assertNotIn("suspicious_numeric", node.attributes)

@@ -13,6 +13,8 @@ Files in this package:
   Docling imports are lazy; ``JLR_DOCLING_OCR`` explicitly enables local OCR.
 - ``pdf_inspector.py`` detects usable embedded PDF text before extraction, so
   scanned PDFs do not unexpectedly initialize OCR models.
+- ``raw_text_index.py`` reads raw PDF word positions without interpretation,
+  giving reconciliation a cheap source-position referee for disputed values.
 - ``fallbacks.py`` provides local PyMuPDF/pdfplumber/pypdf, python-docx, and
   python-pptx recovery paths when a primary extractor fails.
 - ``merger.py`` deterministically chooses the stronger page/slide output and
@@ -35,6 +37,9 @@ from backend.ingestion.extraction.fallbacks import PdfFallbackExtractor
 from backend.ingestion.extraction.fallbacks import PowerPointFallbackExtractor
 from backend.ingestion.extraction.pdf_inspector import PdfInspection
 from backend.ingestion.extraction.pdf_inspector import PdfInspector
+from backend.ingestion.extraction.raw_text_index import CandidateMatch
+from backend.ingestion.extraction.raw_text_index import PdfRawTextIndex
+from backend.ingestion.extraction.raw_text_index import RawPdfWord
 from backend.ingestion.extraction.merger import ExtractionResultMerger
 
 __all__ = [
@@ -45,6 +50,9 @@ __all__ = [
     "ExtractionResultMerger",
     "PdfFallbackExtractor",
     "PowerPointFallbackExtractor",
+    "CandidateMatch",
+    "PdfRawTextIndex",
     "PdfInspection",
     "PdfInspector",
+    "RawPdfWord",
 ]

@@ -1,9 +1,9 @@
 # Stable storage routing for the ADAS knowledge agent.
 schema_version: 1
-agent_id: adas
+agent_id: adas-agent
 display_name: ADAS Knowledge Assistant
 ui:
   route: /agents/adas
 storage:
   incoming_raw_folder: storage/raw/adas-agent
-  qdrant_collection: jlr-adas-chunks
+  qdrant_collection: jlr-adas-agent-chunks

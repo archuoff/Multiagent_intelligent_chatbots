@@ -6,6 +6,7 @@ falls back to lightweight local libraries when Docling is unavailable.
 
 from __future__ import annotations
 
+from collections import Counter
 from datetime import datetime
 import hashlib
 import os
@@ -35,6 +36,7 @@ from backend.ingestion.utils import normalize_text
 from backend.ingestion.extraction.docling import DoclingContentAdapter
 from backend.ingestion.extraction.fallbacks import PdfFallbackExtractor
 from backend.ingestion.extraction.fallbacks import DocxFallbackExtractor
+from backend.ingestion.extraction.raw_text_index import PdfRawTextIndex
 from backend.ingestion.extraction.pdf_inspector import PdfInspector
 from backend.ingestion.extraction.merger import ExtractionResultMerger
 
@@ -730,7 +732,8 @@ class PdfDocumentParser(SourceParser):
                 if missing_pages:
                     warnings.append(f"Docling omitted {len(missing_pages)} source pages; review recovery output.")
                 fallback = self._fallback.extract(source.file_path)
-                extracted = self._merger.merge(extracted, fallback)
+                raw_text_index = PdfRawTextIndex(source.file_path) if inspection.has_usable_embedded_text else None
+                extracted = self._merger.merge(extracted, fallback, raw_text_index=raw_text_index)
                 warnings = [
                     "Docling and local PDF fallback were quality-reconciled page by page.",
                     *warnings,
@@ -756,6 +759,9 @@ class PdfDocumentParser(SourceParser):
                 "Scanned or low-text PDF detected; OCR is deferred until a local OCR model policy is configured.",
                 *fallback.warnings,
             ]
+        suspicious_numeric_count = self._count_nodes_with_attribute(page_nodes, "suspicious_numeric")
+        if suspicious_numeric_count:
+            warnings.append(f"[pdf_suspicious_numeric] {suspicious_numeric_count} PDF node(s) were excluded from retrieval due to possible numeric/exponent corruption.")
 
         return CanonicalDocument(
             document_id=document_id,
@@ -807,6 +813,13 @@ class PdfDocumentParser(SourceParser):
             ),
         )
 
+    def _count_nodes_with_attribute(self, nodes: list[CanonicalNode], attribute_name: str) -> int:
+        """Counts canonical nodes carrying a specific quality/safety flag."""
+        return sum(
+            (1 if node.attributes.get(attribute_name) else 0) + self._count_nodes_with_attribute(node.children, attribute_name)
+            for node in nodes
+        )
+
     # This function builds fallback page nodes from raw pypdf extraction results.
     def _build_fallback_pages(
         self,
@@ -820,7 +833,7 @@ class PdfDocumentParser(SourceParser):
             page_number = extracted_page.number
             page_node_id = make_id("page")
             extracted_text = extracted_page.text
-            children = self._builder._text_to_nodes(
+            text_nodes = self._builder._text_to_nodes(
                 document_id=document_id,
                 source_type=source.source_type,
                 version=source.version,
@@ -829,8 +842,15 @@ class PdfDocumentParser(SourceParser):
                 location_value=page_number,
                 text=extracted_text,
             )
-            children.extend(
-                self._builder.build_matrix_table_node(
+            table_nodes = [
+                self._builder.build_structured_table_node(
+                    document_id=document_id,
+                    source_type=source.source_type,
+                    version=source.version,
+                    parent_node_id=page_node_id,
+                    table_index=table_index,
+                    table=rows,
+                ) if isinstance(rows, dict) else self._builder.build_matrix_table_node(
                     document_id=document_id,
                     source_type=source.source_type,
                     version=source.version,
@@ -840,7 +860,10 @@ class PdfDocumentParser(SourceParser):
                 )
                 for table_index, rows in enumerate(extracted_page.tables, start=1)
                 if rows
-            )
+            ]
+            self._suppress_duplicate_table_text(text_nodes, table_nodes)
+            children = [*text_nodes, *table_nodes]
+            self._flag_suspicious_pdf_numbers(children)
             for child in children:
                 self._set_page_provenance(child, page_number)
             page_nodes.append(
@@ -867,6 +890,78 @@ class PdfDocumentParser(SourceParser):
                 )
             )
         return page_nodes
+
+    def _flag_suspicious_pdf_numbers(self, nodes: list[CanonicalNode]) -> int:
+        """Marks likely PDF exponent-corruption values as review-only retrieval content."""
+        flagged = 0
+        for node in nodes:
+            text = normalize_text(
+                node.text
+                or str(node.attributes.get("semantic_text", ""))
+                or str(node.attributes.get("value", ""))
+            ) or ""
+            if self._is_suspicious_pdf_number_context(text):
+                node.attributes["requires_review"] = True
+                node.attributes["retrieval_allowed"] = False
+                node.attributes["suspicious_numeric"] = True
+                node.attributes["suspicious_numeric_reason"] = (
+                    "PDF extraction produced a long digit run in a technical numeric context; "
+                    "possible superscript/exponent corruption."
+                )
+                flagged += 1
+            flagged += self._flag_suspicious_pdf_numbers(node.children)
+        return flagged
+
+    def _is_suspicious_pdf_number_context(self, text: str) -> bool:
+        """Detects known risky PDF numeric corruption without guessing corrections."""
+        normalized = normalize_text(text) or ""
+        if not normalized:
+            return False
+        technical_context = re.search(
+            r"\b(resistivity|conductivity|dielectric|thermal|expansion|coefficient|ohm|volume|surface)\b",
+            normalized,
+            re.IGNORECASE,
+        )
+        if not technical_context:
+            return False
+        if re.search(r"10\s*(\^|[⁰¹²³⁴⁵⁶⁷⁸⁹])", normalized):
+            return False
+        return bool(re.search(r"\b10\d{3,}\b", normalized))
+
+    def _suppress_duplicate_table_text(self, text_nodes: list[CanonicalNode], table_nodes: list[CanonicalNode]) -> None:
+        """Keeps PDF audit text while preventing duplicated table prose from retrieval."""
+        table_text = " ".join(self._node_text_values(table) for table in table_nodes)
+        table_tokens = self._coverage_tokens(table_text)
+        if not table_tokens:
+            return
+        for node in text_nodes:
+            node_tokens = self._coverage_tokens(node.text or "")
+            if len(node_tokens) < 12:
+                continue
+            coverage = self._token_coverage(table_tokens, node_tokens)
+            if coverage >= 0.85:
+                node.attributes["retrieval_allowed"] = False
+                node.attributes["suppression_reason"] = "Text block substantially duplicates structured table content on the same PDF page."
+                node.attributes["table_text_coverage"] = round(coverage, 3)
+
+    def _node_text_values(self, node: CanonicalNode) -> str:
+        """Collects text from a canonical subtree for same-page duplicate checks."""
+        values = [normalize_text(node.text) or ""]
+        for child in node.children:
+            values.append(self._node_text_values(child))
+        return " ".join(value for value in values if value)
+
+    def _coverage_tokens(self, text: str) -> Counter[str]:
+        """Tokenizes text for duplicate coverage without using fuzzy embeddings."""
+        return Counter(re.findall(r"[a-z0-9]+(?:[./_-][a-z0-9]+)*", (normalize_text(text) or "").casefold()))
+
+    def _token_coverage(self, reference: Counter[str], candidate: Counter[str]) -> float:
+        """Measures how much candidate wording is already represented in reference."""
+        total = sum(candidate.values())
+        if not total:
+            return 1.0
+        shared = sum(min(reference[token], count) for token, count in candidate.items())
+        return shared / total
 
     def _set_page_provenance(self, node: CanonicalNode, page_number: int) -> None:
         """Carries PDF page citations through table rows and cells."""

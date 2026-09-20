@@ -76,6 +76,23 @@ class CanonicalChunkingTests(unittest.TestCase):
         self.assertIn("Temperature: 90 C", chunk.content_text)
         self.assertEqual(chunk.metadata["header_context"], ["Material | Temperature"])
 
+    def test_retrieval_disallowed_table_row_is_not_chunked(self):
+        """A suspicious row is preserved in JSON but skipped before embeddings."""
+        header = node("header", NodeType.TABLE_HEADER, parent="table", attributes={"header_rows": [["Property", "Value"]]})
+        safe_row = node("safe-row", NodeType.TABLE_ROW, parent="table", children=[
+            node("safe-cell1", NodeType.TABLE_CELL, text="Density", parent="safe-row"),
+            node("safe-cell2", NodeType.TABLE_CELL, text="1070", parent="safe-row"),
+        ])
+        blocked_row = node("blocked-row", NodeType.TABLE_ROW, parent="table", attributes={"retrieval_allowed": False}, children=[
+            node("blocked-cell1", NodeType.TABLE_CELL, text="Volume Resistivity", parent="blocked-row"),
+            node("blocked-cell2", NodeType.TABLE_CELL, text="101122", parent="blocked-row"),
+        ])
+        table = node("table", NodeType.TABLE, title="Material limits", parent="root", children=[header, safe_row, blocked_row])
+        chunks = ChunkingService().build(document([table])).chunks
+        self.assertEqual(len(chunks), 1)
+        self.assertIn("Density", chunks[0].content_text)
+        self.assertNotIn("101122", chunks[0].content_text)
+
     def test_document_quality_error_blocks_automatic_chunking(self):
         """Incomplete extraction never reaches automatic embedding in strict mode."""
         paragraph = node("p1", NodeType.PARAGRAPH, text="Do not embed this.", parent="root")
@@ -91,6 +108,16 @@ class CanonicalChunkingTests(unittest.TestCase):
         result = ChunkingService().build(document([safe, conflicting]))
         self.assertEqual(len(result.chunks), 1)
         self.assertIn("Approved", result.chunks[0].content_text)
+
+    def test_retrieval_disallowed_node_is_not_chunked(self):
+        """Canonical audit content can be preserved while blocked from embeddings."""
+        safe = node("safe", NodeType.PARAGRAPH, text="Approved source content.", parent="root")
+        suppressed = node("suppressed", NodeType.PARAGRAPH, text="Duplicated table prose.", parent="root",
+            attributes={"retrieval_allowed": False})
+        result = ChunkingService().build(document([safe, suppressed]))
+        self.assertEqual(len(result.chunks), 1)
+        self.assertIn("Approved", result.chunks[0].content_text)
+        self.assertNotIn("Duplicated", result.chunks[0].content_text)
 
     def test_chunk_ids_are_deterministic_for_the_same_document_version(self):
         """Reprocessing unchanged canonical JSON produces index-safe stable IDs."""

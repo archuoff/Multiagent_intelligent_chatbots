@@ -1,9 +1,9 @@
 # Stable storage routing for the Lead Engineering knowledge agent.
 schema_version: 1
-agent_id: lead_engineering
+agent_id: le-agent
 display_name: Lead Engineering Knowledge Assistant
 ui:
   route: /agents/lead-engineering
 storage:
   incoming_raw_folder: storage/raw/le-agent
-  qdrant_collection: jlr-lead-engineering-chunks
+  qdrant_collection: jlr-le-agent-chunks

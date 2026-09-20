@@ -1,8 +1,8 @@
 """Deterministic field-use policy for Excel and other structured source fields.
 
-The policy labels fields; it does not delete source values. ``service.py``
-applies labels to canonical table cells before chunking. Answer generation must
-later enforce ``answer_visible`` when presenting source-grounded information.
+The policy labels fields without deleting source values from the audit-friendly
+Master JSON. Chunking and answer generation must honor these labels so
+internal-only fields never reach embeddings or user-facing responses.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ class FieldPolicyResolver:
             return FieldPolicy(field_name=label, use=FieldUse.REFERENCE_LINK, retrieval_allowed=True,
                 answer_visible=True, reason="Column name indicates a source reference or document link.")
         if self._INTERNAL_PATTERN.search(label):
-            return FieldPolicy(field_name=label, use=FieldUse.INTERNAL_ONLY, retrieval_allowed=True,
+            return FieldPolicy(field_name=label, use=FieldUse.INTERNAL_ONLY, retrieval_allowed=False,
                 answer_visible=False, reason="Column name indicates operational or internal-only data.")
         return FieldPolicy(field_name=label, use=FieldUse.STANDARD, retrieval_allowed=True,
             answer_visible=True, reason="No restrictive field policy matched the column name.")

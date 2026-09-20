@@ -6,7 +6,8 @@ identity and storage routing.
 
 Confirmed fields only:
 
-- `agent_id`: immutable lowercase snake-case application identifier.
+- `agent_id`: immutable lowercase storage/retrieval identifier; it must match
+  the raw-folder suffix and Qdrant collection convention used by ingestion.
 - `display_name`: human-readable agent name for the future portal.
 - `ui.route`: planned React route; it does not require the frontend to exist.
 - `storage.incoming_raw_folder`: current location of uploaded/source files.

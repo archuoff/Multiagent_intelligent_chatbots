@@ -44,6 +44,7 @@ class CanonicalEnrichmentTests(unittest.TestCase):
         CanonicalEnrichmentService().enrich(source)
         self.assertTrue(row.children[0].attributes["field_policy"]["answer_visible"])
         self.assertFalse(row.children[1].attributes["field_policy"]["answer_visible"])
+        self.assertFalse(row.children[1].attributes["field_policy"]["retrieval_allowed"])
         self.assertEqual(row.children[2].attributes["field_policy"]["use"], "reference_link")
         self.assertEqual(row.children[2].attributes["references"][0]["status"], "unverified_remote")
         self.assertFalse(row.children[2].attributes["references"][0]["answer_eligible"])
@@ -70,6 +71,8 @@ class CanonicalEnrichmentTests(unittest.TestCase):
         CanonicalEnrichmentService().enrich(source)
         chunk = ChunkingService().build(source).chunks[0]
         self.assertFalse(chunk.metadata["field_policies"][0]["answer_visible"])
+        self.assertNotIn("Private", chunk.content_text)
+        self.assertNotIn("Private", chunk.embedding_text)
         self.assertEqual(len(chunk.metadata["references"]), 1)
         self.assertEqual(chunk.metadata["answer_eligible_references"], [])
 

@@ -191,9 +191,11 @@ class DoclingContentAdapter:
             page = page_map.setdefault(page_number, ExtractedPage(number=page_number))
             text = self._element_text(element)
             if text:
-                page.text_blocks.append(
-                    {"text": text, "type": self._element_type(element), "level": level}
-                )
+                block = {"text": text, "type": self._element_type(element), "level": level}
+                bbox = self._element_bbox(element)
+                if bbox:
+                    block["bbox"] = bbox
+                page.text_blocks.append(block)
         for page in page_map.values():
             page.text = "\n".join(block["text"] for block in page.text_blocks)
         for table in getattr(document, "tables", []):
@@ -268,6 +270,22 @@ class DoclingContentAdapter:
                 else:
                     metadata["bbox"] = None
         return metadata
+
+    def _element_bbox(self, element: Any) -> dict[str, float] | None:
+        """Reads the first Docling provenance bbox for text-level verification."""
+        provenance = getattr(element, "prov", None)
+        if not provenance:
+            return None
+        bbox = getattr(provenance[0], "bbox", None)
+        if bbox is None:
+            return None
+        left = getattr(bbox, "l", None)
+        top = getattr(bbox, "t", None)
+        right = getattr(bbox, "r", None)
+        bottom = getattr(bbox, "b", None)
+        if not all(isinstance(value, (int, float)) for value in (left, top, right, bottom)):
+            return None
+        return {"left": min(left, right), "top": min(top, bottom), "width": abs(right - left), "height": abs(bottom - top)}
 
     def _picture_description(self, picture: Any) -> str:
         """Reads Docling picture descriptions from current and deprecated metadata fields."""

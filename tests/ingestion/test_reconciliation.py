@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 from backend.ingestion.extraction.contracts import ExtractedPage, ExtractionResult
 from backend.ingestion.extraction.docling import DoclingContentAdapter
 from backend.ingestion.extraction.merger import ExtractionResultMerger
+from backend.ingestion.extraction.raw_text_index import PdfRawTextIndex
+from backend.ingestion.extraction.raw_text_index import RawPdfWord
 from backend.ingestion.extraction.reconciliation import ExtractionReconciler
 from backend.ingestion.models import CanonicalDocument, CanonicalNode, DocumentFamily, DocumentMetadata, NodeType, ParserInfo, Provenance, SourceType
 from backend.ingestion.validation.quality import CanonicalQualityValidator
@@ -60,6 +62,56 @@ class ReconciliationTests(unittest.TestCase):
         self.assertTrue(merged.requires_review)
         self.assertEqual(len(merged.pages[0].text_blocks), 1)
         self.assertIn("conflict", [event["decision"] for event in merged.pages[0].reconciliation])
+
+    def test_raw_text_index_can_resolve_conflict_to_fallback_block(self):
+        """PDF source-position text can approve a conflicting fallback value."""
+        primary = ExtractionResult("docling", "primary", pages=[
+            ExtractedPage(1, text="Maximum operating temperature is 90 C for this sensor.")
+        ])
+        fallback = ExtractionResult("pymupdf", "fallback", pages=[
+            ExtractedPage(1, text_blocks=[{"text": "Maximum operating temperature is 80 C for this sensor.",
+                                           "bbox": {"x0": 0, "y0": 0, "x1": 300, "y1": 20}}])
+        ])
+        raw_index = PdfRawTextIndex(words=[
+            RawPdfWord(1, 0, 0, 60, 10, "Maximum"),
+            RawPdfWord(1, 65, 0, 120, 10, "operating"),
+            RawPdfWord(1, 125, 0, 190, 10, "temperature"),
+            RawPdfWord(1, 195, 0, 205, 10, "is"),
+            RawPdfWord(1, 210, 0, 225, 10, "80"),
+            RawPdfWord(1, 230, 0, 240, 10, "C"),
+            RawPdfWord(1, 245, 0, 260, 10, "for"),
+            RawPdfWord(1, 265, 0, 280, 10, "this"),
+            RawPdfWord(1, 285, 0, 315, 10, "sensor."),
+        ])
+        merged = self.merger.merge(primary, fallback, raw_text_index=raw_index)
+        self.assertFalse(merged.requires_review)
+        self.assertEqual(merged.pages[0].reconciliation[-1]["decision"], "conflict_resolved")
+        self.assertEqual(merged.pages[0].reconciliation[-1]["winning_source"], "fallback")
+
+    def test_raw_text_index_can_resolve_conflict_to_docling_text(self):
+        """PDF source-position text can reject an incorrect fallback value."""
+        primary = ExtractionResult("docling", "primary", pages=[
+            ExtractedPage(1, text="Maximum operating temperature is 90 C for this sensor.")
+        ])
+        fallback = ExtractionResult("pymupdf", "fallback", pages=[
+            ExtractedPage(1, text_blocks=[{"text": "Maximum operating temperature is 80 C for this sensor.",
+                                           "bbox": {"x0": 0, "y0": 0, "x1": 300, "y1": 20}}])
+        ])
+        raw_index = PdfRawTextIndex(words=[
+            RawPdfWord(1, 0, 0, 60, 10, "Maximum"),
+            RawPdfWord(1, 65, 0, 120, 10, "operating"),
+            RawPdfWord(1, 125, 0, 190, 10, "temperature"),
+            RawPdfWord(1, 195, 0, 205, 10, "is"),
+            RawPdfWord(1, 210, 0, 225, 10, "90"),
+            RawPdfWord(1, 230, 0, 240, 10, "C"),
+            RawPdfWord(1, 245, 0, 260, 10, "for"),
+            RawPdfWord(1, 265, 0, 280, 10, "this"),
+            RawPdfWord(1, 285, 0, 315, 10, "sensor."),
+        ])
+        merged = self.merger.merge(primary, fallback, raw_text_index=raw_index)
+        self.assertFalse(merged.requires_review)
+        self.assertEqual(merged.pages[0].text_blocks, [])
+        self.assertEqual(merged.pages[0].reconciliation[-1]["winning_source"], "docling")
 
     def test_recovery_block_does_not_overwrite_primary_page_text(self):
         """A fallback block cannot replace stronger primary text when primary has no blocks."""

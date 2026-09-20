@@ -1,8 +1,13 @@
 # Generated local ingestion artifacts are not source code.
+__pycache__/
+*.py[cod]
 storage/raw/*
 storage/canonical/*
 storage/manifests/*
 storage/visual-assets/
+storage/chunks/
+storage/chunk-manifests/
+storage/test-temp/
 !storage/raw/.gitkeep
 !storage/canonical/.gitkeep
 !storage/manifests/.gitkeep
