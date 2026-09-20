@@ -70,6 +70,16 @@ class QdrantVectorStore:
         ])
         client.delete(collection_name=collection_name, points_selector=models.FilterSelector(filter=query_filter), wait=True)
 
+    def close(self) -> None:
+        """Closes the underlying Qdrant client before Python interpreter shutdown."""
+        client = self._client
+        if client is None:
+            return
+        close = getattr(client, "close", None)
+        if callable(close):
+            close()
+        self._client = None
+
     def _get_client_and_models(self) -> tuple[Any, Any]:
         """Creates the official Qdrant local client lazily so tests need no Qdrant installation."""
         if self._client is None or self._models is None:

@@ -240,6 +240,31 @@ class CanonicalEnrichmentTests(unittest.TestCase):
         self.assertEqual(result.chunks, [])
         self.assertEqual(result.rejected[0].node_id, "excel-image")
 
+    def test_image_description_loads_dotenv_before_enabled_check(self):
+        """The VLM enable flag can come from .env, not only preloaded process env."""
+        image = CanonicalNode(node_id="excel-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/excel.png", "ocr_text": "",
+                        "needs_vision_description": True},
+            provenance=Provenance(document_id="doc", source_type=SourceType.XLSX, version="v1",
+                                  parent_node_id="sheet", sheet_name="Radar Sensor"))
+
+        class FakeVisionProvider:
+            deployment = "gpt-4o-vision"
+
+            def describe(self, image_path, *, context):
+                return {"visible_text": "VISIBLE LABEL", "description": "Diagram description.",
+                        "uncertainty": "", "confidence": "high"}
+
+        with patch.object(Path, "is_file", return_value=True):
+            with patch("backend.ingestion.enrichment.image_description.AzureOpenAIVisionDescriptionProvider._load_dotenv_if_available") as load_dotenv:
+                with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "true",
+                                               "JLR_IMAGE_DESCRIPTION_SCOPE": "vision_candidates"}, clear=True):
+                    count = ImageDescriptionEnrichment(FakeVisionProvider()).apply(document([image]))
+
+        load_dotenv.assert_called_once()
+        self.assertEqual(count, 1)
+        self.assertEqual(image.attributes["vlm_transcribed_text"], "VISIBLE LABEL")
+
     def test_pptx_image_only_slide_uses_required_vlm_policy(self):
         """PowerPoint diagram-heavy slides follow the same OCR-failover-to-VLM rule."""
         image = CanonicalNode(node_id="ppt-image", node_type=NodeType.IMAGE,
@@ -287,6 +312,34 @@ class CanonicalEnrichmentTests(unittest.TestCase):
         chunks = ChunkingService().build(source).chunks
         self.assertEqual(chunks[0].chunk_type.value, "visual")
         self.assertIn("VOLUME RESISTIVITY", chunks[0].content_text)
+
+    def test_pdf_image_ocr_persists_asset_before_standard_ocr(self):
+        """PDF image nodes get saved_path before OCR/VLM enrichment uses them."""
+        image = CanonicalNode(node_id="pdf-image", node_type=NodeType.IMAGE,
+            attributes={"xref": 17, "extension": "png"},
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1",
+                                  parent_node_id="page", page_number=2))
+        source = typed_document([image], SourceType.PDF, DocumentFamily.HIERARCHICAL)
+
+        class FakeOcr:
+            def __call__(self, image_bytes):
+                return type("OcrResult", (), {"txts": ("LOGO TEXT",), "scores": (0.94,), "boxes": None})()
+
+        def fake_persist(self, document, image_nodes):
+            image_nodes[0].attributes.update({
+                "saved_path": "storage/visual-assets/adas/doc/v1/page_002_image_001_abcd.png",
+                "image_storage_status": "stored",
+                "image_persistence_method": "pdf_xref",
+            })
+
+        with patch.object(ImageOcrEnrichment, "_persist_pdf_images", fake_persist):
+            with patch.object(Path, "is_file", return_value=True):
+                with patch.object(Path, "read_bytes", return_value=b"fake-pdf-image"):
+                    count = ImageOcrEnrichment(ocr_factory=FakeOcr).apply(source)
+
+        self.assertEqual(count, 1)
+        self.assertEqual(image.attributes["image_persistence_method"], "pdf_xref")
+        self.assertEqual(image.attributes["ocr_text"], "LOGO TEXT")
 
     def test_explicit_policy_override_wins_over_generic_column_rules(self):
         """Each agent can allow a business-specific column without modifying shared code."""

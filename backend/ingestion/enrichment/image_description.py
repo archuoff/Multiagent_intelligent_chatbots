@@ -155,6 +155,7 @@ class ImageDescriptionEnrichment:
 
     def apply(self, document: CanonicalDocument) -> int:
         """Describes stored images only when explicitly enabled by runtime config."""
+        AzureOpenAIVisionDescriptionProvider._load_dotenv_if_available()
         self._apply_required_policy(document)
         if os.getenv("JLR_IMAGE_DESCRIPTION", "false").lower() != "true":
             self._mark_required_nodes(document, "Azure vision description is not enabled.")

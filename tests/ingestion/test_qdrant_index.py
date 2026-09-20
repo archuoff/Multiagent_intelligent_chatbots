@@ -54,6 +54,7 @@ class FakeClient:
         self.payload_indexes: list[dict] = []
         self.upserts: list[dict] = []
         self.deletes: list[dict] = []
+        self.closed = False
 
     def collection_exists(self, collection_name: str) -> bool:
         """Reports whether a test collection has already been created."""
@@ -75,6 +76,10 @@ class FakeClient:
     def delete(self, **payload) -> None:
         """Records a Qdrant filtered delete."""
         self.deletes.append(payload)
+
+    def close(self) -> None:
+        """Records explicit cleanup."""
+        self.closed = True
 
 
 def chunk(chunk_id: str = "chunk-1") -> EmbeddingChunk:
@@ -126,6 +131,12 @@ class QdrantVectorStoreTests(unittest.TestCase):
         conditions = client.deletes[0]["points_selector"]["filter"]["must"]
         self.assertEqual([item["key"] for item in conditions], ["document_id", "source_version"])
 
+    def test_close_closes_injected_client(self):
+        """Explicit cleanup avoids Qdrant destructor warnings during interpreter shutdown."""
+        store, client = self.store()
+        store.close()
+        self.assertTrue(client.closed)
+
     def test_orchestrator_verifies_artifact_before_embedding_and_indexing(self):
         """The application path cannot index chunks without calling checksum-verified load first."""
         artifact_store = Mock(spec=ChunkArtifactStore)
@@ -140,3 +151,4 @@ class QdrantVectorStoreTests(unittest.TestCase):
         artifact_store.load.assert_called_once_with(artifact)
         embedding_service.embed.assert_called_once_with(chunks)
         vector_store.upsert.assert_called_once_with(chunks, embeddings)
+        vector_store.close.assert_called_once_with()
