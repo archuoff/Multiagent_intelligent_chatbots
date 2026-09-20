@@ -60,6 +60,25 @@ class QdrantVectorStore:
             indexed_chunk_ids=[chunk.chunk_id for chunk in selected_chunks], document_id=first.document_id,
             source_version=first.source_version)
 
+    def search(self, *, agent_id: str, query_vector: list[float], limit: int = 10) -> list[dict[str, Any]]:
+        """Returns the closest chunks in one agent's collection, newest payload fields included.
+
+        Filters only by agent_id -- ACL and other governance checks happen
+        client-side in backend/retrieval/, since expressing the
+        empty-list-means-public rule as a Qdrant filter is fragile to hand-write
+        and awkward to unit-test against this offline FakeClient/FakeModels
+        pattern. Returns [] for a collection that doesn't exist yet (an agent
+        with no ingested documents) instead of raising.
+        """
+        client, models = self._get_client_and_models()
+        collection_name = self._collection_name(agent_id)
+        if not client.collection_exists(collection_name):
+            return []
+        query_filter = models.Filter(must=[models.FieldCondition(key="agent_id", match=models.MatchValue(value=agent_id))])
+        response = client.query_points(collection_name=collection_name, query=query_vector,
+            query_filter=query_filter, limit=limit, with_payload=True)
+        return [{"id": point.id, "score": point.score, "payload": point.payload} for point in response.points]
+
     def delete_document_version(self, *, agent_id: str, document_id: str, source_version: str) -> None:
         """Removes only one obsolete document version while retaining other agent data and versions."""
         client, models = self._get_client_and_models()
@@ -139,4 +158,15 @@ class QdrantVectorStore:
             "security_classification": str(security.get("classification", "internal")),
             "allowed_groups": [str(group) for group in groups] if isinstance(groups, list) else [],
             "allowed_users": [str(user) for user in users] if isinstance(users, list) else [],
+            # Citation coordinates and answer-governance metadata -- payload-only, not
+            # search-filterable, needed by the query layer for citations and per-field
+            # answer_visible redaction (see backend/retrieval/).
+            "breadcrumbs": [str(item) for item in chunk.metadata.get("breadcrumbs") or []],
+            "page_number": chunk.metadata.get("page_number"),
+            "slide_number": chunk.metadata.get("slide_number"),
+            "sheet_name": chunk.metadata.get("sheet_name"),
+            "cell_range": chunk.metadata.get("cell_range"),
+            "table_title": chunk.metadata.get("table_title"),
+            "header_context": [str(item) for item in chunk.metadata.get("header_context") or []],
+            "field_policies": chunk.metadata.get("field_policies") or [],
         }

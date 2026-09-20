@@ -45,6 +45,22 @@ class FakeModels:
         return payload
 
 
+class FakeScoredPoint:
+    """Mirrors the small slice of qdrant_client's ScoredPoint search() consumes."""
+
+    def __init__(self, point_id: str, score: float, payload: dict) -> None:
+        self.id = point_id
+        self.score = score
+        self.payload = payload
+
+
+class FakeQueryResponse:
+    """Mirrors qdrant_client's QueryResponse (query_points()'s return type)."""
+
+    def __init__(self, points: list[FakeScoredPoint]) -> None:
+        self.points = points
+
+
 class FakeClient:
     """Captures Qdrant calls without importing the real client or writing local vectors."""
 
@@ -54,6 +70,8 @@ class FakeClient:
         self.payload_indexes: list[dict] = []
         self.upserts: list[dict] = []
         self.deletes: list[dict] = []
+        self.query_points_calls: list[dict] = []
+        self.query_response = FakeQueryResponse([])
         self.closed = False
 
     def collection_exists(self, collection_name: str) -> bool:
@@ -76,6 +94,11 @@ class FakeClient:
     def delete(self, **payload) -> None:
         """Records a Qdrant filtered delete."""
         self.deletes.append(payload)
+
+    def query_points(self, **payload):
+        """Records a search call and returns the test's preconfigured response."""
+        self.query_points_calls.append(payload)
+        return self.query_response
 
     def close(self) -> None:
         """Records explicit cleanup."""
@@ -136,6 +159,65 @@ class QdrantVectorStoreTests(unittest.TestCase):
         store, client = self.store()
         store.close()
         self.assertTrue(client.closed)
+
+    def test_upsert_payload_includes_citation_and_field_policy_metadata(self):
+        """Page/sheet/breadcrumb coordinates and field policies now reach Qdrant's payload."""
+        store, client = self.store()
+        row_chunk = EmbeddingChunk(chunk_id="row-1", chunk_type=ChunkType.TABLE_ROW, document_id="document-1",
+            agent_id="adas-agent", source_type="xlsx", source_version="v1", parent_node_id="table-1",
+            source_node_ids=["row-1"], content_text="Density: 1.08", embedding_text="Density: 1.08",
+            metadata={"security_scope": {"classification": "internal", "allowed_groups": []},
+                "breadcrumbs": ["Sheet1", "Material Table"], "page_number": None, "slide_number": None,
+                "sheet_name": "Sheet1", "cell_range": "A2:B2", "table_title": "Material Properties",
+                "header_context": ["Property | Value"],
+                "field_policies": [{"field_name": "Density", "use": "standard", "retrieval_allowed": True,
+                    "answer_visible": True, "reason": "No restrictive policy matched."}]})
+        store.upsert(ChunkBuildResult(policy_version="v1", chunks=[row_chunk]),
+            EmbeddingBuildResult(embedding_model="azure-embedding", dimensions=3, embedded_chunks=[vector("row-1")]))
+        payload = client.upserts[0]["points"][0]["payload"]
+        self.assertEqual(payload["breadcrumbs"], ["Sheet1", "Material Table"])
+        self.assertEqual(payload["sheet_name"], "Sheet1")
+        self.assertEqual(payload["cell_range"], "A2:B2")
+        self.assertEqual(payload["table_title"], "Material Properties")
+        self.assertEqual(payload["header_context"], ["Property | Value"])
+        self.assertEqual(payload["field_policies"][0]["field_name"], "Density")
+        self.assertIsNone(payload["page_number"])
+
+    def test_upsert_payload_defaults_new_fields_safely_when_metadata_lacks_them(self):
+        """A narrative chunk with no table/page metadata still gets a well-formed payload."""
+        store, client = self.store()
+        store.upsert(ChunkBuildResult(policy_version="v1", chunks=[chunk()]),
+            EmbeddingBuildResult(embedding_model="azure-embedding", dimensions=3, embedded_chunks=[vector()]))
+        payload = client.upserts[0]["points"][0]["payload"]
+        self.assertEqual(payload["breadcrumbs"], [])
+        self.assertEqual(payload["header_context"], [])
+        self.assertEqual(payload["field_policies"], [])
+        self.assertIsNone(payload["page_number"])
+        self.assertIsNone(payload["table_title"])
+
+    def test_search_filters_by_agent_id_and_returns_scored_payloads(self):
+        """A search hit's score and full payload (including new citation fields) reach the caller."""
+        store, client = self.store()
+        client.collections.add("jlr-adas-agent-chunks")
+        client.query_response = FakeQueryResponse([
+            FakeScoredPoint("point-1", 0.93, {"chunk_id": "chunk-1", "page_number": 4, "content_text": "Sensor spec"}),
+            FakeScoredPoint("point-2", 0.81, {"chunk_id": "chunk-2", "page_number": 5, "content_text": "Mounting torque"}),
+        ])
+        results = store.search(agent_id="adas-agent", query_vector=[0.1, 0.2, 0.3], limit=5)
+        call = client.query_points_calls[0]
+        self.assertEqual(call["collection_name"], "jlr-adas-agent-chunks")
+        self.assertEqual(call["limit"], 5)
+        self.assertEqual(call["query_filter"]["must"][0]["key"], "agent_id")
+        self.assertEqual(call["query_filter"]["must"][0]["match"]["value"], "adas-agent")
+        self.assertEqual([item["score"] for item in results], [0.93, 0.81])
+        self.assertEqual(results[0]["payload"]["page_number"], 4)
+
+    def test_search_returns_empty_list_for_agent_with_no_ingested_data(self):
+        """An agent whose collection was never created returns no results, not an error."""
+        store, client = self.store()
+        results = store.search(agent_id="benchmarking-agent", query_vector=[0.1, 0.2, 0.3])
+        self.assertEqual(results, [])
+        self.assertEqual(client.query_points_calls, [])
 
     def test_orchestrator_verifies_artifact_before_embedding_and_indexing(self):
         """The application path cannot index chunks without calling checksum-verified load first."""
