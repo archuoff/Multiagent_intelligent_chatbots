@@ -1,20 +1,13 @@
 import logging
 import json
 import time
-from functools import lru_cache
 from typing import Any
 
-from .azure_chat import AzureOpenAIChatClient
+from .azure_chat import AzureOpenAIChatClient, get_chat_client
 from .state import AgentState
 from .config import AgentConfig, get_agent_config
 
 logger = logging.getLogger(__name__)
-
-
-@lru_cache(maxsize=1)
-def get_chat_client() -> AzureOpenAIChatClient:
-    """Builds one Azure chat client per process, reused across every classification call."""
-    return AzureOpenAIChatClient.from_runtime_environment()
 
 
 def classify_intent(agent_state: AgentState) -> dict[str, Any]:
@@ -59,6 +52,7 @@ def state_update(query: str, classification: dict[str, Any]) -> dict[str, Any]:
     else:  # Domain_qn
         result["needs_clarification"] = False
         result["resolved_query"] = classification.get("resolved_query", query)
+        result["requires_decomposition"] = bool(classification.get("requires_decomposition", False))
 
     return result
 
@@ -113,13 +107,22 @@ ADDITIONAL FIELDS:
       abbreviations) but preserve the user's actual wording and intent.
     - For general_chat or out_of_scope, just pass the original query through
       unchanged.
+- requires_decomposition: true only when intent is "Domain_qn" AND the
+  question genuinely asks about more than one distinct thing that each need
+  a separate lookup (e.g. comparing two named components, or asking about
+  several unrelated properties at once). False for every other intent, and
+  false for a Domain_qn question that's really just one lookup even if it's
+  phrased with multiple clauses. When unsure, use false — splitting a
+  question that didn't need it wastes a retrieval call, but not splitting
+  one that did just returns partial results, not wrong ones.
 
 OUTPUT — respond with ONLY this JSON object, no markdown fences, no other text:
 {{
   "intent": "general_chat | out_of_scope | clarification_qn | Domain_qn",
   "needs_clarification": true | false,
   "clarification_question": "..." | null,
-  "resolved_query": "..."
+  "resolved_query": "...",
+  "requires_decomposition": true | false
 }}"""
 
 
@@ -164,6 +167,7 @@ def _parse_classification(raw: str, query: str) -> dict[str, Any]:
         result.setdefault("needs_clarification", False)
         result.setdefault("clarification_question", None)
         result.setdefault("resolved_query", query)
+        result.setdefault("requires_decomposition", False)
         return result
 
     except (json.JSONDecodeError, IndexError) as e:
@@ -178,6 +182,7 @@ def _fallback_classification(query: str) -> dict[str, Any]:
         "needs_clarification": False,
         "clarification_question": None,
         "resolved_query": query,
+        "requires_decomposition": False,
     }
 
 

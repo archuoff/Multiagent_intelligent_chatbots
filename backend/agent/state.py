@@ -15,6 +15,8 @@ class AgentState(TypedDict):
 
     intent: str  # Domain_qn/normal_qn/clarification_qn
     resolved_query: str  # Self-contained, history-resolved version of user_query.
+    requires_decomposition: bool  # Set by classify_intent; true only routes through decompose.
+    sub_queries: list[str]  # Set by decompose_query when requires_decomposition is true.
     needs_clarification: bool
     ask_user: str  # The question to ask the user for clarification.
 

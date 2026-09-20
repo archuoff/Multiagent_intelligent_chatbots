@@ -10,6 +10,7 @@ local Ollama server the production deployment can't depend on being up.
 from __future__ import annotations
 
 import os
+from functools import lru_cache
 from typing import Any
 
 
@@ -56,3 +57,9 @@ class AzureOpenAIChatClient:
         if not value:
             raise RuntimeError(f"Required runtime setting is missing: {name}.")
         return value
+
+
+@lru_cache(maxsize=1)
+def get_chat_client() -> AzureOpenAIChatClient:
+    """Builds one Azure chat client per process, shared by every graph node that needs one."""
+    return AzureOpenAIChatClient.from_runtime_environment()

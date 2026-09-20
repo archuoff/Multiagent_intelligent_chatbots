@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from backend.agent.graph import build_agent_graph
+from backend.agent.graph import build_agent_graph, make_retrieve_node
 
 
 def base_state(**overrides) -> dict:
@@ -82,6 +82,123 @@ class RetrieveNodeInputTests(unittest.TestCase):
         self.assertEqual(seen_state["agent_id"], "adas-agent")
         self.assertEqual(seen_state["principal_group_codes"], ["adas_engineer"])
         self.assertEqual(seen_state["principal_user_id"], "bob")
+
+
+class DecompositionRoutingTests(unittest.TestCase):
+    """Confirms decompose only runs when classify_intent flags requires_decomposition."""
+
+    def test_requires_decomposition_true_routes_through_decompose_first(self):
+        decompose_calls: list = []
+        retrieve_calls: list = []
+
+        def fake_classify(state):
+            return {"intent": "Domain_qn", "needs_clarification": False, "resolved_query": "compare A and B",
+                "requires_decomposition": True}
+
+        def fake_decompose(state):
+            decompose_calls.append(state)
+            return {"sub_queries": ["spec for A", "spec for B"]}
+
+        def fake_retrieve(state):
+            retrieve_calls.append(state.get("sub_queries"))
+            return {"retrieved_chunks": []}
+
+        compiled = build_agent_graph(classify_node=fake_classify, decompose_node=fake_decompose,
+            retrieve_node=fake_retrieve).compile()
+        compiled.invoke(base_state(user_query="compare A and B"))
+        self.assertEqual(len(decompose_calls), 1)
+        self.assertEqual(retrieve_calls, [["spec for A", "spec for B"]])
+
+    def test_requires_decomposition_false_skips_decompose_entirely(self):
+        decompose_calls: list = []
+        retrieve_calls: list = []
+
+        def fake_classify(state):
+            return {"intent": "Domain_qn", "needs_clarification": False, "resolved_query": "single lookup",
+                "requires_decomposition": False}
+
+        def fake_decompose(state):
+            decompose_calls.append(state)
+            return {"sub_queries": ["should never run"]}
+
+        def fake_retrieve(state):
+            retrieve_calls.append(state.get("sub_queries"))
+            return {"retrieved_chunks": []}
+
+        compiled = build_agent_graph(classify_node=fake_classify, decompose_node=fake_decompose,
+            retrieve_node=fake_retrieve).compile()
+        compiled.invoke(base_state(user_query="single lookup"))
+        self.assertEqual(decompose_calls, [])
+        self.assertEqual(retrieve_calls, [None])
+
+
+class FakeRetrievalResultChunk:
+    """Mirrors just enough of RetrievedChunk for make_retrieve_node's model_dump() call."""
+
+    def __init__(self, chunk_id: str, score: float) -> None:
+        self.chunk_id = chunk_id
+        self.score = score
+
+    def model_dump(self) -> dict:
+        return {"chunk_id": self.chunk_id, "score": self.score}
+
+
+class FakeRetrievalResult:
+    def __init__(self, chunks: list[FakeRetrievalResultChunk]) -> None:
+        self.chunks = chunks
+
+
+class FakeRetrievalService:
+    """Returns a preconfigured result per query_text so merge/dedupe logic can be tested directly."""
+
+    def __init__(self, results_by_query: dict[str, list[FakeRetrievalResultChunk]]) -> None:
+        self.results_by_query = results_by_query
+        self.calls: list[str] = []
+
+    def retrieve(self, *, agent_id, query_text, principal_group_codes, principal_user_id, **_):
+        self.calls.append(query_text)
+        return FakeRetrievalResult(self.results_by_query.get(query_text, []))
+
+
+class RetrieveNodeMergeTests(unittest.TestCase):
+    """Unit-level tests of make_retrieve_node's multi-query merge/dedupe, bypassing the graph."""
+
+    def test_single_query_behavior_is_unchanged_when_no_sub_queries_present(self):
+        service = FakeRetrievalService({"resolved query": [FakeRetrievalResultChunk("c1", 0.9)]})
+        node = make_retrieve_node(service)
+        result = node(base_state(resolved_query="resolved query"))
+        self.assertEqual(service.calls, ["resolved query"])
+        self.assertEqual(result["retrieved_chunks"], [{"chunk_id": "c1", "score": 0.9}])
+
+    def test_runs_once_per_sub_query_and_merges_results(self):
+        service = FakeRetrievalService({
+            "spec for A": [FakeRetrievalResultChunk("c1", 0.9)],
+            "spec for B": [FakeRetrievalResultChunk("c2", 0.8)],
+        })
+        node = make_retrieve_node(service)
+        result = node(base_state(sub_queries=["spec for A", "spec for B"]))
+        self.assertEqual(service.calls, ["spec for A", "spec for B"])
+        self.assertEqual([c["chunk_id"] for c in result["retrieved_chunks"]], ["c1", "c2"])
+
+    def test_a_chunk_matching_multiple_sub_queries_is_deduplicated(self):
+        service = FakeRetrievalService({
+            "spec for A": [FakeRetrievalResultChunk("shared", 0.7), FakeRetrievalResultChunk("only-a", 0.6)],
+            "spec for B": [FakeRetrievalResultChunk("shared", 0.7), FakeRetrievalResultChunk("only-b", 0.5)],
+        })
+        node = make_retrieve_node(service)
+        result = node(base_state(sub_queries=["spec for A", "spec for B"]))
+        chunk_ids = [c["chunk_id"] for c in result["retrieved_chunks"]]
+        self.assertEqual(chunk_ids, ["shared", "only-a", "only-b"])
+        self.assertEqual(len(chunk_ids), len(set(chunk_ids)))
+
+    def test_merged_results_are_sorted_by_score_descending(self):
+        service = FakeRetrievalService({
+            "low first": [FakeRetrievalResultChunk("low", 0.4)],
+            "high second": [FakeRetrievalResultChunk("high", 0.95)],
+        })
+        node = make_retrieve_node(service)
+        result = node(base_state(sub_queries=["low first", "high second"]))
+        self.assertEqual([c["chunk_id"] for c in result["retrieved_chunks"]], ["high", "low"])
 
 
 if __name__ == "__main__":

@@ -61,6 +61,22 @@ class CallIntentClassifierTests(unittest.TestCase):
         sent_messages = client.calls[0]["messages"]
         self.assertIn({"role": "user", "content": "earlier question"}, sent_messages)
 
+    def test_requires_decomposition_true_is_preserved(self):
+        client = FakeChatClient(reply='{"intent": "Domain_qn", "requires_decomposition": true}')
+        result = call_intent_classifier("adas-agent", "compare A and B", chat_client=client)
+        self.assertTrue(result["requires_decomposition"])
+
+    def test_requires_decomposition_defaults_to_false_when_absent(self):
+        """Backward-safe default for an LLM response that omits the new field."""
+        client = FakeChatClient(reply='{"intent": "Domain_qn"}')
+        result = call_intent_classifier("adas-agent", "single lookup", chat_client=client)
+        self.assertFalse(result["requires_decomposition"])
+
+    def test_requires_decomposition_defaults_to_false_on_fallback(self):
+        client = FakeChatClient(error=RuntimeError("Azure is down"))
+        result = call_intent_classifier("adas-agent", "anything", chat_client=client)
+        self.assertFalse(result["requires_decomposition"])
+
 
 if __name__ == "__main__":
     unittest.main()

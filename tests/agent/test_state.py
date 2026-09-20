@@ -33,5 +33,27 @@ class ResolvedQueryFieldTests(unittest.TestCase):
             self.assertNotIn("resolved_query", result)
 
 
+class RequiresDecompositionFieldTests(unittest.TestCase):
+    def test_agent_state_declares_requires_decomposition_and_sub_queries(self):
+        self.assertIn("requires_decomposition", AgentState.__annotations__)
+        self.assertIn("sub_queries", AgentState.__annotations__)
+
+    def test_domain_qn_carries_requires_decomposition_true(self):
+        classification = {"intent": "Domain_qn", "requires_decomposition": True}
+        result = state_update("compare A and B", classification)
+        self.assertTrue(result["requires_decomposition"])
+
+    def test_domain_qn_defaults_requires_decomposition_to_false(self):
+        classification = {"intent": "Domain_qn"}
+        result = state_update("single lookup", classification)
+        self.assertFalse(result["requires_decomposition"])
+
+    def test_non_domain_intents_do_not_set_requires_decomposition(self):
+        for intent in ("general_chat", "out_of_scope", "clarification_qn"):
+            classification = {"intent": intent, "clarification_question": "which one?"}
+            result = state_update("hi", classification)
+            self.assertNotIn("requires_decomposition", result)
+
+
 if __name__ == "__main__":
     unittest.main()
