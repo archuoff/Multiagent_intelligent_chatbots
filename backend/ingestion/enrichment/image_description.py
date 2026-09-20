@@ -138,9 +138,22 @@ class ImageDescriptionEnrichment:
             for node in self._walk(root):
                 if node.node_type != NodeType.IMAGE:
                     continue
+                if not self._should_describe(node):
+                    self._mark_skipped(node, "Image does not match the configured vision-description scope.")
+                    continue
                 if self._describe_node(node, provider):
                     processed += 1
         return processed
+
+    def _should_describe(self, node: CanonicalNode) -> bool:
+        """Limits VLM usage to likely useful image nodes unless explicitly overridden."""
+        scope = os.getenv("JLR_IMAGE_DESCRIPTION_SCOPE", "candidates").lower()
+        if scope == "all":
+            return True
+        if scope == "vision_candidates":
+            return bool(node.attributes.get("needs_vision_description"))
+        ocr_text = normalize_text(str(node.attributes.get("ocr_text") or ""))
+        return bool(node.attributes.get("needs_vision_description")) or not bool(ocr_text)
 
     def _describe_node(self, node: CanonicalNode, provider: VisionDescriptionProvider) -> bool:
         """Adds description metadata without changing OCR text or canonical source text."""
@@ -174,6 +187,7 @@ class ImageDescriptionEnrichment:
         parts = [
             str(node.title or ""),
             str(node.attributes.get("shape_name") or ""),
+            str(node.attributes.get("nearby_text") or ""),
             str(node.attributes.get("ocr_text") or ""),
         ]
         return "\n".join(part for part in (normalize_text(part) for part in parts) if part)[:1200]
