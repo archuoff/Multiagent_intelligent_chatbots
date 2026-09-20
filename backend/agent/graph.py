@@ -31,7 +31,9 @@ from backend.agent.state import AgentState
 from backend.ingestion.embedding.azure_openai import AzureOpenAIEmbeddingProvider
 from backend.ingestion.indexing.qdrant_store import QdrantVectorStore
 from backend.ingestion.persistence.canonical_store import CanonicalArtifactStore
+from backend.retrieval.contracts import RetrievedChunk
 from backend.retrieval.query_rewrite import rewrite_query
+from backend.retrieval.reranker import CrossEncoderReranker, get_reranker
 from backend.retrieval.service import RetrievalService
 
 GraphNode = Callable[[AgentState], dict[str, Any]]
@@ -101,6 +103,18 @@ def make_retrieve_node(service: RetrievalService) -> GraphNode:
     return retrieve_node
 
 
+def make_rerank_node(reranker: CrossEncoderReranker) -> GraphNode:
+    """Builds the rerank node around one CrossEncoderReranker, injectable for tests."""
+
+    def rerank_node(state: AgentState) -> dict[str, Any]:
+        query_text = state.get("resolved_query") or state["user_query"]
+        chunks = [RetrievedChunk(**item) for item in state.get("retrieved_chunks") or []]
+        reranked = reranker.rerank(query_text, chunks)
+        return {"reranked_chunks": [chunk.model_dump() for chunk in reranked]}
+
+    return rerank_node
+
+
 @lru_cache(maxsize=1)
 def _default_retrieval_service() -> RetrievalService:
     """Builds the one process-lifetime RetrievalService instance production code uses.
@@ -122,20 +136,23 @@ def _route_after_intent(state: AgentState) -> str:
 
 
 def build_agent_graph(*, classify_node: GraphNode | None = None, decompose_node: GraphNode | None = None,
-                       retrieve_node: GraphNode | None = None) -> StateGraph:
-    """Assembles the classify -> (decompose) -> retrieve graph. Every node is injectable for tests."""
+                       retrieve_node: GraphNode | None = None, rerank_node: GraphNode | None = None) -> StateGraph:
+    """Assembles the classify -> (decompose) -> retrieve -> rerank graph. Every node is injectable for tests."""
     classify = classify_node or classify_intent
     decompose = decompose_node or _default_decompose_node
     retrieve = retrieve_node or make_retrieve_node(_default_retrieval_service())
+    rerank = rerank_node or make_rerank_node(get_reranker())
     graph = StateGraph(AgentState)
     graph.add_node("classify_intent", classify)
     graph.add_node("decompose", decompose)
     graph.add_node("retrieve", retrieve)
+    graph.add_node("rerank", rerank)
     graph.add_edge(START, "classify_intent")
     graph.add_conditional_edges("classify_intent", _route_after_intent,
         {"decompose": "decompose", "retrieve": "retrieve", END: END})
     graph.add_edge("decompose", "retrieve")
-    graph.add_edge("retrieve", END)
+    graph.add_edge("retrieve", "rerank")
+    graph.add_edge("rerank", END)
     return graph
 
 

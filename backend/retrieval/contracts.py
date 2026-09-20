@@ -36,6 +36,7 @@ class RetrievedChunk(BaseModel):
     vlm_confidence: float | None = None
     image_path: str | None = None
     image_storage_status: str | None = None
+    rerank_score: float | None = None
 
 
 class RetrievalResult(BaseModel):
