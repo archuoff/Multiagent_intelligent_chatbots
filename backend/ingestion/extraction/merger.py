@@ -155,10 +155,17 @@ class ExtractionResultMerger:
             if decision["decision"] in {"fallback_only", "conflict"}:
                 primary.text_blocks.append({**fallback_block, "extractor_role": recovery_role, "reconciliation": decision})
                 comparable_text = "\n".join((comparable_text, fallback_block["text"])).strip()
+        original_text = self._page_text(primary)
         if not primary.text and fallback.text and not primary.text_blocks:
             primary.text = fallback.text
         if primary.text_blocks:
-            primary.text = "\n".join(block.get("text", "") for block in primary.text_blocks)
+            block_text = "\n".join(block.get("text", "") for block in primary.text_blocks if normalize_text(str(block.get("text", ""))))
+            if original_text and normalize_text(block_text) and not self._reconciler.compare_text(block_text, original_text)["decision"] in {"duplicate", "near_duplicate"}:
+                primary.text = "\n".join((original_text, block_text)).strip()
+            elif original_text:
+                primary.text = original_text
+            else:
+                primary.text = block_text
         for table in fallback.tables:
             decision = self._best_table_decision(primary.tables, table)
             event = {"content_type": "table", "location": primary.number, **decision}

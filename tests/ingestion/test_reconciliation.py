@@ -61,6 +61,14 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(len(merged.pages[0].text_blocks), 1)
         self.assertIn("conflict", [event["decision"] for event in merged.pages[0].reconciliation])
 
+    def test_recovery_block_does_not_overwrite_primary_page_text(self):
+        """A fallback block cannot replace stronger primary text when primary has no blocks."""
+        primary = ExtractionResult("docling", "primary", pages=[ExtractedPage(1, text="A B C D E")])
+        fallback = ExtractionResult("pymupdf", "fallback", pages=[ExtractedPage(1, text_blocks=[{"text": "C"}])])
+        merged = self.merger.merge(primary, fallback)
+        self.assertIn("A B C D E", merged.pages[0].text)
+        self.assertNotEqual(merged.pages[0].text, "C")
+
     def test_fallback_can_replace_weaker_primary_page(self):
         """Quality wins over extractor name when fallback has materially stronger text."""
         primary = ExtractionResult("docling", "primary", pages=[ExtractedPage(1, text="Sensor overview.")])
