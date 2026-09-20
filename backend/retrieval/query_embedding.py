@@ -16,6 +16,7 @@ from __future__ import annotations
 from functools import lru_cache
 
 from backend.ingestion.embedding.azure_openai import AzureOpenAIEmbeddingProvider
+from backend.ingestion.embedding.sparse_provider import FastEmbedSparseProvider
 
 
 @lru_cache(maxsize=1)
@@ -31,3 +32,18 @@ def embed_query(text: str, provider: AzureOpenAIEmbeddingProvider | None = None)
     if not embeddings:
         raise RuntimeError("Azure returned no embedding for the query text.")
     return embeddings[0]
+
+
+@lru_cache(maxsize=1)
+def get_sparse_embedding_provider() -> FastEmbedSparseProvider:
+    """Builds one BM25 sparse provider per process, reused across every query."""
+    return FastEmbedSparseProvider.from_default_model()
+
+
+def embed_query_sparse(text: str, provider: FastEmbedSparseProvider | None = None) -> dict[str, list]:
+    """Embeds one query string into the same BM25 sparse space chunks were embedded in."""
+    provider = provider or get_sparse_embedding_provider()
+    vectors = provider.embed([text])
+    if not vectors:
+        raise RuntimeError("Sparse BM25 provider returned no vector for the query text.")
+    return vectors[0]

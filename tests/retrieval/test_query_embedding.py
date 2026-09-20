@@ -12,7 +12,9 @@ import unittest
 
 from backend.ingestion.embedding.azure_openai import AzureOpenAIEmbeddingProvider
 from backend.ingestion.embedding.contracts import EmbeddingModelSettings
-from backend.retrieval.query_embedding import embed_query, get_embedding_provider
+from backend.ingestion.embedding.sparse_provider import FastEmbedSparseProvider
+from backend.retrieval.query_embedding import (embed_query, embed_query_sparse,
+    get_embedding_provider, get_sparse_embedding_provider)
 
 
 class FakeRecord:
@@ -84,6 +86,58 @@ class GetEmbeddingProviderTests(unittest.TestCase):
         finally:
             AzureOpenAIEmbeddingProvider.from_runtime_environment = original_from_env
             get_embedding_provider.cache_clear()
+
+
+class FakeSparseVector:
+    """Mirrors fastembed's real SparseEmbedding return shape (numpy .indices/.values)."""
+
+    def __init__(self, indices: list[int], values: list[float]) -> None:
+        self.indices = indices
+        self.values = values
+
+
+class FakeSparseModel:
+    def __init__(self) -> None:
+        self.embed_calls: list[list[str]] = []
+
+    def embed(self, texts):
+        self.embed_calls.append(list(texts))
+        return [FakeSparseVector([1, 5], [0.9, 0.4]) for _ in texts]
+
+
+class EmbedQuerySparseTests(unittest.TestCase):
+    def test_embeds_a_single_sparse_vector_via_the_real_provider_shape(self):
+        """Exercises FastEmbedSparseProvider itself, not just a hand-faked embed_query_sparse provider."""
+        provider = FastEmbedSparseProvider(model=FakeSparseModel())
+        result = embed_query_sparse("torque spec for X", provider=provider)
+        self.assertEqual(result, {"indices": [1, 5], "values": [0.9, 0.4]})
+        self.assertIsInstance(result["indices"][0], int)
+        self.assertIsInstance(result["values"][0], float)
+
+    def test_raises_clearly_if_the_provider_returns_no_vector(self):
+        class EmptyResponseProvider:
+            def embed(self, texts: list[str]) -> list[dict]:
+                return []
+
+        with self.assertRaises(RuntimeError):
+            embed_query_sparse("anything", provider=EmptyResponseProvider())
+
+
+class GetSparseEmbeddingProviderTests(unittest.TestCase):
+    def test_is_cached_across_calls(self):
+        get_sparse_embedding_provider.cache_clear()
+        original_from_default = FastEmbedSparseProvider.from_default_model
+        built = []
+        try:
+            FastEmbedSparseProvider.from_default_model = classmethod(
+                lambda cls: built.append(1) or FastEmbedSparseProvider(model=FakeSparseModel()))
+            first = get_sparse_embedding_provider()
+            second = get_sparse_embedding_provider()
+            self.assertIs(first, second)
+            self.assertEqual(len(built), 1)
+        finally:
+            FastEmbedSparseProvider.from_default_model = original_from_default
+            get_sparse_embedding_provider.cache_clear()
 
 
 if __name__ == "__main__":

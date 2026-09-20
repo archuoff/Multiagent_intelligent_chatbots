@@ -20,8 +20,19 @@ class FakeModels:
     class PayloadSchemaType:
         KEYWORD = "keyword"
 
+    class Fusion:
+        RRF = "rrf"
+
     @staticmethod
     def VectorParams(**payload):
+        return payload
+
+    @staticmethod
+    def SparseVectorParams(**payload):
+        return payload
+
+    @staticmethod
+    def SparseVector(**payload):
         return payload
 
     @staticmethod
@@ -43,6 +54,26 @@ class FakeModels:
     @staticmethod
     def FilterSelector(**payload):
         return payload
+
+    @staticmethod
+    def Prefetch(**payload):
+        return payload
+
+    @staticmethod
+    def FusionQuery(**payload):
+        return payload
+
+
+class FakeSparseProvider:
+    """Returns a preconfigured sparse vector per call, recording batch sizes requested."""
+
+    def __init__(self, vector: dict | None = None) -> None:
+        self.vector = vector or {"indices": [1, 2], "values": [0.5, 0.3]}
+        self.embed_calls: list[list[str]] = []
+
+    def embed(self, texts: list[str]) -> list[dict]:
+        self.embed_calls.append(texts)
+        return [self.vector for _ in texts]
 
 
 class FakeScoredPoint:
@@ -122,23 +153,38 @@ def vector(chunk_id: str = "chunk-1") -> EmbeddedChunk:
 class QdrantVectorStoreTests(unittest.TestCase):
     """Ensures Qdrant receives only validated points and filterable ACL payloads."""
 
-    def store(self) -> tuple[QdrantVectorStore, FakeClient]:
+    def store(self, sparse_provider: FakeSparseProvider | None = None) -> tuple[QdrantVectorStore, FakeClient]:
         """Creates an injected store that stays fully offline."""
         client = FakeClient()
-        return QdrantVectorStore(client=client, models_module=FakeModels), client
+        return QdrantVectorStore(client=client, models_module=FakeModels,
+            sparse_provider=sparse_provider or FakeSparseProvider()), client
 
     def test_upsert_creates_collection_indexes_and_filterable_payload(self):
-        """One agent receives a cosine collection and retrieval/security payload fields."""
+        """One agent receives a named dense+sparse collection and retrieval/security payload fields."""
         store, client = self.store()
         result = store.upsert(ChunkBuildResult(policy_version="v1", chunks=[chunk()]),
             EmbeddingBuildResult(embedding_model="azure-embedding", dimensions=3, embedded_chunks=[vector()]))
         payload = client.upserts[0]["points"][0]["payload"]
+        point_vector = client.upserts[0]["points"][0]["vector"]
         self.assertEqual(result.collection_name, "jlr-adas-agent-chunks")
-        self.assertEqual(client.created[0]["vectors_config"]["size"], 3)
+        self.assertEqual(client.created[0]["vectors_config"]["dense"]["size"], 3)
+        self.assertIn("sparse", client.created[0]["sparse_vectors_config"])
+        self.assertEqual(point_vector["dense"], [0.1, 0.2, 0.3])
+        self.assertEqual(point_vector["sparse"], {"indices": [1, 2], "values": [0.5, 0.3]})
         self.assertEqual({item["field_name"] for item in client.payload_indexes},
             {"agent_id", "document_id", "source_version", "security_classification", "allowed_groups", "allowed_users"})
         self.assertEqual(payload["allowed_groups"], ["adas_engineer"])
         self.assertEqual(payload["chunk_id"], "chunk-1")
+
+    def test_upsert_computes_one_sparse_vector_per_chunk_in_the_batch(self):
+        """A multi-chunk batch requests exactly as many sparse vectors as chunks, not just one."""
+        sparse_provider = FakeSparseProvider()
+        store, client = self.store(sparse_provider)
+        store.upsert(ChunkBuildResult(policy_version="v1", chunks=[chunk("c1"), chunk("c2")]),
+            EmbeddingBuildResult(embedding_model="azure-embedding", dimensions=3,
+                embedded_chunks=[vector("c1"), vector("c2")]))
+        self.assertEqual(len(sparse_provider.embed_calls[0]), 2)
+        self.assertEqual(len(client.upserts[0]["points"]), 2)
 
     def test_rejects_vector_from_another_chunk_artifact(self):
         """A mismatched vector cannot be silently attached to another source chunk."""
@@ -184,7 +230,7 @@ class QdrantVectorStoreTests(unittest.TestCase):
         self.assertIsNone(payload["page_number"])
 
     def test_upsert_payload_defaults_new_fields_safely_when_metadata_lacks_them(self):
-        """A narrative chunk with no table/page metadata still gets a well-formed payload."""
+        """A narrative chunk with no table/page/image metadata still gets a well-formed payload."""
         store, client = self.store()
         store.upsert(ChunkBuildResult(policy_version="v1", chunks=[chunk()]),
             EmbeddingBuildResult(embedding_model="azure-embedding", dimensions=3, embedded_chunks=[vector()]))
@@ -194,8 +240,28 @@ class QdrantVectorStoreTests(unittest.TestCase):
         self.assertEqual(payload["field_policies"], [])
         self.assertIsNone(payload["page_number"])
         self.assertIsNone(payload["table_title"])
+        self.assertIsNone(payload["image_path"])
+        self.assertIsNone(payload["image_storage_status"])
 
-    def test_search_filters_by_agent_id_and_returns_scored_payloads(self):
+    def test_upsert_payload_includes_image_linking_fields_for_a_visual_chunk(self):
+        """A VISUAL chunk's actual file location now reaches Qdrant's payload."""
+        store, client = self.store()
+        visual_chunk = EmbeddingChunk(chunk_id="img-1", chunk_type=ChunkType.VISUAL, document_id="document-1",
+            agent_id="adas-agent", source_type="pdf", source_version="v1", parent_node_id="page-1",
+            source_node_ids=["img-1"], content_text="OCR visible text: Torque 8Nm", embedding_text="OCR visible text: Torque 8Nm",
+            metadata={"security_scope": {"classification": "internal"}, "visual_node_type": "image",
+                "ocr_status": "completed", "image_description_status": "completed", "vlm_confidence": 0.82,
+                "image_path": "storage/visual-assets/adas-agent/document-1/v1/img_001.png",
+                "image_storage_status": "stored"})
+        store.upsert(ChunkBuildResult(policy_version="v1", chunks=[visual_chunk]),
+            EmbeddingBuildResult(embedding_model="azure-embedding", dimensions=3, embedded_chunks=[vector("img-1")]))
+        payload = client.upserts[0]["points"][0]["payload"]
+        self.assertEqual(payload["image_path"], "storage/visual-assets/adas-agent/document-1/v1/img_001.png")
+        self.assertEqual(payload["image_storage_status"], "stored")
+        self.assertEqual(payload["vlm_confidence"], 0.82)
+        self.assertEqual(payload["visual_node_type"], "image")
+
+    def test_search_issues_a_hybrid_dense_plus_sparse_query_and_returns_scored_payloads(self):
         """A search hit's score and full payload (including new citation fields) reach the caller."""
         store, client = self.store()
         client.collections.add("jlr-adas-agent-chunks")
@@ -203,19 +269,25 @@ class QdrantVectorStoreTests(unittest.TestCase):
             FakeScoredPoint("point-1", 0.93, {"chunk_id": "chunk-1", "page_number": 4, "content_text": "Sensor spec"}),
             FakeScoredPoint("point-2", 0.81, {"chunk_id": "chunk-2", "page_number": 5, "content_text": "Mounting torque"}),
         ])
-        results = store.search(agent_id="adas-agent", query_vector=[0.1, 0.2, 0.3], limit=5)
+        results = store.search(agent_id="adas-agent", query_vector=[0.1, 0.2, 0.3],
+            query_sparse_vector={"indices": [1], "values": [0.5]}, limit=5)
         call = client.query_points_calls[0]
         self.assertEqual(call["collection_name"], "jlr-adas-agent-chunks")
         self.assertEqual(call["limit"], 5)
-        self.assertEqual(call["query_filter"]["must"][0]["key"], "agent_id")
-        self.assertEqual(call["query_filter"]["must"][0]["match"]["value"], "adas-agent")
+        self.assertEqual(call["query"]["fusion"], "rrf")
+        legs = {leg["using"] for leg in call["prefetch"]}
+        self.assertEqual(legs, {"dense", "sparse"})
+        for leg in call["prefetch"]:
+            self.assertEqual(leg["filter"]["must"][0]["key"], "agent_id")
+            self.assertEqual(leg["filter"]["must"][0]["match"]["value"], "adas-agent")
         self.assertEqual([item["score"] for item in results], [0.93, 0.81])
         self.assertEqual(results[0]["payload"]["page_number"], 4)
 
     def test_search_returns_empty_list_for_agent_with_no_ingested_data(self):
         """An agent whose collection was never created returns no results, not an error."""
         store, client = self.store()
-        results = store.search(agent_id="benchmarking-agent", query_vector=[0.1, 0.2, 0.3])
+        results = store.search(agent_id="benchmarking-agent", query_vector=[0.1, 0.2, 0.3],
+            query_sparse_vector={"indices": [], "values": []})
         self.assertEqual(results, [])
         self.assertEqual(client.query_points_calls, [])
 

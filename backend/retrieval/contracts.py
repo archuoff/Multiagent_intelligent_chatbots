@@ -30,6 +30,12 @@ class RetrievedChunk(BaseModel):
     security_classification: str = "internal"
     source_type: str = ""
     source_version: str = ""
+    visual_node_type: str | None = None
+    ocr_status: str | None = None
+    image_description_status: str | None = None
+    vlm_confidence: float | None = None
+    image_path: str | None = None
+    image_storage_status: str | None = None
 
 
 class RetrievalResult(BaseModel):

@@ -126,3 +126,26 @@ class CanonicalChunkingTests(unittest.TestCase):
         first = ChunkingService().build(source).chunks[0]
         second = ChunkingService().build(source).chunks[0]
         self.assertEqual(first.chunk_id, second.chunk_id)
+
+
+class VisualChunkImageLinkingTests(unittest.TestCase):
+    """No prior test exercised _visual_chunk at all -- these pin the image_path fix."""
+
+    def test_image_node_with_saved_path_carries_it_into_chunk_metadata(self):
+        """A persisted image file's location reaches the chunk, not just its OCR text."""
+        image = node("img1", NodeType.IMAGE, parent="root", attributes={
+            "ocr_text": "Torque spec 8Nm", "saved_path": "storage/visual-assets/adas/doc/v1/img_001.png",
+            "image_storage_status": "stored", "vlm_confidence": 0.8})
+        chunks = ChunkingService().build(document([image])).chunks
+        self.assertEqual(len(chunks), 1)
+        self.assertEqual(chunks[0].chunk_type, ChunkType.VISUAL)
+        self.assertEqual(chunks[0].metadata["image_path"], "storage/visual-assets/adas/doc/v1/img_001.png")
+        self.assertEqual(chunks[0].metadata["image_storage_status"], "stored")
+
+    def test_image_node_without_saved_path_still_chunks_with_no_image_path(self):
+        """OCR/VLM text can exist even when the file itself was never persisted -- the chunk
+        must still be built (not silently dropped), just without a usable file reference."""
+        image = node("img1", NodeType.IMAGE, parent="root", attributes={"ocr_text": "Torque spec 8Nm"})
+        chunks = ChunkingService().build(document([image])).chunks
+        self.assertEqual(len(chunks), 1)
+        self.assertIsNone(chunks[0].metadata["image_path"])

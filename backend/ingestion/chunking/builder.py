@@ -147,7 +147,10 @@ class CanonicalChunkBuilder:
         metadata = {"breadcrumbs": list(entry.breadcrumbs), "visual_node_type": node.node_type.value,
             "ocr_status": node.attributes.get("ocr_status"), "image_description_status": node.attributes.get("image_description_status"),
             "image_description_is_inferred": bool(node.attributes.get("image_description_is_inferred")),
-            "vlm_confidence": node.attributes.get("vlm_confidence"), **self._source_metadata(document, node)}
+            "vlm_confidence": node.attributes.get("vlm_confidence"),
+            "image_path": node.attributes.get("saved_path"),
+            "image_storage_status": node.attributes.get("image_storage_status"),
+            **self._source_metadata(document, node)}
         return self._new_chunk(document, ChunkType.VISUAL, node.node_id, [(node.node_id, text)], prefix,
             entry.breadcrumbs, metadata=metadata)
 

@@ -19,6 +19,14 @@ class FakeEmbeddingProvider:
         return [[0.1, 0.2, 0.3] for _ in texts]
 
 
+class FakeSparseProvider:
+    """Returns one fixed sparse vector per call -- required so tests never fall back to
+    the real, uncredentialed default BM25 model."""
+
+    def embed(self, texts: list[str]) -> list[dict]:
+        return [{"indices": [1], "values": [0.5]} for _ in texts]
+
+
 class FakeVectorStore:
     """Records the search call and returns a preconfigured list of raw hits."""
 
@@ -73,10 +81,24 @@ def hit(chunk_id: str, score: float, *, document_id: str = "doc-1", source_versi
     }}
 
 
+def visual_hit(chunk_id: str = "img1", *, image_path: str | None = "storage/visual-assets/adas/doc-1/v1/img.png",
+                image_storage_status: str | None = "stored") -> dict:
+    """Builds a raw VISUAL-chunk search result, image fields populated."""
+    return {"id": f"point-{chunk_id}", "score": 0.85, "payload": {
+        "chunk_id": chunk_id, "chunk_type": "visual", "content_text": "OCR visible text: Torque 8Nm",
+        "document_id": "doc-1", "source_version": "v1", "source_type": "pdf", "security_classification": "internal",
+        "page_number": 2, "slide_number": None, "sheet_name": None, "cell_range": None, "breadcrumbs": [],
+        "table_title": None, "header_context": [], "field_policies": [], "allowed_groups": [], "allowed_users": [],
+        "visual_node_type": "image", "ocr_status": "completed", "image_description_status": "completed",
+        "vlm_confidence": 0.8, "image_path": image_path, "image_storage_status": image_storage_status,
+    }}
+
+
 def service(results: list[dict], titles: dict | None = None) -> tuple[RetrievalService, FakeVectorStore, FakeCanonicalStore]:
     vector_store = FakeVectorStore(results)
     canonical_store = FakeCanonicalStore(titles)
-    return RetrievalService(vector_store, FakeEmbeddingProvider(), canonical_store), vector_store, canonical_store
+    return (RetrievalService(vector_store, FakeEmbeddingProvider(), canonical_store, FakeSparseProvider()),
+        vector_store, canonical_store)
 
 
 class AclEnforcementTests(unittest.TestCase):
@@ -156,12 +178,40 @@ class SearchCallTests(unittest.TestCase):
         self.assertEqual(call["agent_id"], "benchmarking-agent")
         self.assertEqual(call["limit"], 3)
 
+    def test_search_receives_both_dense_and_sparse_query_vectors(self):
+        svc, vector_store, _ = service([])
+        svc.retrieve(agent_id="adas-agent", query_text="torque spec",
+            principal_group_codes=frozenset(), principal_user_id="u1", limit=5)
+        call = vector_store.search_calls[0]
+        self.assertEqual(call["query_vector"], [0.1, 0.2, 0.3])
+        self.assertEqual(call["query_sparse_vector"], {"indices": [1], "values": [0.5]})
+
     def test_no_search_hits_returns_an_empty_result_not_an_error(self):
         svc, _, _ = service([])
         result = svc.retrieve(agent_id="adas-agent", query_text="q", principal_group_codes=frozenset(),
             principal_user_id="u1", limit=5)
         self.assertEqual(result.chunks, [])
         self.assertEqual(result.query, "q")
+
+
+class ImageLinkingTests(unittest.TestCase):
+    """A VISUAL chunk's real file reference reaches the caller; a text chunk stays None."""
+
+    def test_visual_chunk_image_path_reaches_retrieved_chunk(self):
+        svc, _, _ = service([visual_hit()])
+        result = svc.retrieve(agent_id="adas-agent", query_text="show me the sensor diagram",
+            principal_group_codes=frozenset(), principal_user_id="u1", limit=5)
+        image_chunk = result.chunks[0]
+        self.assertEqual(image_chunk.image_path, "storage/visual-assets/adas/doc-1/v1/img.png")
+        self.assertEqual(image_chunk.image_storage_status, "stored")
+        self.assertEqual(image_chunk.vlm_confidence, 0.8)
+
+    def test_narrative_chunk_with_no_image_fields_defaults_to_none(self):
+        svc, _, _ = service([hit("c1", 0.9)])
+        result = svc.retrieve(agent_id="adas-agent", query_text="q", principal_group_codes=frozenset(),
+            principal_user_id="u1", limit=5)
+        self.assertIsNone(result.chunks[0].image_path)
+        self.assertIsNone(result.chunks[0].image_storage_status)
 
 
 if __name__ == "__main__":
