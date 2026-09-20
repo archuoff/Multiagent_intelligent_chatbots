@@ -1,17 +1,20 @@
 import logging
 import json
 import time
+from functools import lru_cache
 from typing import Any
 
-import requests
-
+from .azure_chat import AzureOpenAIChatClient
 from .state import AgentState
 from .config import AgentConfig, get_agent_config
 
 logger = logging.getLogger(__name__)
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
-OLLAMA_MODEL = "llama3.1"  # swap to whatever you've pulled locally
+
+@lru_cache(maxsize=1)
+def get_chat_client() -> AzureOpenAIChatClient:
+    """Builds one Azure chat client per process, reused across every classification call."""
+    return AzureOpenAIChatClient.from_runtime_environment()
 
 
 def classify_intent(agent_state: AgentState) -> dict[str, Any]:
@@ -121,7 +124,7 @@ OUTPUT — respond with ONLY this JSON object, no markdown fences, no other text
 
 
 def call_intent_classifier(
-    agent_id: str, query: str, history: list[dict] | None = None
+    agent_id: str, query: str, history: list[dict] | None = None, chat_client: AzureOpenAIChatClient | None = None
 ) -> dict[str, Any]:
     """Classify user intent to route the query appropriately."""
     history = history or []
@@ -137,28 +140,14 @@ def call_intent_classifier(
         messages.append(msg)
     messages.append({"role": "user", "content": query})
 
+    client = chat_client or get_chat_client()
     try:
-        raw = _call_ollama(messages, temperature=0.1)
+        raw = client.complete(messages, temperature=0.1)
     except Exception as e:
         logger.error(f"[classify_intent] LLM call failed: {e}")
         return _fallback_classification(query)
 
     return _parse_classification(raw, query)
-
-
-def _call_ollama(messages: list[dict], temperature: float = 0.1, timeout: float = 10.0) -> str:
-    response = requests.post(
-        OLLAMA_URL,
-        json={
-            "model": OLLAMA_MODEL,
-            "messages": messages,
-            "stream": False,
-            "options": {"temperature": temperature},
-        },
-        timeout=timeout,
-    )
-    response.raise_for_status()
-    return response.json()["message"]["content"]
 
 
 def _parse_classification(raw: str, query: str) -> dict[str, Any]:
