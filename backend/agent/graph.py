@@ -1,4 +1,5 @@
-"""LangGraph wiring for the query pipeline: classify intent, then route.
+"""LangGraph wiring for the query pipeline: classify -> (decompose) ->
+retrieve -> rerank -> synthesize.
 
 Only a domain question reaches retrieval; every other intent (general_chat,
 out_of_scope, clarification_qn) short-circuits straight to END with the
@@ -6,13 +7,13 @@ canned/clarification response classify_intent already produced. A domain
 question that classify_intent flagged as requires_decomposition first
 passes through decompose_query (a second, separate LLM call -- most domain
 questions skip this and go straight to retrieval on the single
-resolved_query).
+resolved_query). Hybrid-searched, reranked chunks are then turned into a
+written, source-grounded answer by synthesize_answer.
 
-Deliberately stops at raw retrieved chunks -- query rewrite (per-sub-query
-search-term/filter refinement) and answer synthesis (turning chunks into a
-written answer) are both separate, later rounds. This graph proves the
-classify -> (decompose) -> retrieve wiring works end-to-end, not a finished
-chat response.
+Query rewrite (per-sub-query search-term/filter refinement beyond the
+existing whitespace normalization) and a relevance/validation threshold on
+reranked results are both still explicitly deferred, discussed but not
+built, per user direction.
 """
 
 from __future__ import annotations
@@ -28,6 +29,7 @@ from langgraph.graph.state import CompiledStateGraph
 from backend.agent.decomposition import decompose_query
 from backend.agent.nodes import classify_intent
 from backend.agent.state import AgentState
+from backend.agent.synthesis import synthesize_answer
 from backend.ingestion.embedding.azure_openai import AzureOpenAIEmbeddingProvider
 from backend.ingestion.indexing.qdrant_store import QdrantVectorStore
 from backend.ingestion.persistence.canonical_store import CanonicalArtifactStore
@@ -115,6 +117,15 @@ def make_rerank_node(reranker: CrossEncoderReranker) -> GraphNode:
     return rerank_node
 
 
+def _default_synthesize_node(state: AgentState) -> dict[str, Any]:
+    """Turns the reranked chunks into a written, source-grounded answer. Only
+    reached for a Domain_qn question -- every other intent already has its
+    answer set by classify_intent."""
+    query_text = state.get("resolved_query") or state["user_query"]
+    chunks = [RetrievedChunk(**item) for item in state.get("reranked_chunks") or []]
+    return synthesize_answer(query_text, chunks)
+
+
 @lru_cache(maxsize=1)
 def _default_retrieval_service() -> RetrievalService:
     """Builds the one process-lifetime RetrievalService instance production code uses.
@@ -136,23 +147,28 @@ def _route_after_intent(state: AgentState) -> str:
 
 
 def build_agent_graph(*, classify_node: GraphNode | None = None, decompose_node: GraphNode | None = None,
-                       retrieve_node: GraphNode | None = None, rerank_node: GraphNode | None = None) -> StateGraph:
-    """Assembles the classify -> (decompose) -> retrieve -> rerank graph. Every node is injectable for tests."""
+                       retrieve_node: GraphNode | None = None, rerank_node: GraphNode | None = None,
+                       synthesize_node: GraphNode | None = None) -> StateGraph:
+    """Assembles the classify -> (decompose) -> retrieve -> rerank -> synthesize graph.
+    Every node is injectable for tests."""
     classify = classify_node or classify_intent
     decompose = decompose_node or _default_decompose_node
     retrieve = retrieve_node or make_retrieve_node(_default_retrieval_service())
     rerank = rerank_node or make_rerank_node(get_reranker())
+    synthesize = synthesize_node or _default_synthesize_node
     graph = StateGraph(AgentState)
     graph.add_node("classify_intent", classify)
     graph.add_node("decompose", decompose)
     graph.add_node("retrieve", retrieve)
     graph.add_node("rerank", rerank)
+    graph.add_node("synthesize", synthesize)
     graph.add_edge(START, "classify_intent")
     graph.add_conditional_edges("classify_intent", _route_after_intent,
         {"decompose": "decompose", "retrieve": "retrieve", END: END})
     graph.add_edge("decompose", "retrieve")
     graph.add_edge("retrieve", "rerank")
-    graph.add_edge("rerank", END)
+    graph.add_edge("rerank", "synthesize")
+    graph.add_edge("synthesize", END)
     return graph
 
 
