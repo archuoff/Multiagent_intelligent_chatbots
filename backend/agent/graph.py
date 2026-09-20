@@ -29,6 +29,7 @@ from backend.agent.state import AgentState
 from backend.ingestion.embedding.azure_openai import AzureOpenAIEmbeddingProvider
 from backend.ingestion.indexing.qdrant_store import QdrantVectorStore
 from backend.ingestion.persistence.canonical_store import CanonicalArtifactStore
+from backend.retrieval.query_rewrite import rewrite_query
 from backend.retrieval.service import RetrievalService
 
 GraphNode = Callable[[AgentState], dict[str, Any]]
@@ -57,7 +58,7 @@ def make_retrieve_node(service: RetrievalService) -> GraphNode:
         seen_chunk_ids: set[str] = set()
         combined_chunks: list[dict[str, Any]] = []
         for query_text in queries:
-            result = service.retrieve(agent_id=agent_id, query_text=query_text,
+            result = service.retrieve(agent_id=agent_id, query_text=rewrite_query(query_text),
                 principal_group_codes=principal_group_codes, principal_user_id=principal_user_id)
             for chunk in result.chunks:
                 if chunk.chunk_id in seen_chunk_ids:
