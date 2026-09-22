@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 from collections.abc import Generator
 
+from fastapi import HTTPException, status
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -24,7 +25,10 @@ def create_session_factory(database_url: str | None = None) -> sessionmaker[Sess
 
 def get_session() -> Generator[Session, None, None]:
     """Provides one database session per FastAPI request and always closes it."""
-    session = create_session_factory()()
+    try:
+        session = create_session_factory()()
+    except RuntimeError as error:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(error)) from error
     try:
         yield session
     finally:

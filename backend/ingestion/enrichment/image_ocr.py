@@ -7,6 +7,7 @@ is local and non-blocking so extraction remains usable when OCR fails.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 from pathlib import Path
@@ -44,6 +45,8 @@ class ImageOcrEnrichment:
             return 0
         if document.source_type == SourceType.XLSX:
             return self._apply_saved_image_ocr(image_nodes)
+        if document.source_type == SourceType.PDF:
+            return self._apply_pdf_image_ocr(document, image_nodes)
         if document.source_type not in {SourceType.PPT, SourceType.PPTX}:
             return 0
         try:
@@ -62,6 +65,101 @@ class ImageOcrEnrichment:
             self._apply_ocr(node, bytes(image["blob"]), match_type)
             processed += 1
         return processed
+
+    def _apply_pdf_image_ocr(self, document: CanonicalDocument, image_nodes: list[CanonicalNode]) -> int:
+        """Persists PDF image assets or page-region crops, then runs OCR on each stored image."""
+        try:
+            self._persist_pdf_images(document, image_nodes)
+        except Exception as error:
+            for node in image_nodes:
+                self._mark_ocr_failure(node, f"PDF image persistence failed: {type(error).__name__}")
+            return 0
+        return self._apply_saved_image_ocr(image_nodes)
+
+    def _persist_pdf_images(self, document: CanonicalDocument, image_nodes: list[CanonicalNode]) -> None:
+        """Stores PDF image bytes so OCR/VLM enrichment can use the standard saved_path flow."""
+        try:
+            import pymupdf as fitz
+        except ImportError as error:  # pragma: no cover - depends on optional local dependency.
+            raise RuntimeError("PDF image persistence requires PyMuPDF.") from error
+        folder = self._asset_folder(document)
+        with fitz.open(str(document.source_path)) as pdf:
+            for index, node in enumerate(image_nodes, start=1):
+                if node.attributes.get("saved_path"):
+                    continue
+                page_number = node.provenance.page_number or self._page_from_attributes(node)
+                if not page_number or page_number < 1 or page_number > len(pdf):
+                    self._mark_ocr_failure(node, "PDF image node has no valid page number for asset persistence.")
+                    continue
+                page = pdf[page_number - 1]
+                try:
+                    record = self._pdf_embedded_image(pdf, node) or self._pdf_region_crop(page, node)
+                except Exception as error:
+                    self._mark_ocr_failure(node, f"PDF image asset extraction failed: {type(error).__name__}")
+                    continue
+                if record is None:
+                    self._mark_ocr_failure(node, "PDF image node has neither extractable xref nor usable bbox.")
+                    continue
+                folder.mkdir(parents=True, exist_ok=True)
+                digest = hashlib.sha256(record["blob"]).hexdigest()
+                target = folder / f"page_{page_number:03d}_image_{index:03d}_{digest[:12]}.{record['extension']}"
+                target.write_bytes(record["blob"])
+                node.attributes.update({
+                    "saved_path": target.as_posix(),
+                    "image_hash": digest,
+                    "image_extension": record["extension"],
+                    "image_storage_status": record["status"],
+                    "image_persistence_method": record["method"],
+                })
+
+    def _pdf_embedded_image(self, pdf: Any, node: CanonicalNode) -> ImageRecord | None:
+        """Extracts a native PDF image when xref metadata is available."""
+        xref = node.attributes.get("xref")
+        if xref is None:
+            return None
+        try:
+            extracted = pdf.extract_image(int(xref))
+        except Exception:
+            return None
+        blob = extracted.get("image")
+        if not blob:
+            return None
+        extension = self._safe_extension(str(extracted.get("ext") or node.attributes.get("extension") or "png"))
+        return {"blob": bytes(blob), "extension": extension, "status": "stored", "method": "pdf_xref"}
+
+    def _pdf_region_crop(self, page: Any, node: CanonicalNode) -> ImageRecord | None:
+        """Renders a PDF image node's bbox when only positional metadata is available."""
+        rect = self._pdf_rect_from_node(page, node)
+        if rect is None or rect.is_empty or rect.width <= 0 or rect.height <= 0:
+            return None
+        dpi = int(os.getenv("JLR_PDF_IMAGE_CROP_DPI", "220"))
+        import pymupdf as fitz
+        pixmap = page.get_pixmap(matrix=fitz.Matrix(dpi / 72, dpi / 72), clip=rect, alpha=False)
+        return {"blob": pixmap.tobytes("png"), "extension": "png", "status": "stored_crop", "method": "pdf_bbox_crop"}
+
+    def _pdf_rect_from_node(self, page: Any, node: CanonicalNode) -> Any | None:
+        """Builds a PyMuPDF rectangle from common bbox shapes used by Docling/fallback extractors."""
+        bbox = node.attributes.get("bbox") or node.provenance.bbox
+        if not isinstance(bbox, dict):
+            return None
+        try:
+            import pymupdf as fitz
+            if all(key in bbox for key in ("x0", "y0", "x1", "y1")):
+                rect = fitz.Rect(float(bbox["x0"]), float(bbox["y0"]), float(bbox["x1"]), float(bbox["y1"]))
+            elif all(key in bbox for key in ("left", "top", "right", "bottom")):
+                rect = fitz.Rect(float(bbox["left"]), float(bbox["top"]), float(bbox["right"]), float(bbox["bottom"]))
+            elif all(key in bbox for key in ("left", "top", "width", "height")):
+                left = float(bbox["left"])
+                top = float(bbox["top"])
+                rect = fitz.Rect(left, top, left + float(bbox["width"]), top + float(bbox["height"]))
+            else:
+                return None
+            page_rect = page.rect
+            if rect.y0 > page_rect.height or rect.y1 > page_rect.height:
+                rect = fitz.Rect(rect.x0, page_rect.height - rect.y1, rect.x1, page_rect.height - rect.y0)
+            return rect & page_rect
+        except Exception:
+            return None
 
     def _apply_saved_image_ocr(self, image_nodes: list[CanonicalNode]) -> int:
         """Runs OCR for canonical image nodes that already point to stored image files."""
@@ -149,7 +247,7 @@ class ImageOcrEnrichment:
         slide_number = node.provenance.slide_number or 0
         shape_name = self._safe_component(str(node.attributes.get("shape_name") or "image"))
         digest = str(image.get("hash") or "")[:12]
-        folder = self._asset_root / self._safe_component(document.agent_id) / self._safe_component(document.document_id) / self._safe_component(document.version)
+        folder = self._asset_folder(document)
         folder.mkdir(parents=True, exist_ok=True)
         target = folder / f"slide_{slide_number:03d}_{shape_name}_{digest}.{extension}"
         target.write_bytes(bytes(image["blob"]))
@@ -159,6 +257,15 @@ class ImageOcrEnrichment:
             "image_extension": extension,
             "image_storage_status": "stored",
         })
+
+    def _asset_folder(self, document: CanonicalDocument) -> Path:
+        """Builds the shared visual-asset folder for one document version."""
+        return self._asset_root / self._safe_component(document.agent_id) / self._safe_component(document.document_id) / self._safe_component(document.version)
+
+    def _page_from_attributes(self, node: CanonicalNode) -> int | None:
+        """Reads page number from image attributes when provenance is incomplete."""
+        value = node.attributes.get("page_number")
+        return int(value) if isinstance(value, int) or str(value).isdigit() else None
 
     def _pptx_images(self, source_path: Path) -> dict[tuple[Any, ...], ImageRecord]:
         """Extracts embedded PPTX picture bytes keyed by slide, shape name, and bbox."""

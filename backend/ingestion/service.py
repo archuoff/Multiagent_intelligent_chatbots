@@ -89,7 +89,15 @@ class IngestionService:
         path = Path(file_path)
         source_hash = hash_file(path)
         parser_context = context or ParserContext()
-        processing_key = hashlib.sha256(json.dumps({"revision": "governance-enrichment-v8", "context": asdict(parser_context), "ocr": os.getenv("JLR_DOCLING_OCR", "false")}, sort_keys=True).encode()).hexdigest()
+        self._load_runtime_environment()
+        processing_key = hashlib.sha256(json.dumps({
+            "revision": "governance-enrichment-v9",
+            "context": asdict(parser_context),
+            "ocr": os.getenv("JLR_DOCLING_OCR", "false"),
+            "image_description": os.getenv("JLR_IMAGE_DESCRIPTION", "false"),
+            "image_description_scope": os.getenv("JLR_IMAGE_DESCRIPTION_SCOPE", "candidates"),
+            "vision_deployment": os.getenv("AZURE_OPENAI_VISION_DEPLOYMENT", ""),
+        }, sort_keys=True).encode()).hexdigest()
         registration = SourceRegistry(store.storage_root).resolve(
             agent_id=agent_id,
             source_type=source_type,
@@ -118,6 +126,14 @@ class IngestionService:
             raise RuntimeError("Source changed during extraction; retry ingestion.")
         artifact = store.persist(document, status=status, source_key=registration.source_key, processing_key=processing_key)
         return document, artifact
+
+    def _load_runtime_environment(self) -> None:
+        """Loads optional local runtime flags before source-change detection."""
+        try:
+            from dotenv import load_dotenv
+        except ImportError:
+            return
+        load_dotenv(override=False)
 
     # This function validates a document explicitly when callers need the full report.
     def validate_document(self, document: CanonicalDocument) -> QualityReport:

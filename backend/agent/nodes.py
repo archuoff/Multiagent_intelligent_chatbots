@@ -3,15 +3,11 @@ import json
 import time
 from typing import Any
 
-import requests
-
+from .azure_chat import AzureOpenAIChatClient, get_chat_client
 from .state import AgentState
-from .config import AgentConfig, load_all_configs
+from .config import AgentConfig, get_agent_config
 
 logger = logging.getLogger(__name__)
-
-OLLAMA_URL = "http://localhost:11434/api/chat"
-OLLAMA_MODEL = "llama3.1"  # swap to whatever you've pulled locally
 
 
 def classify_intent(agent_state: AgentState) -> dict[str, Any]:
@@ -56,6 +52,7 @@ def state_update(query: str, classification: dict[str, Any]) -> dict[str, Any]:
     else:  # Domain_qn
         result["needs_clarification"] = False
         result["resolved_query"] = classification.get("resolved_query", query)
+        result["requires_decomposition"] = bool(classification.get("requires_decomposition", False))
 
     return result
 
@@ -110,26 +107,35 @@ ADDITIONAL FIELDS:
       abbreviations) but preserve the user's actual wording and intent.
     - For general_chat or out_of_scope, just pass the original query through
       unchanged.
+- requires_decomposition: true only when intent is "Domain_qn" AND the
+  question genuinely asks about more than one distinct thing that each need
+  a separate lookup (e.g. comparing two named components, or asking about
+  several unrelated properties at once). False for every other intent, and
+  false for a Domain_qn question that's really just one lookup even if it's
+  phrased with multiple clauses. When unsure, use false — splitting a
+  question that didn't need it wastes a retrieval call, but not splitting
+  one that did just returns partial results, not wrong ones.
 
 OUTPUT — respond with ONLY this JSON object, no markdown fences, no other text:
 {{
   "intent": "general_chat | out_of_scope | clarification_qn | Domain_qn",
   "needs_clarification": true | false,
   "clarification_question": "..." | null,
-  "resolved_query": "..."
+  "resolved_query": "...",
+  "requires_decomposition": true | false
 }}"""
 
 
 def call_intent_classifier(
-    agent_id: str, query: str, history: list[dict] | None = None
+    agent_id: str, query: str, history: list[dict] | None = None, chat_client: AzureOpenAIChatClient | None = None
 ) -> dict[str, Any]:
     """Classify user intent to route the query appropriately."""
     history = history or []
     config = _load_config(agent_id)
 
     system_prompt = INTENT_CLASSIFICATION_SYSTEM_PROMPT.format(
-        agent_name=config.name,
-        domain_description=getattr(config, "domain_description", config.name),
+        agent_name=config.display_name,
+        domain_description=config.domain_description,
     )
 
     messages = [{"role": "system", "content": system_prompt}]
@@ -137,28 +143,14 @@ def call_intent_classifier(
         messages.append(msg)
     messages.append({"role": "user", "content": query})
 
+    client = chat_client or get_chat_client()
     try:
-        raw = _call_ollama(messages, temperature=0.1)
+        raw = client.complete(messages, temperature=0.1)
     except Exception as e:
         logger.error(f"[classify_intent] LLM call failed: {e}")
         return _fallback_classification(query)
 
     return _parse_classification(raw, query)
-
-
-def _call_ollama(messages: list[dict], temperature: float = 0.1, timeout: float = 10.0) -> str:
-    response = requests.post(
-        OLLAMA_URL,
-        json={
-            "model": OLLAMA_MODEL,
-            "messages": messages,
-            "stream": False,
-            "options": {"temperature": temperature},
-        },
-        timeout=timeout,
-    )
-    response.raise_for_status()
-    return response.json()["message"]["content"]
 
 
 def _parse_classification(raw: str, query: str) -> dict[str, Any]:
@@ -175,6 +167,7 @@ def _parse_classification(raw: str, query: str) -> dict[str, Any]:
         result.setdefault("needs_clarification", False)
         result.setdefault("clarification_question", None)
         result.setdefault("resolved_query", query)
+        result.setdefault("requires_decomposition", False)
         return result
 
     except (json.JSONDecodeError, IndexError) as e:
@@ -189,13 +182,12 @@ def _fallback_classification(query: str) -> dict[str, Any]:
         "needs_clarification": False,
         "clarification_question": None,
         "resolved_query": query,
+        "requires_decomposition": False,
     }
 
 
 def _load_config(agent_id: str) -> AgentConfig:
-    # TODO: route through AgentFactory's cached configs instead of reloading
-    # from disk on every classification call.
-    return load_all_configs("agents/configs")[agent_id]
+    return get_agent_config(agent_id)
 
 
 def log_classification(

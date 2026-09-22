@@ -63,6 +63,16 @@ class CanonicalChunkBuilder:
                     node_id=entry.node.node_id, severity="warning"))
                 continue
             result.chunks.extend(self._table_chunks(document, entry))
+        for entry in entries:
+            if entry.node.node_type != NodeType.IMAGE:
+                continue
+            if entry.blocked:
+                result.rejected.append(ChunkRejection(reason="Image-derived content requires OCR, VLM, or human review before embedding.",
+                    node_id=entry.node.node_id, severity="warning"))
+                continue
+            visual_chunk = self._visual_chunk(document, entry)
+            if visual_chunk:
+                result.chunks.append(visual_chunk)
         narrative_groups: dict[str, list[_NodeEntry]] = {}
         for entry in entries:
             if entry.blocked or entry.node.node_type not in self._NARRATIVE_TYPES:
@@ -125,6 +135,41 @@ class CanonicalChunkBuilder:
             chunks.append(self._new_chunk(document, ChunkType.NARRATIVE, parent_id, current, prefix, breadcrumb,
                 overlap_node_ids=[node_id for node_id, _ in overlap]))
         return chunks
+
+    def _visual_chunk(self, document: CanonicalDocument, entry: _NodeEntry) -> EmbeddingChunk | None:
+        """Creates one retrieval chunk from OCR text and VLM-derived visual evidence."""
+        node = entry.node
+        parts = self._visual_parts(node)
+        if not parts:
+            return None
+        text = "\n".join(parts)
+        prefix = self._context_prefix(document, entry.breadcrumbs, node.title or "Image")
+        metadata = {"breadcrumbs": list(entry.breadcrumbs), "visual_node_type": node.node_type.value,
+            "ocr_status": node.attributes.get("ocr_status"), "image_description_status": node.attributes.get("image_description_status"),
+            "image_description_is_inferred": bool(node.attributes.get("image_description_is_inferred")),
+            "vlm_confidence": node.attributes.get("vlm_confidence"),
+            "image_path": node.attributes.get("saved_path"),
+            "image_storage_status": node.attributes.get("image_storage_status"),
+            **self._source_metadata(document, node)}
+        return self._new_chunk(document, ChunkType.VISUAL, node.node_id, [(node.node_id, text)], prefix,
+            entry.breadcrumbs, metadata=metadata)
+
+    def _visual_parts(self, node: CanonicalNode) -> list[str]:
+        """Keeps OCR/source-like text separate from VLM-inferred description inside one chunk."""
+        parts: list[str] = []
+        ocr_text = normalize_text(str(node.attributes.get("ocr_text") or ""))
+        vlm_text = normalize_text(str(node.attributes.get("vlm_transcribed_text") or ""))
+        description = normalize_text(str(node.attributes.get("image_description") or ""))
+        nearby = normalize_text(str(node.attributes.get("nearby_text") or ""))
+        if ocr_text:
+            parts.append(f"OCR visible text: {ocr_text}")
+        if vlm_text and vlm_text != ocr_text:
+            parts.append(f"VLM transcribed visible text: {vlm_text}")
+        if description:
+            parts.append(f"AI-inferred image description: {description}")
+        if nearby:
+            parts.append(f"Nearby source context: {nearby}")
+        return parts
 
     def _table_chunks(self, document: CanonicalDocument, entry: _NodeEntry) -> list[EmbeddingChunk]:
         """Creates row-level chunks with header context for structured and Excel tables."""

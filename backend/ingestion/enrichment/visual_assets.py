@@ -50,6 +50,9 @@ class VisualAssetRegistry:
 
     def _status(self, raw: dict) -> str:
         """Reflects the richest image processing state available on the node."""
+        description_status = raw.get("image_description_status")
+        if description_status in {"success", "no_description", "failed", "skipped"}:
+            return f"description_{description_status}"
         ocr_status = raw.get("ocr_status")
         if ocr_status in {"success", "no_text", "failed"}:
             return f"ocr_{ocr_status}"
