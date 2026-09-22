@@ -85,7 +85,7 @@ class RetrievalService:
             visual_node_type=payload.get("visual_node_type"),
             ocr_status=payload.get("ocr_status"),
             image_description_status=payload.get("image_description_status"),
-            vlm_confidence=payload.get("vlm_confidence"),
+            vlm_confidence=_numeric_confidence(payload.get("vlm_confidence")),
             image_path=payload.get("image_path"),
             image_storage_status=payload.get("image_storage_status"),
         )
@@ -108,3 +108,23 @@ class RetrievalService:
             title = None
         self._title_cache[cache_key] = title
         return title
+
+
+def _numeric_confidence(value: Any) -> float | None:
+    """Converts confidence payloads to numbers without failing retrieval on labels."""
+    if value is None:
+        return None
+    if isinstance(value, int | float):
+        return float(value)
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if not normalized:
+            return None
+        label_scores = {"low": 0.33, "medium": 0.66, "high": 1.0}
+        if normalized in label_scores:
+            return label_scores[normalized]
+        try:
+            return float(normalized)
+        except ValueError:
+            return None
+    return None

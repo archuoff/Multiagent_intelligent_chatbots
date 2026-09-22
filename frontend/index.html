@@ -429,6 +429,10 @@
           session_id: state.sessionId,
           conversation_history: history
             .filter((item) => item.role === "user" || item.role === "assistant")
+            .map((item) => ({
+              role: item.role,
+              content: item.content,
+            }))
             .slice(-10),
         }),
       });

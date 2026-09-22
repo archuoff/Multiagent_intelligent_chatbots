@@ -1,8 +1,7 @@
 """Cross-encoder reranking: a second, more precise scoring pass over hybrid
 search results.
 
-Uses a local sentence-transformers CrossEncoder (cross-encoder/ms-marco-MiniLM-L-6-v2,
-already cached locally -- no download needed) instead of a hosted API, per
+Uses a local sentence-transformers CrossEncoder instead of a hosted API, per
 user direction. Reads the query and each candidate chunk together, which is
 more accurate than comparing pre-computed vectors, at the cost of some
 extra latency per candidate.
@@ -11,8 +10,11 @@ extra latency per candidate.
 from __future__ import annotations
 
 import logging
+import os
 from functools import lru_cache
 from typing import Any
+
+from dotenv import load_dotenv
 
 from backend.retrieval.contracts import RetrievedChunk
 
@@ -29,19 +31,34 @@ class CrossEncoderReranker:
 
     @classmethod
     def from_default_model(cls) -> "CrossEncoderReranker":
-        """Loads the local cross-encoder model."""
+        """Loads the configured local cross-encoder model."""
+        load_dotenv()
+
         try:
             from sentence_transformers import CrossEncoder
         except ImportError as error:
-            raise RuntimeError("Reranking requires the 'sentence-transformers' package. Install requirements.txt first.") from error
-        return cls(model=CrossEncoder(_DEFAULT_MODEL))
+            raise RuntimeError(
+                "Reranking requires the 'sentence-transformers' package. Install requirements.txt first."
+            ) from error
+
+        model_path = os.getenv("JLR_RERANKER_MODEL_PATH") or _DEFAULT_MODEL
+        cache_folder = os.getenv("SENTENCE_TRANSFORMERS_HOME") or os.getenv("TRANSFORMERS_CACHE")
+
+        if cache_folder and model_path == _DEFAULT_MODEL:
+            return cls(model=CrossEncoder(model_path, cache_folder=cache_folder))
+
+        return cls(model=CrossEncoder(model_path))
 
     def rerank(self, query: str, chunks: list[RetrievedChunk]) -> list[RetrievedChunk]:
         """Scores each (query, chunk) pair and returns chunks sorted by that score, descending."""
         if not chunks:
             return []
+
         scores = self._model.predict([(query, chunk.content_text) for chunk in chunks])
-        rescored = [chunk.model_copy(update={"rerank_score": float(score)}) for chunk, score in zip(chunks, scores)]
+        rescored = [
+            chunk.model_copy(update={"rerank_score": float(score)})
+            for chunk, score in zip(chunks, scores)
+        ]
         rescored.sort(key=lambda chunk: chunk.rerank_score, reverse=True)
         return rescored
 

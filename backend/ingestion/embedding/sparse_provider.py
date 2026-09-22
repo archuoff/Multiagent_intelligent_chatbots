@@ -8,8 +8,9 @@ no whole-corpus refit on every new document.
 """
 
 from __future__ import annotations
-
+import os
 from typing import Any
+from dotenv import load_dotenv
 
 
 class FastEmbedSparseProvider:
@@ -22,19 +23,27 @@ class FastEmbedSparseProvider:
     @classmethod
     def from_default_model(cls) -> "FastEmbedSparseProvider":
         """Builds the provider using Qdrant's recommended BM25 sparse model."""
+        load_dotenv()
+
         try:
             from fastembed import SparseTextEmbedding
         except ImportError as error:
             raise RuntimeError("Sparse embedding requires the 'fastembed' package. Install requirements.txt first.") from error
+
+        cache_dir = os.getenv("FASTEMBED_CACHE_PATH")
+        if cache_dir:
+            return cls(model=SparseTextEmbedding(model_name="Qdrant/bm25", cache_dir=cache_dir))
+
         return cls(model=SparseTextEmbedding(model_name="Qdrant/bm25"))
 
     def embed(self, texts: list[str]) -> list[dict[str, list]]:
-        """Embeds an ordered batch into {"indices": [...], "values": [...]} sparse vectors.
-
-        fastembed returns numpy arrays; converts to plain Python int/float so
-        callers (Qdrant's SparseVector, JSON serialization) never see numpy types.
-        """
+        """Embeds an ordered batch into {"indices": [...], "values": [...]} sparse vectors."""
         if not texts:
             return []
-        return [{"indices": [int(index) for index in vector.indices], "values": [float(value) for value in vector.values]}
-                for vector in self._model.embed(texts)]
+        return [
+            {
+                "indices": [int(index) for index in vector.indices],
+                "values": [float(value) for value in vector.values],
+            }
+            for vector in self._model.embed(texts)
+        ]
