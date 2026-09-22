@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JLR Multi-Agent Knowledge Assistant</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #ffffff;
+    --sidebar: #101828;
+    --sidebar-hover: #1d2939;
+    --accent: #2563eb;
+    --accent-dark: #1d4ed8;
+    --text: #101828;
+    --muted: #667085;
+    --border: #e4e7ec;
+    --bubble-user: #2563eb;
+    --bubble-assistant: #f2f4f7;
+    --danger: #d92d20;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #eef1f6;
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+  }
+  .app { display: flex; height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 280px;
+    background: var(--sidebar);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .sidebar-header {
+    padding: 20px 18px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-header h1 {
+    font-size: 15px;
+    margin: 0 0 2px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .sidebar-header p {
+    margin: 0;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  .agent-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 8px;
+  }
+  .agent-item {
+    padding: 12px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    transition: background 0.12s ease;
+  }
+  .agent-item:hover { background: var(--sidebar-hover); }
+  .agent-item.active { background: var(--accent); }
+  .agent-item .name { font-size: 13.5px; font-weight: 600; }
+  .agent-item .desc {
+    font-size: 11.5px;
+    color: #98a2b3;
+    margin-top: 2px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .agent-item.active .desc { color: #dbeafe; }
+
+  .settings {
+    padding: 12px 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .settings label {
+    display: block;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-bottom: 5px;
+  }
+  .settings input {
+    width: 100%;
+    padding: 7px 9px;
+    background: #1d2939;
+    border: 1px solid #344054;
+    color: #e4e7ec;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .settings .conn-status {
+    margin-top: 8px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #667085; flex-shrink: 0; }
+  .dot.ok { background: #12b76a; }
+  .dot.bad { background: var(--danger); }
+
+  /* Main chat panel */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .topbar {
+    padding: 16px 28px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .topbar h2 { margin: 0; font-size: 16px; font-weight: 600; }
+  .topbar .route { font-size: 12px; color: var(--muted); }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .empty-state {
+    margin: auto;
+    text-align: center;
+    color: var(--muted);
+    max-width: 380px;
+  }
+  .empty-state h3 { color: var(--text); font-size: 15px; margin-bottom: 6px; }
+  .empty-state p { font-size: 13px; line-height: 1.5; }
+
+  .msg-row { display: flex; }
+  .msg-row.user { justify-content: flex-end; }
+  .bubble {
+    max-width: 68%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+  .msg-row.user .bubble {
+    background: var(--bubble-user);
+    color: #fff;
+    border-bottom-right-radius: 3px;
+  }
+  .msg-row.assistant .bubble {
+    background: var(--bubble-assistant);
+    color: var(--text);
+    border-bottom-left-radius: 3px;
+  }
+  .msg-row.error .bubble {
+    background: #fef3f2;
+    color: var(--danger);
+    border: 1px solid #fda29b;
+  }
+
+  .sources {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e4e7ec;
+  }
+  .sources .sources-title {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .source-item {
+    font-size: 12px;
+    color: #344054;
+    padding: 6px 0;
+    border-bottom: 1px dashed #eaecf0;
+  }
+  .source-item:last-child { border-bottom: none; }
+  .source-item .src-title { font-weight: 600; }
+  .source-item .src-loc { color: var(--muted); }
+
+  .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%; background: #98a2b3;
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  .composer {
+    padding: 16px 28px 22px;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+  }
+  .composer textarea {
+    flex: 1;
+    resize: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    height: 46px;
+    max-height: 140px;
+  }
+  .composer textarea:focus { outline: none; border-color: var(--accent); }
+  .composer button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  .composer button:hover:not(:disabled) { background: var(--accent-dark); }
+  .composer button:disabled { background: #98a2b3; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>JLR Knowledge Platform</h1>
+      <p>Multi-agent assistant</p>
+    </div>
+    <div id="agentList" class="agent-list">
+      <div style="padding:14px;color:#98a2b3;font-size:12.5px;">Loading agents&hellip;</div>
+    </div>
+    <div class="settings">
+      <label for="apiBase">Backend URL</label>
+      <input id="apiBase" type="text" value="http://localhost:8000" />
+      <div class="conn-status"><span id="connDot" class="dot"></span><span id="connText">Not connected</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h2 id="activeAgentName">Select an agent</h2>
+        <div class="route" id="activeAgentRoute"></div>
+      </div>
+    </div>
+    <div id="messages" class="messages">
+      <div class="empty-state">
+        <h3>No agent selected</h3>
+        <p>Choose an agent from the left, then ask a question about its domain to see a real, source-cited answer.</p>
+      </div>
+    </div>
+    <div class="composer">
+      <textarea id="messageInput" placeholder="Ask a question..." disabled></textarea>
+      <button id="sendBtn" disabled>Send</button>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const state = {
+    agents: [],
+    activeAgentId: null,
+    // per-agent chat history, shaped like the backend's conversation_history: [{role, content}]
+    history: {},
+    sessionId: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+  };
+
+  const el = {
+    apiBase: document.getElementById("apiBase"),
+    connDot: document.getElementById("connDot"),
+    connText: document.getElementById("connText"),
+    agentList: document.getElementById("agentList"),
+    activeAgentName: document.getElementById("activeAgentName"),
+    activeAgentRoute: document.getElementById("activeAgentRoute"),
+    messages: document.getElementById("messages"),
+    messageInput: document.getElementById("messageInput"),
+    sendBtn: document.getElementById("sendBtn"),
+  };
+
+  function apiBase() {
+    return el.apiBase.value.trim().replace(/\/+$/, "");
+  }
+
+  function setConnection(ok, label) {
+    el.connDot.className = "dot " + (ok ? "ok" : "bad");
+    el.connText.textContent = label;
+  }
+
+  async function loadAgents() {
+    setConnection(false, "Connecting...");
+    try {
+      const response = await fetch(apiBase() + "/agents");
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const agents = await response.json();
+      state.agents = agents;
+      renderAgentList();
+      setConnection(true, "Connected (" + agents.length + " agents)");
+    } catch (error) {
+      state.agents = [];
+      el.agentList.innerHTML =
+        '<div style="padding:14px;color:#fda29b;font-size:12.5px;line-height:1.5;">' +
+        "Could not reach the backend at this URL.<br/>Confirm the API is running and the URL above is correct, then click Retry." +
+        '</div><button id="retryBtn" style="margin:0 12px;padding:7px 12px;background:#1d2939;color:#e4e7ec;border:1px solid #344054;border-radius:6px;cursor:pointer;font-size:12px;">Retry</button>';
+      document.getElementById("retryBtn").addEventListener("click", loadAgents);
+      setConnection(false, "Disconnected: " + error.message);
+    }
+  }
+
+  function renderAgentList() {
+    el.agentList.innerHTML = "";
+    state.agents.forEach((agent) => {
+      const item = document.createElement("div");
+      item.className = "agent-item" + (agent.agent_id === state.activeAgentId ? " active" : "");
+      item.innerHTML =
+        '<div class="name">' + escapeHtml(agent.display_name) + "</div>" +
+        '<div class="desc">' + escapeHtml(agent.domain_description || "") + "</div>";
+      item.addEventListener("click", () => selectAgent(agent.agent_id));
+      el.agentList.appendChild(item);
+    });
+  }
+
+  function selectAgent(agentId) {
+    state.activeAgentId = agentId;
+    if (!state.history[agentId]) state.history[agentId] = [];
+    const agent = state.agents.find((item) => item.agent_id === agentId);
+    el.activeAgentName.textContent = agent ? agent.display_name : agentId;
+    el.activeAgentRoute.textContent = agent && agent.route ? agent.route : "";
+    el.messageInput.disabled = false;
+    el.sendBtn.disabled = false;
+    renderAgentList();
+    renderMessages();
+  }
+
+  function renderMessages() {
+    const history = state.history[state.activeAgentId] || [];
+    if (history.length === 0) {
+      el.messages.innerHTML =
+        '<div class="empty-state"><h3>Ask ' +
+        escapeHtml((state.agents.find((a) => a.agent_id === state.activeAgentId) || {}).display_name || "this agent") +
+        " something</h3><p>Answers are generated live from your ingested documents, with citations back to the source.</p></div>";
+      return;
+    }
+    el.messages.innerHTML = "";
+    history.forEach((message) => appendMessageNode(message));
+    el.messages.scrollTop = el.messages.scrollHeight;
+  }
+
+  function appendMessageNode(message) {
+    const row = document.createElement("div");
+    row.className = "msg-row " + (message.role === "user" ? "user" : message.role === "error" ? "error" : "assistant");
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = message.content;
+    row.appendChild(bubble);
+
+    if (message.sources && message.sources.length > 0) {
+      const sources = document.createElement("div");
+      sources.className = "sources";
+      const title = document.createElement("div");
+      title.className = "sources-title";
+      title.textContent = "Sources";
+      sources.appendChild(title);
+      message.sources.forEach((source) => {
+        const item = document.createElement("div");
+        item.className = "source-item";
+        item.innerHTML =
+          '<span class="src-title">' + escapeHtml(source.document_title || source.document_id || "Untitled source") + "</span>" +
+          (source.location ? '<span class="src-loc"> &middot; ' + escapeHtml(source.location) + "</span>" : "");
+        sources.appendChild(item);
+      });
+      bubble.appendChild(sources);
+    }
+    el.messages.appendChild(row);
+    return row;
+  }
+
+  function citationLocation(citation) {
+    if (!citation) return "";
+    if (citation.page_number != null) return "page " + citation.page_number;
+    if (citation.sheet_name) return "sheet " + citation.sheet_name;
+    if (citation.slide_number != null) return "slide " + citation.slide_number;
+    return "";
+  }
+
+  async function sendMessage() {
+    const text = el.messageInput.value.trim();
+    if (!text || !state.activeAgentId) return;
+
+    const history = state.history[state.activeAgentId];
+    history.push({ role: "user", content: text });
+    el.messageInput.value = "";
+    renderMessages();
+
+    const typingRow = appendTypingIndicator();
+    el.sendBtn.disabled = true;
+    el.messageInput.disabled = true;
+
+    try {
+      const response = await fetch(apiBase() + "/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          agent_id: state.activeAgentId,
+          message: text,
+          session_id: state.sessionId,
+          conversation_history: history
+            .filter((item) => item.role === "user" || item.role === "assistant")
+            .slice(-10),
+        }),
+      });
+
+      typingRow.remove();
+
+      if (!response.ok) {
+        const detail = await safeErrorDetail(response);
+        history.push({ role: "error", content: "Request failed (" + response.status + "): " + detail });
+        renderMessages();
+        return;
+      }
+
+      const data = await response.json();
+      const sources = (data.retrieved_context || []).map((context) => ({
+        document_title: context.document_title,
+        document_id: context.citation ? context.citation.document_id : null,
+        location: citationLocation(context.citation),
+      }));
+
+      history.push({ role: "assistant", content: data.answer, sources: sources });
+      renderMessages();
+    } catch (error) {
+      typingRow.remove();
+      history.push({ role: "error", content: "Could not reach the backend: " + error.message });
+      renderMessages();
+    } finally {
+      el.sendBtn.disabled = false;
+      el.messageInput.disabled = false;
+      el.messageInput.focus();
+    }
+  }
+
+  async function safeErrorDetail(response) {
+    try {
+      const body = await response.json();
+      return body.detail || JSON.stringify(body);
+    } catch (error) {
+      return response.statusText || "unknown error";
+    }
+  }
+
+  function appendTypingIndicator() {
+    const row = document.createElement("div");
+    row.className = "msg-row assistant";
+    row.innerHTML = '<div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+    el.messages.appendChild(row);
+    el.messages.scrollTop = el.messages.scrollHeight;
+    return row;
+  }
+
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value == null ? "" : String(value);
+    return div.innerHTML;
+  }
+
+  el.sendBtn.addEventListener("click", sendMessage);
+  el.messageInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+  el.apiBase.addEventListener("change", loadAgents);
+
+  loadAgents();
+})();
+</script>
+</body>
+</html>
