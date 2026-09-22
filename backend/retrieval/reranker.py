@@ -10,12 +10,14 @@ extra latency per candidate.
 
 from __future__ import annotations
 
+import logging
 from functools import lru_cache
 from typing import Any
 
 from backend.retrieval.contracts import RetrievedChunk
 
 _DEFAULT_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+logger = logging.getLogger(__name__)
 
 
 class CrossEncoderReranker:
@@ -44,7 +46,20 @@ class CrossEncoderReranker:
         return rescored
 
 
+class ScoreOnlyReranker:
+    """Safe fallback that preserves vector-store ranking when the cross-encoder is unavailable."""
+
+    def rerank(self, query: str, chunks: list[RetrievedChunk]) -> list[RetrievedChunk]:
+        """Returns chunks sorted by the existing retrieval score without loading a model."""
+        _ = query
+        return sorted(chunks, key=lambda chunk: chunk.score, reverse=True)
+
+
 @lru_cache(maxsize=1)
-def get_reranker() -> CrossEncoderReranker:
-    """Builds one reranker per process, reused across every query."""
-    return CrossEncoderReranker.from_default_model()
+def get_reranker() -> CrossEncoderReranker | ScoreOnlyReranker:
+    """Builds one reranker per process, falling back to retrieval-score ordering when unavailable."""
+    try:
+        return CrossEncoderReranker.from_default_model()
+    except RuntimeError as error:
+        logger.warning("cross_encoder_reranker_unavailable", extra={"error": str(error)})
+        return ScoreOnlyReranker()

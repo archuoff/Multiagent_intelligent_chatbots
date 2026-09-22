@@ -110,7 +110,12 @@ def make_rerank_node(reranker: CrossEncoderReranker) -> GraphNode:
 
     def rerank_node(state: AgentState) -> dict[str, Any]:
         query_text = state.get("resolved_query") or state["user_query"]
-        chunks = [RetrievedChunk(**item) for item in state.get("retrieved_chunks") or []]
+        chunks = []
+        for item in state.get("retrieved_chunks") or []:
+            try:
+                chunks.append(RetrievedChunk(**item))
+            except Exception as error:
+                logger.warning(f"[rerank_node] Skipping malformed retrieved chunk: {error}")
         reranked = reranker.rerank(query_text, chunks)
         return {"reranked_chunks": [chunk.model_dump() for chunk in reranked]}
 
