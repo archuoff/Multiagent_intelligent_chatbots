@@ -1,38 +1,16 @@
-# Demo chat UI
+# React + Vite
 
-A single static page (`index.html`, no build step) that talks to the real
-`GET /agents` / `POST /chat` endpoints in `backend/api/routes.py`. No mock
-data -- every answer and citation shown is generated live by the actual
-query pipeline against whatever is indexed in Qdrant.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Run it
+Currently, two official plugins are available:
 
-1. Start the backend (from the repo root, with your `.env` and ingested
-   Qdrant data already in place):
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-   ```
-   uvicorn backend.api.app:app --reload --port 8000
-   ```
+## React Compiler
 
-2. Serve this folder on a port the backend's CORS config already allows
-   (`localhost:3000` or `localhost:5178` -- see `backend/api/app.py`).
-   Opening `index.html` directly as a `file://` URL will not work; the
-   browser needs to send an allowed origin.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-   ```
-   cd frontend
-   python -m http.server 3000
-   ```
+## Expanding the ESLint configuration
 
-3. Open `http://localhost:3000` in a browser.
-
-If the backend runs on a different host/port, change the "Backend URL"
-field in the sidebar -- no code edit needed.
-
-## Notes
-
-- Auth is currently a dev stub on the backend (`backend/api/dependencies.py`),
-  so there is no login step here either.
-- Conversation history is kept in memory in the browser tab only (per
-  agent, last 10 turns) and is lost on refresh -- there is no server-side
-  session store yet.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

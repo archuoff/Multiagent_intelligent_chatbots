@@ -8,6 +8,7 @@ generation stay inside the agent graph/retrieval modules.
 from __future__ import annotations
 
 import logging
+from uuid import uuid4
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -58,16 +59,25 @@ def chat(request: ChatRequest, user: CurrentUser = Depends(get_current_user)) ->
     except KeyError as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
 
+    session_id = request.session_id or uuid4().hex
     initial_state = {
         "agent_id": request.agent_id,
         "user_query": message,
-        "conversation_history": _safe_history(request.conversation_history),
+        "conversation_history": [] if request.session_id else _safe_history(request.conversation_history),
         "principal_group_codes": list(user.groups),
         "principal_user_id": user.user_id,
+        "sub_queries": [],
+        "retrieved_chunks": [],
+        "reranked_chunks": [],
+        "image_chunks": [],
+        "merged_context": "",
+        "answer": "",
+        "sources": [],
     }
+    graph_config = {"configurable": {"thread_id": session_id}}
 
     try:
-        result = get_compiled_graph().invoke(initial_state)
+        result = get_compiled_graph().invoke(initial_state, config=graph_config)
     except RuntimeError as error:
         logger.exception("query_pipeline_runtime_error")
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(error)) from error
@@ -78,7 +88,7 @@ def chat(request: ChatRequest, user: CurrentUser = Depends(get_current_user)) ->
             detail="Query pipeline failed. Please check backend logs.",
         ) from error
 
-    return _chat_response_from_state(request, result)
+    return _chat_response_from_state(request, result, session_id)
 
 
 def _safe_history(history: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -93,12 +103,12 @@ def _safe_history(history: list[dict[str, str]]) -> list[dict[str, str]]:
     return safe_messages
 
 
-def _chat_response_from_state(request: ChatRequest, state: dict[str, Any]) -> ChatResponse:
+def _chat_response_from_state(request: ChatRequest, state: dict[str, Any], session_id: str | None = None) -> ChatResponse:
     """Maps graph state onto the public API response schema."""
     if state.get("needs_clarification"):
         return ChatResponse(
             agent_id=request.agent_id,
-            session_id=request.session_id,
+            session_id=session_id or request.session_id,
             answer=state.get("ask_user") or "Could you clarify your question?",
             status="needs_clarification",
         )
@@ -107,7 +117,7 @@ def _chat_response_from_state(request: ChatRequest, state: dict[str, Any]) -> Ch
     contexts = [_context_from_chunk(chunk) for chunk in chunks]
     return ChatResponse(
         agent_id=request.agent_id,
-        session_id=request.session_id,
+        session_id=session_id or request.session_id,
         answer=state.get("answer") or "I couldn't generate an answer for that request.",
         citations=_unique_citations(context.citation for context in contexts),
         retrieved_context=contexts,
@@ -136,6 +146,12 @@ def _context_from_chunk(chunk: dict[str, Any]) -> RetrievedContext:
         chunk_type=chunk.get("chunk_type"),
         breadcrumbs=chunk.get("breadcrumbs") or [],
         image_path=chunk.get("image_path"),
+        visual_node_type=chunk.get("visual_node_type"),
+        visual_object_type=chunk.get("visual_object_type"),
+        ocr_status=chunk.get("ocr_status"),
+        image_description_status=chunk.get("image_description_status"),
+        vlm_confidence=chunk.get("vlm_confidence"),
+        image_storage_status=chunk.get("image_storage_status"),
     )
 
 

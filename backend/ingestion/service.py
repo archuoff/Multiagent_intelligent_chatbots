@@ -21,6 +21,7 @@ from backend.ingestion.parsers.document import PdfDocumentParser
 from backend.ingestion.parsers.excel import ExcelWorkbookParser
 from backend.ingestion.models import CanonicalDocument
 from backend.ingestion.models import SourceType
+from backend.ingestion.persistence import BlockGraphArtifactStore
 from backend.ingestion.persistence import CanonicalArtifactStore
 from backend.ingestion.persistence import SourceRegistry
 from backend.ingestion.persistence.canonical_store import StoredCanonicalArtifact
@@ -61,6 +62,7 @@ class IngestionService:
         document_id: str | None = None,
         context: ParserContext | None = None,
     ) -> CanonicalDocument:
+        self._load_runtime_environment()
         parser_context = context or ParserContext()
         source = IngestionSource(
             agent_id=agent_id,
@@ -91,10 +93,13 @@ class IngestionService:
         parser_context = context or ParserContext()
         self._load_runtime_environment()
         processing_key = hashlib.sha256(json.dumps({
-            "revision": "governance-enrichment-v9",
+            "revision": "governance-enrichment-v10",
             "context": asdict(parser_context),
             "ocr": os.getenv("JLR_DOCLING_OCR", "false"),
+            "chart_extraction": os.getenv("JLR_DOCLING_CHART_EXTRACTION", "false"),
             "image_description": os.getenv("JLR_IMAGE_DESCRIPTION", "false"),
+            "visual_enrichment": os.getenv("JLR_VISUAL_ENRICHMENT", "false"),
+            "pdf_page_visual_assets": os.getenv("JLR_PDF_PAGE_VISUAL_ASSETS", "true"),
             "image_description_scope": os.getenv("JLR_IMAGE_DESCRIPTION_SCOPE", "candidates"),
             "vision_deployment": os.getenv("AZURE_OPENAI_VISION_DEPLOYMENT", ""),
         }, sort_keys=True).encode()).hexdigest()
@@ -111,7 +116,9 @@ class IngestionService:
                 document_id=registration.document_id,
                 version=registration.version,
             )
-            return CanonicalDocument.model_validate_json(artifact.master_json_path.read_text(encoding="utf-8")), artifact
+            document = CanonicalDocument.model_validate_json(artifact.master_json_path.read_text(encoding="utf-8"))
+            self._persist_block_graph(document, store.storage_root)
+            return document, artifact
 
         document = self.ingest_source(
             agent_id=agent_id,
@@ -125,7 +132,12 @@ class IngestionService:
         if document.source_hash != source_hash or hash_file(path) != source_hash:
             raise RuntimeError("Source changed during extraction; retry ingestion.")
         artifact = store.persist(document, status=status, source_key=registration.source_key, processing_key=processing_key)
+        self._persist_block_graph(document, store.storage_root)
         return document, artifact
+
+    def _persist_block_graph(self, document: CanonicalDocument, storage_root: Path) -> None:
+        """Persists the compact BlockGraph companion artifact for production ingestion."""
+        BlockGraphArtifactStore(storage_root).persist(document)
 
     def _load_runtime_environment(self) -> None:
         """Loads optional local runtime flags before source-change detection."""

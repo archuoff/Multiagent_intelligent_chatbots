@@ -19,7 +19,7 @@ class VisualAssetRegistry:
     """Registers image metadata while keeping it separate from factual text extraction."""
 
     def apply(self, document: CanonicalDocument) -> list[VisualAssetRecord]:
-        """Adds direct asset metadata and a document-level visual registry."""
+        """Adds compact visual asset pointers and a document-level visual registry."""
         records: list[VisualAssetRecord] = []
         for root in document.root_nodes:
             for node in self._walk(root):
@@ -45,7 +45,7 @@ class VisualAssetRegistry:
             assets.append(VisualAssetRecord(asset_id=f"asset_{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:20]}",
                 source_node_id=node.node_id, parent_node_id=node.provenance.parent_node_id,
                 asset_type=str(raw.get("image_type") or raw.get("extension") or "image"),
-                status=self._status(raw), locator=locator, metadata=dict(raw)))
+                status=self._status(raw), locator=locator))
         return assets
 
     def _status(self, raw: dict) -> str:

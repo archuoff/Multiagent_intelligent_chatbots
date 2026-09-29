@@ -190,6 +190,7 @@ class QdrantVectorStore:
             # Image linking -- lets a retrieved VISUAL chunk point back at its
             # actual file, not just its OCR/VLM-derived text.
             "visual_node_type": chunk.metadata.get("visual_node_type"),
+            "visual_object_type": chunk.metadata.get("visual_object_type"),
             "ocr_status": chunk.metadata.get("ocr_status"),
             "image_description_status": chunk.metadata.get("image_description_status"),
             "vlm_confidence": chunk.metadata.get("vlm_confidence"),

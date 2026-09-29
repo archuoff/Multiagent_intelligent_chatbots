@@ -214,5 +214,52 @@ class ImageLinkingTests(unittest.TestCase):
         self.assertIsNone(result.chunks[0].image_storage_status)
 
 
+
+class ExactRetrievalModeTests(unittest.TestCase):
+    def test_short_keyword_query_keeps_only_direct_matching_chunks(self):
+        matching = hit("direct", 0.95)
+        unrelated = hit("connected", 0.90)
+        unrelated["payload"]["content_text"] = "This is from the same section but has no requested term."
+        svc, _, _ = service([matching, unrelated])
+
+        result = svc.retrieve(agent_id="adas-agent", query_text="torque",
+            principal_group_codes=frozenset(), principal_user_id="u1", limit=5)
+
+        self.assertEqual(result.retrieval_mode, "exact")
+        self.assertEqual([chunk.chunk_id for chunk in result.chunks], ["direct"])
+
+    def test_exact_mode_falls_back_to_hybrid_results_when_no_direct_match_exists(self):
+        semantic = hit("semantic", 0.91)
+        semantic["payload"]["content_text"] = "Fastening requirement is described here."
+        svc, _, _ = service([semantic])
+
+        result = svc.retrieve(agent_id="adas-agent", query_text="torque",
+            principal_group_codes=frozenset(), principal_user_id="u1", limit=5)
+
+        self.assertEqual(result.retrieval_mode, "exact")
+        self.assertEqual([chunk.chunk_id for chunk in result.chunks], ["semantic"])
+
+    def test_broad_question_stays_hybrid(self):
+        svc, _, _ = service([hit("c1", 0.9)])
+
+        result = svc.retrieve(agent_id="adas-agent", query_text="what is torque spec?",
+            principal_group_codes=frozenset(), principal_user_id="u1", limit=5)
+
+        self.assertEqual(result.retrieval_mode, "hybrid")
+        self.assertEqual([chunk.chunk_id for chunk in result.chunks], ["c1"])
+
+    def test_quoted_phrase_requires_literal_chunk_match(self):
+        matching = hit("literal", 0.95)
+        matching["payload"]["content_text"] = "The component mentions PDC sensor bracket."
+        unrelated = hit("other", 0.94)
+        unrelated["payload"]["content_text"] = "The same page discusses sensor packaging."
+        svc, _, _ = service([matching, unrelated])
+
+        result = svc.retrieve(agent_id="adas-agent", query_text='"PDC sensor bracket"',
+            principal_group_codes=frozenset(), principal_user_id="u1", limit=5)
+
+        self.assertEqual(result.retrieval_mode, "exact")
+        self.assertEqual([chunk.chunk_id for chunk in result.chunks], ["literal"])
+
 if __name__ == "__main__":
     unittest.main()

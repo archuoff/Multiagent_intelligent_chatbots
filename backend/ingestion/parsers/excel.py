@@ -7,6 +7,7 @@ structure for downstream branching.
 
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Iterable
 from datetime import datetime
 import hashlib
@@ -778,8 +779,24 @@ class ExcelWorkbookParser(SourceParser):
         regions: list[dict[str, Any]],
     ) -> list[CanonicalNode]:
         nodes: list[CanonicalNode] = []
-        for image_index, image in enumerate(getattr(worksheet, "_images", []) or [], start=1):
-            metadata = self._excel_image_metadata(image, worksheet.title, image_index)
+        image_metadata = [
+            self._excel_image_metadata(image, worksheet.title, image_index)
+            for image_index, image in enumerate(getattr(worksheet, "_images", []) or [], start=1)
+        ]
+        hash_counts = Counter(
+            str(metadata.get("image_hash"))
+            for metadata in image_metadata
+            if metadata.get("image_hash")
+        )
+        for metadata in image_metadata:
+            image_index = int(metadata.get("image_index") or 0)
+            occurrence_count = hash_counts.get(str(metadata.get("image_hash")), 1) if metadata.get("image_hash") else 1
+            classification = self._classify_excel_image(metadata.get("width"), metadata.get("height"), occurrence_count)
+            metadata.update({
+                "classification": classification,
+                "image_occurrence_count": occurrence_count,
+                "is_decorative": classification in {"icon", "decorative"},
+            })
             metadata.update(self._image_context_metadata(worksheet, metadata, regions))
             blob = metadata.pop("_blob", None)
             if blob:
@@ -805,6 +822,23 @@ class ExcelWorkbookParser(SourceParser):
                 confidence=0.82 if metadata.get("saved_path") else 0.68,
             ))
         return nodes
+
+    def _classify_excel_image(self, width: Any, height: Any, occurrence_count: int) -> str:
+        """Classifies tiny/repeated workbook media so icons do not enter VLM as figures."""
+        try:
+            image_width = int(width or 0)
+            image_height = int(height or 0)
+        except Exception:
+            return "image"
+        if image_width <= 0 or image_height <= 0:
+            return "image"
+        max_side = max(image_width, image_height)
+        area = image_width * image_height
+        if max_side <= int(os.getenv("JLR_EXCEL_ICON_MAX_SIDE", "64")) or area <= int(os.getenv("JLR_EXCEL_ICON_MAX_AREA", "4096")):
+            return "icon"
+        if occurrence_count >= int(os.getenv("JLR_EXCEL_REPEATED_ICON_MIN_COUNT", "3")) and max_side <= int(os.getenv("JLR_EXCEL_REPEATED_ICON_MAX_SIDE", "128")):
+            return "icon"
+        return "image"
 
     def _image_context_metadata(self, worksheet: Any, metadata: dict[str, Any], regions: list[dict[str, Any]]) -> dict[str, Any]:
         """Adds nearby source context so OCR/VLM image chunks are meaningful."""

@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 from backend.api.auth_routes import router as auth_router
 from backend.api.routes import router as chat_router
@@ -18,6 +20,10 @@ def create_app() -> FastAPI:
 
     app.router.include_router(chat_router)
     app.router.include_router(auth_router)
+
+    visual_assets = Path("storage") / "visual-assets"
+    visual_assets.mkdir(parents=True, exist_ok=True)
+    app.mount("/assets/visual-assets", StaticFiles(directory=str(visual_assets)), name="visual-assets")
 
     @app.get("/")
     def root():

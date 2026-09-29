@@ -31,6 +31,7 @@ class RetrievedChunk(BaseModel):
     source_type: str = ""
     source_version: str = ""
     visual_node_type: str | None = None
+    visual_object_type: str | None = None
     ocr_status: str | None = None
     image_description_status: str | None = None
     vlm_confidence: float | None = None
@@ -43,4 +44,5 @@ class RetrievalResult(BaseModel):
     """Groups every authorized chunk returned for one query."""
 
     query: str
+    retrieval_mode: str = "hybrid"
     chunks: list[RetrievedChunk] = Field(default_factory=list)

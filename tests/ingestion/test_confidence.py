@@ -359,6 +359,43 @@ class LowConfidenceBlockNodeTests(unittest.TestCase):
         self.assertFalse([c for c in page_nodes[0].children if c.node_type == NodeType.LOW_CONFIDENCE_BLOCK])
         self.assertEqual(page_nodes[0].attributes["low_confidence_block_count"], 0)
 
+    def test_pymupdf_images_without_bbox_are_not_deduped_by_page_only(self):
+        page = ExtractedPage(1, text="Figure page", images=[
+            {"xref": 197, "width": 1682, "height": 517, "extension": "png"},
+            {"xref": 27, "width": 264, "height": 409, "extension": "png"},
+        ])
+        extraction = ExtractionResult("pymupdf", "fallback_library", pages=[page])
+        source = IngestionSource("agent", SourceType.PDF, Path("spec.pdf"))
+
+        page_nodes = PdfDocumentParser()._build_fallback_pages("doc", "root", source, extraction)
+        image_nodes = [
+            child for child in page_nodes[0].children
+            if child.node_type == NodeType.IMAGE and "xref" in child.attributes
+        ]
+
+        self.assertEqual([node.attributes["xref"] for node in image_nodes], [197, 27])
+
+    def test_usable_extracted_visual_prevents_full_page_render_fallback(self):
+        parser = PdfDocumentParser()
+        self.assertFalse(parser._is_pdf_page_visual_candidate(
+            "Figure 7: Architecture diagram for the sensor mounting process.",
+            [{"xref": 197, "width": 1682, "height": 517, "extension": "png"}],
+        ))
+
+    def test_title_or_logo_page_does_not_trigger_full_page_render_fallback(self):
+        parser = PdfDocumentParser()
+        self.assertFalse(parser._is_pdf_page_visual_candidate(
+            "Mounting Specification Ultrasound Base Development Copyright by Continental Corporation",
+            [{"xref": 12, "width": 172, "height": 32, "caption": "Continental logo"}],
+        ))
+
+    def test_large_visual_page_without_usable_crop_triggers_full_page_render_fallback(self):
+        parser = PdfDocumentParser()
+        self.assertTrue(parser._is_pdf_page_visual_candidate(
+            "Figure 4: Architecture diagram for ultrasonic sensor control flow.",
+            [{"xref": 12, "width": 172, "height": 32, "caption": "Continental logo"}],
+        ))
+
 
 if __name__ == "__main__":
     unittest.main()

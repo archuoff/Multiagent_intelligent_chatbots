@@ -156,6 +156,10 @@ class CanonicalChunkBuilder:
 
     def _visual_parts(self, node: CanonicalNode) -> list[str]:
         """Keeps OCR/source-like text separate from VLM-inferred description inside one chunk."""
+        attrs = node.attributes
+        gate = attrs.get("vlm_gate") if isinstance(attrs.get("vlm_gate"), dict) else {}
+        if attrs.get("is_decorative") or gate.get("reason") == "decorative_or_small_visual":
+            return []
         parts: list[str] = []
         ocr_text = normalize_text(str(node.attributes.get("ocr_text") or ""))
         vlm_text = normalize_text(str(node.attributes.get("vlm_transcribed_text") or ""))

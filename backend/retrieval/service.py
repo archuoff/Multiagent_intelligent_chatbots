@@ -16,6 +16,7 @@ concurrent ingestion run on the same machine.
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from backend.ingestion.embedding.azure_openai import AzureOpenAIEmbeddingProvider
@@ -45,12 +46,65 @@ class RetrievalService:
         query_sparse_vector = embed_query_sparse(query_text, provider=self._sparse_provider)
         raw_results = self._vector_store.search(agent_id=agent_id, query_vector=query_vector,
             query_sparse_vector=query_sparse_vector, limit=limit)
-        chunks = [
-            self._to_retrieved_chunk(agent_id, item)
-            for item in raw_results
+        authorized_results = [
+            item for item in raw_results
             if self._is_authorized(item["payload"], principal_group_codes, principal_user_id)
         ]
-        return RetrievalResult(query=query_text, chunks=chunks)
+        retrieval_mode = self._retrieval_mode(query_text)
+        if retrieval_mode == "exact":
+            exact_results = [item for item in authorized_results if self._direct_keyword_match(query_text, item["payload"])]
+            if exact_results:
+                authorized_results = exact_results
+        chunks = [self._to_retrieved_chunk(agent_id, item) for item in authorized_results]
+        return RetrievalResult(query=query_text, chunks=chunks, retrieval_mode=retrieval_mode)
+
+
+    def _retrieval_mode(self, query_text: str) -> str:
+        """Classifies short/specific queries for strict lexical filtering after hybrid search."""
+        normalized = query_text.strip()
+        if not normalized:
+            return "hybrid"
+        if self._quoted_terms(normalized):
+            return "exact"
+        tokens = self._query_tokens(normalized)
+        if any(character.isdigit() for character in normalized):
+            return "exact"
+        if len(tokens) <= 4 and not self._looks_like_broad_question(normalized):
+            return "exact"
+        return "hybrid"
+
+    def _direct_keyword_match(self, query_text: str, payload: dict[str, Any]) -> bool:
+        """Returns true only when the retrieved chunk itself contains the requested keyword terms."""
+        haystack = "\n".join(str(payload.get(key) or "") for key in (
+            "content_text", "table_title", "cell_range", "sheet_name", "source_type"
+        ))
+        haystack_tokens = set(self._query_tokens(haystack))
+        quoted = self._quoted_terms(query_text)
+        haystack_folded = haystack.casefold()
+        if quoted:
+            return any(term.casefold() in haystack_folded for term in quoted)
+        query_tokens = self._query_tokens(query_text)
+        required = [token for token in query_tokens if token not in _QUERY_STOPWORDS]
+        if not required:
+            return False
+        if len(required) == 1:
+            return required[0] in haystack_tokens
+        return all(token in haystack_tokens for token in required)
+
+    def _query_tokens(self, value: str) -> list[str]:
+        """Tokenizes query/chunk text for exact-mode filtering."""
+        return re.findall(r"[a-z0-9]+(?:[._/-][a-z0-9]+)*", value.casefold())
+
+    def _quoted_terms(self, query_text: str) -> list[str]:
+        """Extracts explicit quoted phrases that should be matched literally."""
+        return [term.strip() for term in re.findall(r'"([^"]+)"', query_text) if term.strip()]
+
+
+    def _looks_like_broad_question(self, query_text: str) -> bool:
+        """Keeps explanatory questions in hybrid mode even when they are short."""
+        lowered = query_text.casefold().strip()
+        broad_prefixes = ("what ", "why ", "how ", "explain", "compare", "summarize", "list ", "show ")
+        return lowered.endswith("?") or lowered.startswith(broad_prefixes)
 
     def _is_authorized(self, payload: dict[str, Any], principal_group_codes: frozenset[str],
                         principal_user_id: str) -> bool:
@@ -83,6 +137,7 @@ class RetrievalService:
             source_type=payload.get("source_type", ""),
             source_version=payload.get("source_version", ""),
             visual_node_type=payload.get("visual_node_type"),
+            visual_object_type=payload.get("visual_object_type"),
             ocr_status=payload.get("ocr_status"),
             image_description_status=payload.get("image_description_status"),
             vlm_confidence=_numeric_confidence(payload.get("vlm_confidence")),
@@ -128,3 +183,9 @@ def _numeric_confidence(value: Any) -> float | None:
         except ValueError:
             return None
     return None
+
+
+_QUERY_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is", "it", "of",
+    "on", "or", "the", "to", "with", "about", "give", "me", "show", "find", "tell", "please",
+}

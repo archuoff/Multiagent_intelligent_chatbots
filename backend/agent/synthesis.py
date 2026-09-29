@@ -30,6 +30,9 @@ Rules:
 - If you must add a brief clarifying note not directly stated in the
   context (for example a unit conversion), clearly label it as inferred,
   not quoted from a source.
+- If a context passage includes a visual asset path and the user asks for an
+  image, figure, chart, diagram, or formula screenshot, provide the visual
+  asset path from the context instead of saying the image is unavailable.
 - Be concise and technical -- this is for an engineer, not a general
   audience."""
 
@@ -48,10 +51,15 @@ def synthesize_answer(query: str, chunks: list[RetrievedChunk],
     sources = []
     for index, chunk in enumerate(top_chunks, start=1):
         text = redact_for_synthesis(chunk)
-        context_blocks.append(f"[{index}] {text}\n(Source: {chunk.document_title or chunk.document_id}{_citation_location(chunk)})")
+        visual_suffix = _visual_context(chunk)
+        context_blocks.append(
+            f"[{index}] {text}{visual_suffix}\n"
+            f"(Source: {chunk.document_title or chunk.document_id}{_citation_location(chunk)})"
+        )
         sources.append({
             "index": index, "chunk_id": chunk.chunk_id, "document_title": chunk.document_title,
             "page_number": chunk.page_number, "sheet_name": chunk.sheet_name, "slide_number": chunk.slide_number,
+            "image_path": chunk.image_path, "visual_object_type": chunk.visual_object_type,
             "score": chunk.rerank_score if chunk.rerank_score is not None else chunk.score,
         })
 
@@ -64,6 +72,19 @@ def synthesize_answer(query: str, chunks: list[RetrievedChunk],
         logger.error(f"[synthesize_answer] LLM call failed: {error}")
         return {"answer": _LLM_FAILURE_ANSWER, "sources": sources, "model_used": None}
     return {"answer": answer, "sources": sources, "model_used": client.deployment}
+
+
+def _visual_context(chunk: RetrievedChunk) -> str:
+    """Adds visual asset evidence to the LLM context when retrieval found an image-backed chunk."""
+    if not chunk.image_path:
+        return ""
+    labels = []
+    if chunk.visual_object_type:
+        labels.append(f"type={chunk.visual_object_type}")
+    if chunk.visual_node_type:
+        labels.append(f"node={chunk.visual_node_type}")
+    label_text = f" ({', '.join(labels)})" if labels else ""
+    return f"\nVisual asset{label_text}: {chunk.image_path}"
 
 
 def _citation_location(chunk: RetrievedChunk) -> str:

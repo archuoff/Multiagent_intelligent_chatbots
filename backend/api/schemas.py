@@ -34,6 +34,12 @@ class RetrievedContext(BaseModel):
     chunk_type: str | None = None
     breadcrumbs: list[str] = Field(default_factory=list)
     image_path: str | None = None
+    visual_node_type: str | None = None
+    visual_object_type: str | None = None
+    ocr_status: str | None = None
+    image_description_status: str | None = None
+    vlm_confidence: float | None = None
+    image_storage_status: str | None = None
 
 
 class ChatResponse(BaseModel):

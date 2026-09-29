@@ -7,7 +7,7 @@ quality gates; those are later indexing-layer responsibilities.
 
 from __future__ import annotations
 
-from backend.ingestion.chunking.builder import CanonicalChunkBuilder
+from backend.ingestion.chunking.block_graph_builder import BlockGraphChunkBuilder
 from backend.ingestion.chunking.contracts import ChunkBuildResult
 from backend.ingestion.chunking.contracts import ChunkingPolicy
 from backend.ingestion.chunking.chunk_store import ChunkArtifactStore, StoredChunkArtifact
@@ -16,11 +16,11 @@ from backend.ingestion.models import CanonicalDocument
 
 
 class ChunkingService:
-    """Builds validated, model-agnostic chunks from one canonical document."""
+    """Builds validated, model-agnostic chunks from one document BlockGraph."""
 
     def __init__(self, policy: ChunkingPolicy | None = None) -> None:
         """Shares one chunking policy across deterministic build and validation steps."""
-        self._builder = CanonicalChunkBuilder(policy)
+        self._builder = BlockGraphChunkBuilder(policy)
         self._validator = ChunkValidator()
 
     def build(self, document: CanonicalDocument) -> ChunkBuildResult:

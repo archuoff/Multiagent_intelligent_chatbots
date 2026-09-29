@@ -19,10 +19,14 @@ built, per user direction.
 from __future__ import annotations
 
 import logging
+import os
+from contextlib import ExitStack
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
 from typing import Any, Callable
 
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
@@ -143,42 +147,86 @@ def _default_retrieval_service() -> RetrievalService:
         CanonicalArtifactStore())
 
 
+def _record_turn_node(state: AgentState) -> dict[str, Any]:
+    """Appends the completed turn to LangGraph-managed conversation history."""
+    user_query = str(state.get("user_query") or "").strip()
+    if state.get("needs_clarification"):
+        assistant_text = str(state.get("ask_user") or "Could you clarify your question?").strip()
+    else:
+        assistant_text = str(state.get("answer") or "").strip()
+    messages: list[dict[str, str]] = []
+    if user_query:
+        messages.append({"role": "user", "content": user_query})
+    if assistant_text:
+        messages.append({"role": "assistant", "content": assistant_text})
+    return {"conversation_history": messages}
+
+
 def _route_after_intent(state: AgentState) -> str:
-    """Domain questions needing a split go through decompose first; other domain
-    questions go straight to retrieve; every non-domain intent stops here."""
+    """Domain questions needing a split go through decompose first; other intents record the turn and stop."""
     if state["intent"] != "Domain_qn":
-        return END
+        return "record_turn"
     return "decompose" if state.get("requires_decomposition") else "retrieve"
 
 
 def build_agent_graph(*, classify_node: GraphNode | None = None, decompose_node: GraphNode | None = None,
                        retrieve_node: GraphNode | None = None, rerank_node: GraphNode | None = None,
-                       synthesize_node: GraphNode | None = None) -> StateGraph:
-    """Assembles the classify -> (decompose) -> retrieve -> rerank -> synthesize graph.
+                       synthesize_node: GraphNode | None = None,
+                       record_turn_node: GraphNode | None = None) -> StateGraph:
+    """Assembles the classify -> (decompose) -> retrieve -> rerank -> synthesize -> record graph.
     Every node is injectable for tests."""
     classify = classify_node or classify_intent
     decompose = decompose_node or _default_decompose_node
     retrieve = retrieve_node or make_retrieve_node(_default_retrieval_service())
     rerank = rerank_node or make_rerank_node(get_reranker())
     synthesize = synthesize_node or _default_synthesize_node
+    record_turn = record_turn_node or _record_turn_node
     graph = StateGraph(AgentState)
     graph.add_node("classify_intent", classify)
     graph.add_node("decompose", decompose)
     graph.add_node("retrieve", retrieve)
     graph.add_node("rerank", rerank)
     graph.add_node("synthesize", synthesize)
+    graph.add_node("record_turn", record_turn)
     graph.add_edge(START, "classify_intent")
     graph.add_conditional_edges("classify_intent", _route_after_intent,
-        {"decompose": "decompose", "retrieve": "retrieve", END: END})
+        {"decompose": "decompose", "retrieve": "retrieve", "record_turn": "record_turn"})
     graph.add_edge("decompose", "retrieve")
     graph.add_edge("retrieve", "rerank")
     graph.add_edge("rerank", "synthesize")
-    graph.add_edge("synthesize", END)
+    graph.add_edge("synthesize", "record_turn")
+    graph.add_edge("record_turn", END)
     return graph
+
+
+_CHECKPOINTER_STACK = ExitStack()
+
+
+@lru_cache(maxsize=1)
+def _graph_checkpointer() -> BaseCheckpointSaver:
+    """Builds the process-wide LangGraph checkpointer.
+
+    Production uses Postgres when LANGGRAPH_CHECKPOINT_DATABASE_URL is set.
+    Local/dev falls back to MemorySaver so tests and one-off runs do not need a database.
+    """
+    database_url = os.getenv("LANGGRAPH_CHECKPOINT_DATABASE_URL", "").strip()
+    if not database_url:
+        return MemorySaver()
+    try:
+        from langgraph.checkpoint.postgres import PostgresSaver
+    except ImportError as error:
+        raise RuntimeError(
+            "Postgres conversation history requires the 'langgraph-checkpoint-postgres' package. "
+            "Install requirements.txt and keep LANGGRAPH_CHECKPOINT_DATABASE_URL configured."
+        ) from error
+    saver_cm = PostgresSaver.from_conn_string(database_url)
+    saver = _CHECKPOINTER_STACK.enter_context(saver_cm)
+    if os.getenv("LANGGRAPH_CHECKPOINT_AUTO_SETUP", "true").lower() == "true":
+        saver.setup()
+    return saver
 
 
 @lru_cache(maxsize=1)
 def get_compiled_graph() -> CompiledStateGraph:
-    """Compiles the production graph once per process. No checkpointer configured yet --
-    conversation-history persistence across turns is separate, later work."""
-    return build_agent_graph().compile()
+    """Compiles the production graph once per process with LangGraph checkpointing enabled."""
+    return build_agent_graph().compile(checkpointer=_graph_checkpointer())

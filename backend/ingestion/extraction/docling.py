@@ -27,6 +27,21 @@ class DoclingContentAdapter:
         self._converter = None
         self._timeout_policy = timeout_policy or PdfTimeoutPolicy()
 
+    def _log_docling_runtime(self, message: str) -> None:
+        """Prints explicit Docling model/config progress during ingestion debugging."""
+        if os.getenv("JLR_DOCLING_VERBOSE", "true").lower() == "true":
+            print(f"[docling] {message}", flush=True)
+
+    def _loaded_ml_runtime_modules(self) -> list[str]:
+        """Reports loaded ML runtimes without importing extra packages."""
+        import sys
+        names = []
+        for name in sys.modules:
+            root = name.split(".", 1)[0]
+            if root in {"torch", "onnxruntime", "transformers", "tokenizers", "rapidocr", "docling_ibm_models"}:
+                names.append(root)
+        return sorted(set(names))
+
     # This function configures Docling PDF processing for text-based enterprise documents.
     def _build_converter(self, timeout_seconds: int = 120) -> Any:
         from docling.datamodel.base_models import InputFormat
@@ -37,6 +52,21 @@ class DoclingContentAdapter:
         pipeline_options.do_ocr = os.getenv("JLR_DOCLING_OCR", "false").lower() == "true"
         pipeline_options.do_table_structure = True
         pipeline_options.table_structure_options.mode = TableFormerMode.ACCURATE
+        pipeline_options.do_chart_extraction = os.getenv("JLR_DOCLING_CHART_EXTRACTION", "false").lower() == "true"
+        pipeline_options.do_formula_enrichment = os.getenv("JLR_DOCLING_FORMULA_ENRICHMENT", "true").lower() == "true"
+        pipeline_options.do_code_enrichment = os.getenv("JLR_DOCLING_CODE_ENRICHMENT", "false").lower() == "true"
+        pipeline_options.code_formula_options.extract_formulas = pipeline_options.do_formula_enrichment
+        pipeline_options.code_formula_options.extract_code = pipeline_options.do_code_enrichment
+        self._log_docling_runtime(
+            "config: "
+            f"ocr={pipeline_options.do_ocr}, "
+            f"table_structure={pipeline_options.do_table_structure}, "
+            f"tableformer_mode={pipeline_options.table_structure_options.mode}, "
+            f"chart_extraction={pipeline_options.do_chart_extraction}, "
+            f"formula_enrichment={pipeline_options.do_formula_enrichment}, "
+            f"code_enrichment={pipeline_options.do_code_enrichment}, "
+            f"timeout={timeout_seconds}s"
+        )
         pipeline_options.generate_page_images = False
         pipeline_options.generate_picture_images = False
         pipeline_options.document_timeout = timeout_seconds
@@ -44,6 +74,8 @@ class DoclingContentAdapter:
         artifacts_path = os.getenv("DOCLING_ARTIFACTS_PATH")
         if artifacts_path:
             pipeline_options.artifacts_path = Path(artifacts_path)
+            self._log_docling_runtime(f"artifacts_path={artifacts_path}")
+        self._log_docling_runtime("creating DocumentConverter; Docling models load lazily during convert()")
         return DocumentConverter(
             format_options={
                 InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options),
@@ -115,7 +147,12 @@ class DoclingContentAdapter:
             for attempt in range(2):
                 try:
                     converter = self._build_converter(allowance)
+                    self._log_docling_runtime(f"convert start: source={Path(source_path).name}, timeout={allowance}s")
                     candidate = converter.convert(str(source_path), raises_on_error=False)
+                    self._log_docling_runtime(
+                        f"convert done: status={self._status(candidate)}, "
+                        f"loaded_ml_modules={self._loaded_ml_runtime_modules()}"
+                    )
                 except Exception as error:
                     if result is None:
                         raise
@@ -138,7 +175,12 @@ class DoclingContentAdapter:
         else:
             if self._converter is None:
                 self._converter = self._build_converter()
+            self._log_docling_runtime(f"convert start: source={Path(source_path).name}")
             result = self._converter.convert(str(source_path))
+            self._log_docling_runtime(
+                f"convert done: status={self._status(result)}, "
+                f"loaded_ml_modules={self._loaded_ml_runtime_modules()}"
+            )
         status = self._status(result)
         requires_review = status != "success"
         details["conversion_status"] = status
@@ -147,6 +189,13 @@ class DoclingContentAdapter:
         document = result.document
         exported = document.export_to_dict()
         pages = self._extract_pages(document)
+        self._log_docling_runtime(
+            f"outputs: pages={len(pages)}, "
+            f"text_blocks={sum(len(page.text_blocks) for page in pages)}, "
+            f"tables={sum(len(page.tables) for page in pages)}, "
+            f"pictures={sum(len(page.images) for page in pages)}, "
+            f"status={status}"
+        )
         try:
             markdown = document.export_to_markdown() or ""
         except Exception as error:
@@ -204,7 +253,11 @@ class DoclingContentAdapter:
             if page_number is None:
                 continue
             page = page_map.setdefault(page_number, ExtractedPage(number=page_number))
-            page.tables.append(self._extract_table(table, document))
+            extracted_table = self._extract_table(table, document)
+            bbox = self._element_bbox(table, page_heights.get(page_number))
+            if bbox:
+                extracted_table["bbox"] = bbox
+            page.tables.append(extracted_table)
         for picture in getattr(document, "pictures", []):
             page_number = self._page_number(picture)
             if page_number is None:

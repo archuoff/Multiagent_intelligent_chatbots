@@ -76,6 +76,7 @@ class CanonicalQualityValidator:
         issues.extend(self._validate_content(nodes))
         issues.extend(self._validate_reconciliation(nodes))
         issues.extend(self._validate_tables(nodes))
+        issues.extend(self._validate_images(nodes))
         if not any((node.text or "").strip() or node.attributes.get("semantic_text") or node.attributes.get("header_rows") for node in nodes):
             issues.append(QualityIssue("error", "no_extracted_content", "No readable source content was extracted; review or OCR is required."))
         if not document.root_nodes:
@@ -202,4 +203,21 @@ class CanonicalQualityValidator:
             has_rows = any(child.node_type == NodeType.TABLE_ROW for child in node.children)
             if not has_header or not has_rows:
                 issues.append(QualityIssue("warning", "incomplete_table", "Table is missing a header or data rows.", node.node_id))
+        return issues
+
+    def _validate_images(self, nodes: list[CanonicalNode]) -> list[QualityIssue]:
+        """Flags image nodes that could not complete the mandatory local image enrichment path."""
+        issues: list[QualityIssue] = []
+        for node in nodes:
+            if node.node_type != NodeType.IMAGE:
+                continue
+            if not node.attributes.get("nearby_text"):
+                issues.append(QualityIssue("warning", "image_missing_nearby_text",
+                    "Image node has no nearby source text for OCR/VLM grounding.", node.node_id))
+            if not node.attributes.get("saved_path"):
+                issues.append(QualityIssue("warning", "image_not_persisted",
+                    "Image node was not persisted to visual-assets storage.", node.node_id))
+            if node.attributes.get("ocr_status") in {None, "failed"}:
+                issues.append(QualityIssue("warning", "image_ocr_incomplete",
+                    "Image OCR did not complete successfully.", node.node_id))
         return issues

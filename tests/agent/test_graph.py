@@ -12,6 +12,8 @@ import threading
 import time
 import unittest
 
+from langgraph.checkpoint.memory import MemorySaver
+
 from backend.agent.graph import build_agent_graph, make_retrieve_node
 
 
@@ -239,6 +241,31 @@ class RetrieveNodeMergeTests(unittest.TestCase):
         result = node(base_state(sub_queries=["good query", "bad query"]))
         self.assertEqual([c["chunk_id"] for c in result["retrieved_chunks"]], ["c1"])
 
+
+
+class CheckpointerConversationHistoryTests(unittest.TestCase):
+    def test_same_thread_sees_previous_turn_history(self):
+        seen_histories: list[list[dict]] = []
+
+        def fake_classify(state):
+            seen_histories.append(list(state.get("conversation_history") or []))
+            return {"intent": "general_chat", "needs_clarification": False, "answer": f"answer to {state['user_query']}"}
+
+        compiled = build_agent_graph(classify_node=fake_classify).compile(checkpointer=MemorySaver())
+        config = {"configurable": {"thread_id": "session-1"}}
+
+        first = compiled.invoke(base_state(user_query="first"), config=config)
+        second = compiled.invoke(base_state(user_query="second"), config=config)
+
+        self.assertEqual(first["conversation_history"], [
+            {"role": "user", "content": "first"},
+            {"role": "assistant", "content": "answer to first"},
+        ])
+        self.assertEqual(seen_histories[1], first["conversation_history"])
+        self.assertEqual(second["conversation_history"][-2:], [
+            {"role": "user", "content": "second"},
+            {"role": "assistant", "content": "answer to second"},
+        ])
 
 if __name__ == "__main__":
     unittest.main()

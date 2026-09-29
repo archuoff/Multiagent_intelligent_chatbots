@@ -14,9 +14,10 @@ the independent SQL path; this package never replaces source rows with text.
 """
 
 from backend.ingestion.chunking.builder import CanonicalChunkBuilder
+from backend.ingestion.chunking.block_graph_builder import BlockGraphChunkBuilder
 from backend.ingestion.chunking.chunk_store import ChunkArtifactManifest, ChunkArtifactStore, StoredChunkArtifact
 from backend.ingestion.chunking.contracts import ChunkBuildResult, ChunkRejection, ChunkType, ChunkingPolicy, EmbeddingChunk
 from backend.ingestion.chunking.service import ChunkingService
 from backend.ingestion.chunking.validation import ChunkValidator
 
-__all__ = ["CanonicalChunkBuilder", "ChunkArtifactManifest", "ChunkArtifactStore", "ChunkBuildResult", "ChunkRejection", "ChunkType", "ChunkingPolicy", "ChunkingService", "ChunkValidator", "EmbeddingChunk", "StoredChunkArtifact"]
+__all__ = ["CanonicalChunkBuilder", "BlockGraphChunkBuilder", "ChunkArtifactManifest", "ChunkArtifactStore", "ChunkBuildResult", "ChunkRejection", "ChunkType", "ChunkingPolicy", "ChunkingService", "ChunkValidator", "EmbeddingChunk", "StoredChunkArtifact"]
