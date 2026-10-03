@@ -11,12 +11,18 @@ implement the same boundary without changing parsers or chunking logic.
 from backend.ingestion.persistence.canonical_store import CanonicalArtifactManifest
 from backend.ingestion.persistence.canonical_store import CanonicalArtifactStore
 from backend.ingestion.persistence.canonical_store import StoredCanonicalArtifact
+from backend.ingestion.persistence.block_graph_store import BlockGraphArtifactManifest
+from backend.ingestion.persistence.block_graph_store import BlockGraphArtifactStore
+from backend.ingestion.persistence.block_graph_store import StoredBlockGraphArtifact
 from backend.ingestion.persistence.source_registry import SourceRegistration
 from backend.ingestion.persistence.source_registry import SourceRegistry
 
 __all__ = [
     "CanonicalArtifactManifest",
     "CanonicalArtifactStore",
+    "BlockGraphArtifactManifest",
+    "BlockGraphArtifactStore",
+    "StoredBlockGraphArtifact",
     "StoredCanonicalArtifact",
     "SourceRegistration",
     "SourceRegistry",

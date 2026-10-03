@@ -7,11 +7,13 @@ falls back to lightweight local libraries when Docling is unavailable.
 from __future__ import annotations
 
 from collections import Counter
+from dataclasses import dataclass
 from datetime import datetime
 import hashlib
 import os
 from pathlib import Path
 import re
+import traceback
 from typing import Any
 import zipfile
 from xml.etree import ElementTree
@@ -34,11 +36,27 @@ from backend.ingestion.utils import hash_file
 from backend.ingestion.utils import make_id
 from backend.ingestion.utils import normalize_text
 from backend.ingestion.extraction.docling import DoclingContentAdapter
+from backend.ingestion.extraction.docx_renderer import WordComDocxRenderer
 from backend.ingestion.extraction.fallbacks import PdfFallbackExtractor
 from backend.ingestion.extraction.fallbacks import DocxFallbackExtractor
 from backend.ingestion.extraction.raw_text_index import PdfRawTextIndex
+from backend.ingestion.extraction.bbox_calibration import audit_axis_agreement
 from backend.ingestion.extraction.pdf_inspector import PdfInspector
 from backend.ingestion.extraction.merger import ExtractionResultMerger
+
+
+
+
+@dataclass(slots=True)
+class _RenderedWord:
+    """One word from a rendered DOCX PDF used for best-effort layout alignment."""
+
+    page_number: int
+    x0: float
+    y0: float
+    x1: float
+    y1: float
+    text: str
 
 
 class DoclingCanonicalBuilder:
@@ -731,19 +749,26 @@ class PdfDocumentParser(SourceParser):
                 missing_pages = set(range(1, inspection.page_count + 1)) - {page.number for page in extracted.pages}
                 if missing_pages:
                     warnings.append(f"Docling omitted {len(missing_pages)} source pages; review recovery output.")
-                fallback = self._fallback.extract(source.file_path)
-                raw_text_index = None
-                if inspection.has_usable_embedded_text and fallback.extractor_name != "pymupdf":
-                    raw_text_index = PdfRawTextIndex(source.file_path)
-                elif fallback.extractor_name == "pymupdf":
-                    warnings.append("PDF raw-text position verification skipped because PyMuPDF produced the fallback extraction.")
-                extracted = self._merger.merge(extracted, fallback, raw_text_index=raw_text_index)
-                warnings = [
-                    "Docling and local PDF fallback were quality-reconciled page by page.",
-                    *warnings,
-                    *fallback.warnings,
-                    *extracted.warnings,
-                ]
+                if missing_pages or extracted.requires_review:
+                    fallback = self._fallback.extract(source.file_path)
+                    raw_text_index = self._build_raw_text_index(source.file_path, extracted, inspection, warnings)
+                    extracted = self._merger.merge(extracted, fallback, raw_text_index=raw_text_index)
+                    if raw_text_index is not None:
+                        if raw_text_index.engine_used and raw_text_index.engine_used == fallback.extractor_name:
+                            warnings.append(
+                                "[verifier_shared_engine] Raw-text position verification used the same "
+                                "library as the fallback extraction for this document; resolutions "
+                                "favoring the fallback are capped at medium confidence."
+                            )
+                        raw_text_index.close()
+                    warnings = [
+                        "Docling required local PDF fallback recovery for missing or review-needed pages.",
+                        *warnings,
+                        *fallback.warnings,
+                        *extracted.warnings,
+                    ]
+                else:
+                    warnings = [*warnings, *extracted.warnings]
                 processing_details = extracted.processing_details
                 requires_review = extracted.requires_review
                 page_nodes = self._build_fallback_pages(document_id, root_node_id, source, extracted)
@@ -751,10 +776,16 @@ class PdfDocumentParser(SourceParser):
                 extraction_mode = extracted.extraction_mode
                 parser_name = "pdf_docling_parser"
             except Exception as error:
+                if os.getenv("JLR_DOCLING_DEBUG_ERRORS", "false").lower() == "true":
+                    print("[docling] PDF extraction failed with full traceback:", flush=True)
+                    traceback.print_exc()
                 fallback = self._fallback.extract(source.file_path)
                 page_nodes = self._build_fallback_pages(document_id, root_node_id, source, fallback)
                 parser_name = f"pdf_{fallback.extractor_name}_fallback_parser"
-                warnings = [f"Docling PDF extraction failed; {fallback.extractor_name} fallback used: {type(error).__name__}", *fallback.warnings]
+                warnings = [
+                    f"Docling PDF extraction failed; {fallback.extractor_name} fallback used: {type(error).__name__}: {error}",
+                    *fallback.warnings,
+                ]
         else:
             fallback = self._fallback.extract(source.file_path)
             page_nodes = self._build_fallback_pages(document_id, root_node_id, source, fallback)
@@ -766,6 +797,13 @@ class PdfDocumentParser(SourceParser):
         suspicious_numeric_count = self._count_nodes_with_attribute(page_nodes, "suspicious_numeric")
         if suspicious_numeric_count:
             warnings.append(f"[pdf_suspicious_numeric] {suspicious_numeric_count} PDF node(s) were excluded from retrieval due to possible numeric/exponent corruption.")
+        low_confidence_count = sum(node.attributes.get("low_confidence_block_count", 0) for node in page_nodes)
+        if low_confidence_count:
+            warnings.append(
+                f"[extraction_confidence] {low_confidence_count} PDF text block(s) could not be verified "
+                "against the source (unresolved conflict, noise heuristic, or position mismatch) and were "
+                "excluded from retrieval; retained in Master JSON for review."
+            )
 
         return CanonicalDocument(
             document_id=document_id,
@@ -824,6 +862,42 @@ class PdfDocumentParser(SourceParser):
             for node in nodes
         )
 
+    def _build_raw_text_index(self, source_path, extracted, inspection, warnings: list[str]) -> PdfRawTextIndex | None:
+        """Builds the PDF raw-text referee, or explains why it isn't available.
+
+        Never trusted blindly: a per-document calibration audit checks that
+        the bboxes we already normalized actually land on their own text
+        before the referee is handed to the merger, so a mis-aimed referee
+        degrades to "unavailable" instead of silently verifying against the
+        wrong region of the page.
+        """
+        if not inspection.has_usable_embedded_text:
+            warnings.append(
+                "[verifier_unavailable] PDF has no usable embedded text layer; "
+                "raw-text position verification is unavailable."
+            )
+            return None
+        try:
+            raw_text_index = PdfRawTextIndex(source_path, engine="auto")
+        except Exception as error:
+            warnings.append(f"[verifier_unavailable] PDF raw-text position verification could not be initialized: {type(error).__name__}.")
+            return None
+        try:
+            calibration = audit_axis_agreement(extracted.pages, raw_text_index)
+        except Exception as error:
+            warnings.append(f"[verifier_unavailable] PDF raw-text position calibration failed: {type(error).__name__}.")
+            raw_text_index.close()
+            return None
+        if not calibration["trust_verification"]:
+            warnings.append(
+                f"[bbox_axis_mismatch] Disabling PDF raw-text position verification for this "
+                f"document: {calibration['low_overlap']} of {calibration['checked']} sampled "
+                f"text blocks did not match their own claimed position in the source text layer."
+            )
+            raw_text_index.close()
+            return None
+        return raw_text_index
+
     # This function builds fallback page nodes from raw pypdf extraction results.
     def _build_fallback_pages(
         self,
@@ -865,8 +939,19 @@ class PdfDocumentParser(SourceParser):
                 for table_index, rows in enumerate(extracted_page.tables, start=1)
                 if rows
             ]
+            image_nodes = self._build_image_nodes(
+                document_id, source, page_node_id, page_number, extracted_page.images, text_nodes,
+            )
+            page_visual_node = self._build_pdf_page_visual_node(
+                document_id, source, page_node_id, page_number, extracted_text, text_nodes, extracted_page.images,
+            )
+            if page_visual_node is not None:
+                image_nodes.append(page_visual_node)
             self._suppress_duplicate_table_text(text_nodes, table_nodes)
-            children = [*text_nodes, *table_nodes]
+            low_confidence_nodes = self._build_low_confidence_nodes(
+                document_id, source, page_node_id, page_number, extracted_page,
+            )
+            children = self._order_page_children([*text_nodes, *table_nodes, *image_nodes, *low_confidence_nodes])
             self._flag_suspicious_pdf_numbers(children)
             for child in children:
                 self._set_page_provenance(child, page_number)
@@ -882,6 +967,7 @@ class PdfDocumentParser(SourceParser):
                         "image_count": len(extracted_page.images),
                         "images": extracted_page.images,
                         "reconciliation": extracted_page.reconciliation,
+                        "low_confidence_block_count": len(low_confidence_nodes),
                     },
                     provenance=Provenance(
                         document_id=document_id,
@@ -894,6 +980,306 @@ class PdfDocumentParser(SourceParser):
                 )
             )
         return page_nodes
+
+    def _build_image_nodes(
+        self,
+        document_id: str,
+        source: IngestionSource,
+        page_node_id: str,
+        page_number: int,
+        images: list[dict[str, Any]],
+        text_nodes: list[CanonicalNode],
+    ) -> list[CanonicalNode]:
+        """Creates one canonical PDF image node per extracted image metadata record."""
+        nodes: list[CanonicalNode] = []
+        seen: set[tuple] = set()
+        for image_index, image in enumerate(images, start=1):
+            if not isinstance(image, dict):
+                continue
+            bbox = image.get("bbox")
+            key = self._image_identity_key(page_number, image, bbox)
+            if key in seen:
+                continue
+            seen.add(key)
+            attributes = dict(image)
+            attributes.update({
+                "page_number": page_number,
+                "image_index": image_index,
+                "nearby_text": self._nearby_text_for_image(bbox, text_nodes),
+                "image_storage_status": attributes.get("image_storage_status", "metadata_only"),
+            })
+            nodes.append(CanonicalNode(
+                node_id=make_id("image"),
+                node_type=NodeType.IMAGE,
+                title=normalize_text(str(image.get("caption") or "")) or f"Image {image_index}",
+                text=normalize_text(str(image.get("description") or image.get("caption") or "")),
+                attributes=attributes,
+                provenance=Provenance(
+                    document_id=document_id,
+                    source_type=source.source_type,
+                    version=source.version,
+                    parent_node_id=page_node_id,
+                    page_number=page_number,
+                ),
+                confidence=0.72 if bbox else 0.55,
+            ))
+        return nodes
+
+    def _build_pdf_page_visual_node(
+        self,
+        document_id: str,
+        source: IngestionSource,
+        page_node_id: str,
+        page_number: int,
+        extracted_text: str,
+        text_nodes: list[CanonicalNode],
+        images: list[dict[str, Any]],
+    ) -> CanonicalNode | None:
+        """Adds a rendered page asset only when native visual extraction missed a large visual.
+
+        Full-page renders are a last fallback for pages such as architecture diagrams,
+        flow diagrams, large technical diagrams, or charts that were not captured as
+        their own usable image/table/chart asset. If an extractable visual already
+        exists on the page, retrieval should use that crop instead of duplicating the
+        whole page.
+        """
+        if os.getenv("JLR_PDF_PAGE_VISUAL_ASSETS", "true").lower() != "true":
+            return None
+        page_text = normalize_text(extracted_text or "\n".join(node.text or "" for node in text_nodes))
+        if not self._is_pdf_page_visual_candidate(page_text, images):
+            return None
+        visual_type = self._pdf_page_visual_type(page_text)
+        attributes = {
+            "page_number": page_number,
+            "image_index": len(images) + 1,
+            "nearby_text": page_text[:1500],
+            "image_storage_status": "render_required",
+            "needs_vision_description": True,
+            "vision_reason": "Native PDF visual extraction did not produce a usable crop for a page that appears to contain a large technical visual, so a rendered page screenshot is required for visual retrieval.",
+            "force_full_page_asset": True,
+            "classification": visual_type,
+            "image_type": "pdf_page_render",
+            "visual_object_type": visual_type,
+            "is_decorative": False,
+            "fallback_reason": "large_visual_extraction_failed",
+        }
+        return CanonicalNode(
+            node_id=make_id("image"),
+            node_type=NodeType.IMAGE,
+            title=f"Page {page_number} visual figure",
+            text=page_text[:500],
+            attributes=attributes,
+            provenance=Provenance(
+                document_id=document_id,
+                source_type=source.source_type,
+                version=source.version,
+                parent_node_id=page_node_id,
+                page_number=page_number,
+            ),
+            confidence=0.78,
+        )
+
+    def _is_pdf_page_visual_candidate(self, page_text: str, images: list[dict[str, Any]]) -> bool:
+        """Gates full-page screenshots to extraction failures for large visual pages."""
+        if self._has_usable_extracted_visual(images):
+            return False
+        text = page_text.lower()
+        strong_visual_terms = (
+            "architecture", "flow diagram", "block diagram", "schematic", "wiring diagram",
+            "technical diagram", "diagram", "chart", "graph", "plot", "figure", "fig.",
+            "section view", "cad", "drawing", "layout", "exploded view",
+        )
+        if any(term in text for term in strong_visual_terms):
+            return True
+        # Low-text pages with image metadata but no usable crop are often vector-only visuals.
+        return bool(images) and len(page_text) < 180 and any(
+            str(image.get("xref") or image.get("bbox") or "") and not self._is_decorative_pdf_image(image)
+            for image in images if isinstance(image, dict)
+        )
+
+    def _has_usable_extracted_visual(self, images: list[dict[str, Any]]) -> bool:
+        return any(self._is_usable_extracted_visual(image) for image in images if isinstance(image, dict))
+
+    def _is_usable_extracted_visual(self, image: dict[str, Any]) -> bool:
+        if self._is_decorative_pdf_image(image):
+            return False
+        if image.get("bbox") or image.get("xref") or image.get("saved_path") or image.get("image_storage_status") in {"stored", "stored_crop"}:
+            area_ratio = self._pdf_image_area_ratio(image)
+            if area_ratio <= 0:
+                width = self._as_float(image.get("width") or image.get("image_width"))
+                height = self._as_float(image.get("height") or image.get("image_height"))
+                return width >= 240 and height >= 160
+            return area_ratio >= float(os.getenv("JLR_PDF_USABLE_IMAGE_MIN_AREA_RATIO", "0.015"))
+        return False
+
+    def _is_decorative_pdf_image(self, image: dict[str, Any]) -> bool:
+        fields = " ".join(str(image.get(key) or "") for key in ("caption", "description", "classification", "image_type", "title")).lower()
+        if any(term in fields for term in ("diagram", "chart", "graph", "plot", "figure", "architecture", "flow", "cad", "drawing")):
+            return False
+        if any(term in fields for term in ("logo", "icon", "header", "footer", "watermark", "decorative")):
+            return True
+        width = self._as_float(image.get("width") or image.get("image_width"))
+        height = self._as_float(image.get("height") or image.get("image_height"))
+        if width > 0 and height > 0 and (width < 240 or height < 120):
+            return True
+        return False
+
+    def _pdf_image_area_ratio(self, image: dict[str, Any]) -> float:
+        bbox = image.get("bbox")
+        if not isinstance(bbox, dict):
+            return 0.0
+        width = self._as_float(bbox.get("width"))
+        height = self._as_float(bbox.get("height"))
+        if width <= 0 or height <= 0:
+            return 0.0
+        page_width = self._as_float(bbox.get("page_width") or image.get("page_width"))
+        page_height = self._as_float(bbox.get("page_height") or image.get("page_height"))
+        if page_width <= 0 or page_height <= 0:
+            page_width = float(os.getenv("JLR_PDF_DEFAULT_PAGE_WIDTH", "612"))
+            page_height = float(os.getenv("JLR_PDF_DEFAULT_PAGE_HEIGHT", "792"))
+        if page_width <= 0 or page_height <= 0:
+            return 0.0
+        return (width * height) / (page_width * page_height)
+
+    @staticmethod
+    def _as_float(value: Any) -> float:
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return 0.0
+
+    def _pdf_page_visual_type(self, page_text: str) -> str:
+        text = page_text.lower()
+        if "flow" in text or "process" in text:
+            return "flow_diagram"
+        if "cad" in text or "3d" in text or "section view" in text:
+            return "cad_3d_visual"
+        if "chart" in text or "graph" in text or "plot" in text:
+            return "chart"
+        if "formula" in text or "equation" in text:
+            return "formula"
+        return "diagram"
+
+    def _nearby_text_for_image(self, bbox: Any, text_nodes: list[CanonicalNode]) -> str:
+        """Finds same-page text nearest to an image bbox for OCR/VLM grounding."""
+        if not isinstance(bbox, dict):
+            return normalize_text("\n".join(node.text or "" for node in text_nodes[:4])) or ""
+        image_rect = self._rect_from_bbox(bbox)
+        if image_rect is None:
+            return normalize_text("\n".join(node.text or "" for node in text_nodes[:4])) or ""
+        ranked: list[tuple[float, str]] = []
+        for node in text_nodes:
+            text = normalize_text(node.text or "")
+            if not text:
+                continue
+            node_rect = self._rect_from_bbox(node.attributes.get("bbox"))
+            if node_rect is None:
+                ranked.append((999999.0, text))
+                continue
+            ranked.append((self._rect_distance(image_rect, node_rect), text))
+        ranked.sort(key=lambda item: item[0])
+        return "\n".join(text for _, text in ranked[:4])[:1200]
+
+    def _order_page_children(self, children: list[CanonicalNode]) -> list[CanonicalNode]:
+        """Keeps page children in visual reading order when bbox metadata exists."""
+        return sorted(children, key=lambda node: (*self._node_position(node), node.node_type.value))
+
+    def _node_position(self, node: CanonicalNode) -> tuple[float, float]:
+        bbox = node.attributes.get("bbox")
+        rect = self._rect_from_bbox(bbox)
+        if rect is None:
+            return (999999.0, 999999.0)
+        return (rect[1], rect[0])
+
+    def _bbox_key(self, bbox: Any) -> tuple:
+        rect = self._rect_from_bbox(bbox)
+        return tuple(round(value, 1) for value in rect) if rect else ()
+
+    def _image_identity_key(self, page_number: int, image: dict[str, Any], bbox: Any) -> tuple:
+        bbox_key = self._bbox_key(bbox)
+        caption = normalize_text(str(image.get("caption") or ""))
+        if bbox_key or caption:
+            return (page_number, bbox_key, caption)
+        if image.get("xref") is not None:
+            return (page_number, "xref", str(image.get("xref")))
+        return (
+            page_number,
+            "metadata",
+            str(image.get("width") or ""),
+            str(image.get("height") or ""),
+            str(image.get("extension") or ""),
+        )
+
+    def _rect_from_bbox(self, bbox: Any) -> tuple[float, float, float, float] | None:
+        if not isinstance(bbox, dict):
+            return None
+        try:
+            if all(key in bbox for key in ("x0", "y0", "x1", "y1")):
+                return float(bbox["x0"]), float(bbox["y0"]), float(bbox["x1"]), float(bbox["y1"])
+            if all(key in bbox for key in ("left", "top", "right", "bottom")):
+                return float(bbox["left"]), float(bbox["top"]), float(bbox["right"]), float(bbox["bottom"])
+            if all(key in bbox for key in ("left", "top", "width", "height")):
+                left = float(bbox["left"])
+                top = float(bbox["top"])
+                return left, top, left + float(bbox["width"]), top + float(bbox["height"])
+        except Exception:
+            return None
+        return None
+
+    def _rect_distance(self, left: tuple[float, float, float, float], right: tuple[float, float, float, float]) -> float:
+        left_center = ((left[0] + left[2]) / 2, (left[1] + left[3]) / 2)
+        right_center = ((right[0] + right[2]) / 2, (right[1] + right[3]) / 2)
+        return abs(left_center[0] - right_center[0]) + abs(left_center[1] - right_center[1])
+
+    def _build_low_confidence_nodes(
+        self,
+        document_id: str,
+        source: IngestionSource,
+        page_node_id: str,
+        page_number: int,
+        extracted_page,
+    ) -> list[CanonicalNode]:
+        """Turns merger-excluded (`retrieval_allowed=False`) text blocks into
+        their own canonical nodes, instead of letting them silently
+        disappear once they're kept out of the merged page text (Finding B):
+        `_text_to_nodes` only ever sees `extracted_page.text`, so a block
+        excluded there would otherwise never reach Master JSON at all. The
+        `LOW_CONFIDENCE_BLOCK` node type is deliberately excluded from
+        `CanonicalChunkBuilder._NARRATIVE_TYPES`, so this content is
+        unchunkable by construction -- the explicit `retrieval_allowed=False`
+        attribute is belt-and-braces, not the only defense.
+        """
+        nodes: list[CanonicalNode] = []
+        for block in extracted_page.text_blocks:
+            if block.get("retrieval_allowed") is not False:
+                continue
+            text = normalize_text(str(block.get("text", ""))) or ""
+            if not text:
+                continue
+            reconciliation = block.get("reconciliation")
+            nodes.append(CanonicalNode(
+                node_id=make_id("low_confidence"),
+                node_type=NodeType.LOW_CONFIDENCE_BLOCK,
+                text=text,
+                attributes={
+                    "retrieval_allowed": False,
+                    "requires_review": True,
+                    "extraction_confidence": (reconciliation or {}).get("confidence_tier"),
+                    "extraction_confidence_reason": (reconciliation or {}).get("confidence_reason"),
+                    "reconciliation": reconciliation,
+                    "extractor_role": block.get("extractor_role"),
+                    "bbox": block.get("bbox"),
+                },
+                provenance=Provenance(
+                    document_id=document_id,
+                    source_type=source.source_type,
+                    version=source.version,
+                    parent_node_id=page_node_id,
+                    page_number=page_number,
+                ),
+                confidence=0.3,
+            ))
+        return nodes
 
     def _flag_suspicious_pdf_numbers(self, nodes: list[CanonicalNode]) -> int:
         """Marks likely PDF exponent-corruption values as review-only retrieval content."""
@@ -997,56 +1383,62 @@ class DocxDocumentParser(SourceParser):
         self._docling = DoclingContentAdapter()
         self._fallback = DocxFallbackExtractor()
         self._builder = DoclingCanonicalBuilder()
+        self._renderer = WordComDocxRenderer()
 
-    # This function loads a DOCX file and converts its paragraphs and tables into canonical nodes.
+    def _docx_render_skipped_result(self):
+        """Returns a renderer-compatible result when DOCX layout rendering is disabled."""
+        from backend.ingestion.extraction.docx_renderer import DocxRenderResult
+
+        return DocxRenderResult(status="skipped", renderer="word_com", warning="DOCX render disabled by JLR_DOCX_RENDER_ENABLED=false.")
+
+    # This function loads a DOCX file using native OOXML structure and enriches it with Docling semantics.
     def parse(self, source: IngestionSource, context: ParserContext) -> CanonicalDocument:
         document_id = source.document_id or make_id("doc")
         root_node_id = make_id("document")
+        native = self._fallback.extract(source.file_path)
+        if os.getenv("JLR_DOCX_RENDER_ENABLED", "true").lower() == "true":
+            render_result = self._renderer.render_pdf(source.file_path, source.agent_id, document_id, source.version)
+        else:
+            render_result = self._docx_render_skipped_result()
+        children = self._build_fallback_children(document_id, root_node_id, source, native)
+        warnings = list(native.warnings)
+        if render_result.status != "success" and os.getenv("JLR_DOCX_RENDER_REQUIRED", "false").lower() == "true":
+            warnings.append(f"[docx_render_{render_result.status}] Word COM render status: {render_result.warning or render_result.error_type or render_result.status}")
         docling_used = False
-        parser_name = "docx_python_docx_fallback_parser"
-        extraction_mode = "fallback_library"
+        docling_details: dict[str, Any] = {"conversion_status": "not_available"}
+        parser_name = "docx_native_docling_semantic_parser"
+        extraction_mode = "native_structure_semantic_enriched"
 
         if self._docling.is_available():
             try:
                 extracted = self._docling.extract(source.file_path)
-                children = self._builder.build_section_nodes(
-                    document_id=document_id,
-                    source_type=source.source_type,
-                    version=source.version,
-                    parent_node_id=root_node_id,
-                    exported=extracted.exported,
-                    markdown=extracted.markdown,
-                )
-                children.extend(
-                    self._builder.build_table_nodes(
-                        document_id=document_id,
-                        source_type=source.source_type,
-                        version=source.version,
-                        parent_node_id=root_node_id,
-                        exported={} if extracted.exported.get("body", {}).get("children") else extracted.exported,
-                    )
-                )
-                layout_count = self._convert_layout_tables(children, document_id, source.source_type, source.version)
-                image_count = self._attach_docx_image_assets(children, source, document_id)
-                review_count = self._requires_review_count(children)
-                warnings = [*extracted.warnings, *self._collect_docling_warnings(extracted.exported, extracted.markdown)]
-                if layout_count:
-                    warnings.append(f"[docx_layout_tables] Converted {layout_count} layout-style DOCX tables into narrative blocks.")
-                if image_count:
-                    warnings.append(f"[docx_images] Stored {image_count} DOCX image assets and attached locators to image nodes.")
-                if review_count:
-                    warnings.append(f"[docx_review_nodes] {review_count} canonical nodes require review.")
                 docling_used = True
-                parser_name = "docx_docling_parser"
-                extraction_mode = "docling_primary"
+                docling_details = self._docling_semantic_summary(extracted)
+                warnings.extend(extracted.warnings)
+                warnings.extend(self._collect_docling_warnings(extracted.exported, extracted.markdown))
+                self._enrich_docx_native_children(children, extracted)
             except Exception as error:
-                fallback = self._fallback.extract(source.file_path)
-                children = self._build_fallback_children(document_id, root_node_id, source, fallback)
-                warnings = [f"Docling DOCX extraction failed; python-docx fallback used: {type(error).__name__}", *fallback.warnings]
+                parser_name = "docx_python_docx_native_parser"
+                extraction_mode = "native_structure"
+                docling_details = {"conversion_status": "failed", "error_type": type(error).__name__}
+                warnings.append(f"Docling DOCX semantic enrichment failed; native python-docx extraction used: {type(error).__name__}")
         else:
-            fallback = self._fallback.extract(source.file_path)
-            children = self._build_fallback_children(document_id, root_node_id, source, fallback)
-            warnings = fallback.warnings
+            parser_name = "docx_python_docx_native_parser"
+            extraction_mode = "native_structure"
+
+        layout_count = self._convert_layout_tables(children, document_id, source.source_type, source.version)
+        image_count = self._attach_docx_image_assets(children, source, document_id)
+        review_count = self._requires_review_count(children)
+        if render_result.status == "success" and render_result.pdf_path:
+            aligned_count = self._align_docx_nodes_to_rendered_pdf(children, Path(render_result.pdf_path))
+            if aligned_count:
+                warnings.append(f"[docx_rendered_layout] Assigned rendered page/bbox metadata to {aligned_count} DOCX nodes.")
+        if layout_count:
+            warnings.append(f"[docx_layout_tables] Converted {layout_count} layout-style DOCX tables into narrative blocks.")
+        if image_count:
+            warnings.append(f"[docx_images] Stored {image_count} DOCX image assets and attached locators to image nodes.")
+        if review_count:
+            warnings.append(f"[docx_review_nodes] {review_count} canonical nodes require review.")
         self._normalize_docx_text(children)
 
         return CanonicalDocument(
@@ -1078,7 +1470,7 @@ class DocxDocumentParser(SourceParser):
                     node_type=NodeType.DOCUMENT_ROOT,
                     title=source.file_path.stem,
                     children=children,
-                    attributes={"docling_enabled": docling_used},
+                    attributes={"docling_enabled": docling_used, "native_extractor": "python-docx", "docling_semantic_enrichment": docling_details, "rendered_layout": render_result.as_dict()},
                     provenance=Provenance(
                         document_id=document_id,
                         source_type=source.source_type,
@@ -1093,29 +1485,147 @@ class DocxDocumentParser(SourceParser):
             ),
         )
 
+    def _align_docx_nodes_to_rendered_pdf(self, children: list[CanonicalNode], rendered_pdf_path: Path) -> int:
+        """Best-effort alignment of native DOCX nodes to rendered PDF page/bbox metadata."""
+        words_by_page = self._rendered_pdf_words(rendered_pdf_path)
+        if not words_by_page:
+            return 0
+        aligned = 0
+        for node in self._walk_nodes(children):
+            text = self._node_alignment_text(node)
+            if not text:
+                continue
+            match = self._find_rendered_text_match(words_by_page, text)
+            if match is None:
+                continue
+            page_number, bbox = match
+            node.provenance.page_number = page_number
+            node.attributes.setdefault("rendered_layout", {})
+            if node.node_type == NodeType.IMAGE:
+                node.attributes["rendered_layout"].update({
+                    "source": "word_com_pdf",
+                    "page_number": page_number,
+                    "context_bbox": bbox,
+                    "alignment": "nearby_text_context_match",
+                    "bbox_scope": "context_only",
+                })
+            else:
+                node.provenance.bbox = [bbox["x0"], bbox["y0"], bbox["x1"], bbox["y1"]]
+                node.attributes["rendered_layout"].update({
+                    "source": "word_com_pdf",
+                    "page_number": page_number,
+                    "bbox": bbox,
+                    "alignment": "text_sequence_match",
+                    "bbox_scope": "node_text",
+                })
+            aligned += 1
+        return aligned
+
+    def _rendered_pdf_words(self, rendered_pdf_path: Path) -> dict[int, list[_RenderedWord]]:
+        """Reads rendered PDF words with PyMuPDF coordinates."""
+        try:
+            import pymupdf as fitz
+        except ImportError:
+            return {}
+        words_by_page: dict[int, list[_RenderedWord]] = {}
+        try:
+            with fitz.open(str(rendered_pdf_path)) as pdf:
+                for page_number, page in enumerate(pdf, start=1):
+                    page_words: list[_RenderedWord] = []
+                    for item in page.get_text("words", sort=True):
+                        if len(item) < 5:
+                            continue
+                        text = normalize_text(str(item[4]) or "") or ""
+                        if not text:
+                            continue
+                        page_words.append(_RenderedWord(page_number, float(item[0]), float(item[1]), float(item[2]), float(item[3]), text))
+                    words_by_page[page_number] = page_words
+        except Exception:
+            return {}
+        return words_by_page
+
+    def _node_alignment_text(self, node: CanonicalNode) -> str:
+        """Chooses compact text for rendered-layout matching."""
+        if node.node_type in {NodeType.PARAGRAPH, NodeType.BULLET_BLOCK, NodeType.TEXT_BLOCK, NodeType.SECTION, NodeType.TITLE_BLOCK}:
+            return normalize_text(str(node.text or node.title or "")) or ""
+        if node.node_type == NodeType.TABLE:
+            values = [normalize_text(str(cell.text or cell.attributes.get("value") or "")) or "" for row in node.children for cell in row.children if cell.node_type == NodeType.TABLE_CELL]
+            return normalize_text(" ".join(value for value in values if value)) or ""
+        if node.node_type == NodeType.IMAGE:
+            return normalize_text(str(node.attributes.get("nearby_text") or "")) or ""
+        return ""
+
+    def _find_rendered_text_match(self, words_by_page: dict[int, list[_RenderedWord]], text: str) -> tuple[int, dict[str, float]] | None:
+        """Finds a contiguous token sequence in rendered PDF words and returns its bbox."""
+        tokens = re.findall(r"[a-z0-9]+(?:[./_^-][a-z0-9]+)*", (normalize_text(text) or "").casefold())
+        if not tokens:
+            return None
+        max_tokens = int(os.getenv("JLR_DOCX_LAYOUT_MATCH_MAX_TOKENS", "24"))
+        query = tokens[:max_tokens]
+        if len(query) < int(os.getenv("JLR_DOCX_LAYOUT_MATCH_MIN_TOKENS", "3")):
+            return None
+        for page_number, words in words_by_page.items():
+            page_tokens = [re.findall(r"[a-z0-9]+(?:[./_^-][a-z0-9]+)*", word.text.casefold()) for word in words]
+            flat_tokens = [items[0] if items else "" for items in page_tokens]
+            limit = len(flat_tokens) - len(query) + 1
+            for start in range(max(limit, 0)):
+                if flat_tokens[start:start + len(query)] != query:
+                    continue
+                matched_words = words[start:start + len(query)]
+                x0 = min(word.x0 for word in matched_words)
+                y0 = min(word.y0 for word in matched_words)
+                x1 = max(word.x1 for word in matched_words)
+                y1 = max(word.y1 for word in matched_words)
+                padding = float(os.getenv("JLR_DOCX_LAYOUT_BBOX_PADDING", "4"))
+                return page_number, {"x0": max(x0 - padding, 0.0), "y0": max(y0 - padding, 0.0), "x1": x1 + padding, "y1": y1 + padding}
+        return None
+
     def _attach_docx_image_assets(self, children: list[CanonicalNode], source: IngestionSource, document_id: str) -> int:
-        """Stores DOCX media files and maps them in order to Docling picture nodes."""
+        """Stores DOCX media files and maps them by media name before order fallback."""
         images = self._docx_media_assets(source.file_path, source.agent_id, document_id, source.version)
         if not images:
             return 0
-        image_index = 0
+        by_media_name = {asset["media_name"]: asset for asset in images}
+        used: set[int] = set()
+        matched = 0
         for node in self._walk_nodes(children):
             if node.node_type != NodeType.IMAGE:
                 continue
-            if image_index >= len(images):
-                node.attributes.update({"image_storage_status": "metadata_only", "locator": node.attributes.get("source_ref")})
+            asset = None
+            media_name = str(node.attributes.get("media_name") or "")
+            if media_name:
+                asset = by_media_name.get(media_name)
+            if asset is None:
+                for index, candidate in enumerate(images):
+                    if index not in used:
+                        asset = candidate
+                        used.add(index)
+                        break
+            else:
+                try:
+                    used.add(images.index(asset))
+                except ValueError:
+                    pass
+            if asset is None:
+                node.attributes.update({"image_storage_status": "metadata_only", "locator": node.attributes.get("source_ref") or media_name})
                 continue
-            asset = images[image_index]
-            image_index += 1
+            matched += 1
             node.attributes.update({
                 "locator": asset["media_name"],
                 "media_name": asset["media_name"],
                 "saved_path": asset["saved_path"],
                 "image_hash": asset["image_hash"],
                 "image_extension": asset["extension"],
+                "image_width": asset.get("image_width"),
+                "image_height": asset.get("image_height"),
+                "image_occurrence_count": asset.get("image_occurrence_count"),
+                "classification": asset.get("classification"),
+                "image_type": asset.get("image_type"),
+                "is_decorative": asset.get("is_decorative"),
                 "image_storage_status": "stored",
+                "image_match": "media_name" if media_name and asset["media_name"] == media_name else "document_order",
             })
-        return min(image_index, len(images))
+        return matched
 
     def _docx_media_assets(self, source_path: Path, agent_id: str, document_id: str, version: str) -> list[dict[str, Any]]:
         """Extracts DOCX embedded media files without interpreting image content."""
@@ -1125,9 +1635,17 @@ class DocxDocumentParser(SourceParser):
             with zipfile.ZipFile(source_path) as archive:
                 media_names = self._docx_media_sequence(archive)
                 saved_by_hash: dict[str, Path] = {}
-                for index, media_name in enumerate(media_names, start=1):
+                hash_counts: Counter[str] = Counter()
+                prepared: list[dict[str, Any]] = []
+                for media_name in media_names:
                     blob = archive.read(media_name)
                     digest = hashlib.sha256(blob).hexdigest()
+                    hash_counts[digest] += 1
+                    prepared.append({"media_name": media_name, "blob": blob, "image_hash": digest})
+                for item in prepared:
+                    media_name = item["media_name"]
+                    blob = item["blob"]
+                    digest = item["image_hash"]
                     extension = self._safe_extension(Path(media_name).suffix.lstrip(".") or "bin")
                     target = saved_by_hash.get(digest)
                     if target is None:
@@ -1135,11 +1653,47 @@ class DocxDocumentParser(SourceParser):
                         target = folder / f"docx_image_{len(saved_by_hash) + 1:03d}_{digest[:12]}.{extension}"
                         target.write_bytes(blob)
                         saved_by_hash[digest] = target
-                    assets.append({"media_name": media_name, "saved_path": target.as_posix(),
-                                   "image_hash": digest, "extension": extension})
+                    width, height = self._image_dimensions(target)
+                    occurrence_count = hash_counts[digest]
+                    classification = self._classify_docx_media(width, height, occurrence_count)
+                    assets.append({
+                        "media_name": media_name,
+                        "saved_path": target.as_posix(),
+                        "image_hash": digest,
+                        "extension": extension,
+                        "image_width": width,
+                        "image_height": height,
+                        "image_occurrence_count": occurrence_count,
+                        "classification": classification,
+                        "image_type": classification,
+                        "is_decorative": classification in {"icon", "decorative"},
+                    })
         except Exception:
             return []
         return assets
+
+
+    def _image_dimensions(self, image_path: Path) -> tuple[int | None, int | None]:
+        """Returns stored image pixel dimensions when Pillow is available."""
+        try:
+            from PIL import Image
+
+            with Image.open(image_path) as image:
+                return int(image.width), int(image.height)
+        except Exception:
+            return None, None
+
+    def _classify_docx_media(self, width: int | None, height: int | None, occurrence_count: int) -> str:
+        """Classifies tiny/repeated DOCX media so icons do not look like figures."""
+        if not width or not height:
+            return "image"
+        max_side = max(width, height)
+        area = width * height
+        if max_side <= 64 or area <= 4096:
+            return "icon"
+        if occurrence_count >= 3 and max_side <= 128:
+            return "icon"
+        return "image"
 
     def _docx_media_sequence(self, archive: zipfile.ZipFile) -> list[str]:
         """Returns DOCX media files in drawing-reference order, including repeats."""
@@ -1250,6 +1804,47 @@ class DocxDocumentParser(SourceParser):
         cleaned = re.sub(r"[^A-Za-z0-9]+", "", value.lower())
         return cleaned or "bin"
 
+    def _docling_semantic_summary(self, extracted: ExtractionResult) -> dict[str, Any]:
+        """Summarizes Docling output used as DOCX semantic enrichment."""
+        exported = extracted.exported or {}
+        body_children = exported.get("body", {}).get("children", []) if isinstance(exported.get("body"), dict) else []
+        tables = exported.get("tables", []) if isinstance(exported.get("tables"), list) else []
+        return {
+            "conversion_status": extracted.processing_details.get("conversion_status", "success"),
+            "semantic_extractor": extracted.extractor_name,
+            "body_children": len(body_children),
+            "table_count": len(tables),
+            "markdown_chars": len(extracted.markdown or ""),
+            "requires_review": extracted.requires_review,
+        }
+
+    def _enrich_docx_native_children(self, children: list[CanonicalNode], extracted: ExtractionResult) -> None:
+        """Adds lightweight Docling semantic counts without overwriting native DOCX structure."""
+        summary = self._docling_semantic_summary(extracted)
+        native_counts = self._docx_node_counts(children)
+        for node in children:
+            node.attributes.setdefault("docling_enabled", True)
+        if children:
+            children[0].attributes.setdefault("semantic_enrichment", {
+                "type": "docling_semantic_enrichment",
+                "native_counts": native_counts,
+                "docling_summary": summary,
+            })
+
+    def _docx_node_counts(self, children: list[CanonicalNode]) -> dict[str, int]:
+        """Counts main DOCX native node types for enrichment audit metadata."""
+        counts = {"sections": 0, "paragraphs": 0, "tables": 0, "images": 0}
+        for node in self._walk_nodes(children):
+            if node.node_type == NodeType.SECTION:
+                counts["sections"] += 1
+            elif node.node_type in {NodeType.PARAGRAPH, NodeType.BULLET_BLOCK, NodeType.TEXT_BLOCK}:
+                counts["paragraphs"] += 1
+            elif node.node_type == NodeType.TABLE:
+                counts["tables"] += 1
+            elif node.node_type == NodeType.IMAGE:
+                counts["images"] += 1
+        return counts
+
     # This function builds canonical DOCX fallback content from the shared extraction contract.
     def _build_fallback_children(
         self,
@@ -1261,7 +1856,58 @@ class DocxDocumentParser(SourceParser):
         children: list[CanonicalNode] = []
         current_section: CanonicalNode | None = None
 
+        table_index = 0
         for block in extraction.blocks:
+            block_type = str(block.get("block_type") or "paragraph")
+            if block_type == "table":
+                table_index += 1
+                rows = block.get("rows") or []
+                node = self._builder.build_matrix_table_node(
+                    document_id=document_id,
+                    source_type=source.source_type,
+                    version=source.version,
+                    parent_node_id=current_section.node_id if current_section else root_node_id,
+                    table_index=int(block.get("table_index") or table_index),
+                    rows=rows,
+                )
+                node.attributes.update({
+                    "source_table_type": "native_docx_table",
+                    "style_name": block.get("style_name") or "",
+                    "extractor_role": block.get("extractor_role") or "native_structure",
+                })
+                if current_section:
+                    current_section.children.append(node)
+                else:
+                    children.append(node)
+                continue
+            if block_type == "image":
+                node = CanonicalNode(
+                    node_id=make_id("image"),
+                    node_type=NodeType.IMAGE,
+                    title=f"Image {block.get('image_index') or ''}".strip(),
+                    attributes={
+                        "image_index": block.get("image_index"),
+                        "paragraph_index": block.get("paragraph_index"),
+                        "relationship_id": block.get("relationship_id"),
+                        "media_name": block.get("media_name"),
+                        "nearby_text": block.get("nearby_text") or "",
+                        "extractor_role": block.get("extractor_role") or "native_structure",
+                        "image_storage_status": block.get("image_storage_status") or "pending",
+                    },
+                    provenance=Provenance(
+                        document_id=document_id,
+                        source_type=source.source_type,
+                        version=source.version,
+                        parent_node_id=current_section.node_id if current_section else root_node_id,
+                    ),
+                    confidence=0.84,
+                )
+                if current_section:
+                    current_section.children.append(node)
+                else:
+                    children.append(node)
+                continue
+
             text = normalize_text(str(block.get("text", "")))
             if not text:
                 continue
@@ -1273,7 +1919,7 @@ class DocxDocumentParser(SourceParser):
                     node_type=NodeType.SECTION,
                     title=text,
                     children=[],
-                    attributes={"style_name": style_name},
+                    attributes={"style_name": style_name, "extractor_role": block.get("extractor_role") or "native_structure", "paragraph_index": block.get("paragraph_index")},
                     provenance=Provenance(
                         document_id=document_id,
                         source_type=source.source_type,
@@ -1289,6 +1935,7 @@ class DocxDocumentParser(SourceParser):
                     node_id=make_id("paragraph"),
                     node_type=NodeType.BULLET_BLOCK if style_name.lower().startswith("list") or text.startswith(("-", "*")) else NodeType.PARAGRAPH,
                     text=text,
+                    attributes={"style_name": style_name, "extractor_role": block.get("extractor_role") or "native_structure", "paragraph_index": block.get("paragraph_index")},
                     provenance=Provenance(
                         document_id=document_id,
                         source_type=source.source_type,
@@ -1302,17 +1949,18 @@ class DocxDocumentParser(SourceParser):
                 else:
                     children.append(paragraph_node)
 
-        for table_index, rows in enumerate(extraction.tables, start=1):
-            children.append(
-                self._builder.build_matrix_table_node(
-                    document_id=document_id,
-                    source_type=source.source_type,
-                    version=source.version,
-                    parent_node_id=root_node_id,
-                    table_index=table_index,
-                    rows=rows,
+        if not extraction.blocks:
+            for table_index, rows in enumerate(extraction.tables, start=1):
+                children.append(
+                    self._builder.build_matrix_table_node(
+                        document_id=document_id,
+                        source_type=source.source_type,
+                        version=source.version,
+                        parent_node_id=root_node_id,
+                        table_index=table_index,
+                        rows=rows,
+                    )
                 )
-            )
         return children
 
     # This function collects warning signals from the Docling DOCX extraction path.

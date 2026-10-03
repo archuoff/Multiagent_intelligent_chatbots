@@ -28,5 +28,8 @@ class EmbeddingIndexingService:
         """Consumes a checksum-verified artifact and never indexes content requiring review."""
         chunks = self._artifact_store.load(artifact)
         embeddings = self._embedding_service.embed(chunks)
-        indexed = self._vector_store.upsert(chunks, embeddings)
+        try:
+            indexed = self._vector_store.upsert(chunks, embeddings)
+        finally:
+            self._vector_store.close()
         return embeddings, indexed

@@ -48,6 +48,73 @@ class PdfRawTextIndexTests(unittest.TestCase):
         self.assertIsNone(result.winner)
         self.assertFalse(result.candidate_a_matches)
 
+    def test_engine_used_is_provided_for_explicit_word_lists(self):
+        """Test/synthetic word lists are labeled 'provided', never a real engine name."""
+        index = PdfRawTextIndex(words=[RawPdfWord(1, 0, 0, 10, 10, "x")])
+        self.assertEqual(index.engine_used, "provided")
+        self.assertFalse(index.is_independent_of("provided"))
+        self.assertTrue(index.is_independent_of("pymupdf"))
+
+    def test_is_independent_of_before_any_page_loaded(self):
+        """Independence is unknown (False, not a guess) until a page has actually loaded."""
+        index = PdfRawTextIndex("does-not-exist.pdf")
+        self.assertIsNone(index.engine_used)
+        self.assertFalse(index.is_independent_of("pymupdf"))
+
+
+class PdfRawTextIndexEngineSelectionTests(unittest.TestCase):
+    """Checks word-source selection and coordinate translation with fake engine modules."""
+
+    def setUp(self):
+        import backend.ingestion.extraction.raw_text_index as module
+        self.module = module
+        self._original_pdfplumber = module.pdfplumber
+        self._original_fitz = module.fitz
+
+    def tearDown(self):
+        self.module.pdfplumber = self._original_pdfplumber
+        self.module.fitz = self._original_fitz
+
+    def test_pdfplumber_words_are_translated_to_cropbox_origin(self):
+        """pdfplumber's MediaBox-relative coordinates must be shifted to CropBox
+        origin so they land in the same space as PyMuPDF's coordinates --
+        without this, a document whose CropBox differs from its MediaBox
+        (common with bleed/trim boxes) would silently mis-position every word."""
+        fake_word = {"text": "Torque", "x0": 120.0, "top": 220.0, "x1": 160.0, "bottom": 230.0}
+        fake_page = type("Page", (), {
+            "cropbox": (100.0, 200.0, 500.0, 700.0),
+            "extract_words": lambda self, **kwargs: [fake_word],
+        })()
+        fake_document = type("Document", (), {"pages": [fake_page], "close": lambda self: None})()
+        self.module.pdfplumber = type("FakePdfplumber", (), {"open": staticmethod(lambda path: fake_document)})()
+
+        index = PdfRawTextIndex("fake.pdf", engine="pdfplumber")
+        # word is at x0=120,top=220 in MediaBox space; cropbox origin is (100,200),
+        # so it must appear at x0=20,y0=20 in the index's (CropBox-relative) space.
+        region_at_translated_position = index.text_at_bbox(1, {"x0": 0, "y0": 0, "x1": 100, "y1": 50})
+        region_at_raw_mediabox_position = index.text_at_bbox(1, {"x0": 115, "y0": 215, "x1": 165, "y1": 235})
+        self.assertEqual(region_at_translated_position, "Torque")
+        self.assertEqual(region_at_raw_mediabox_position, "")
+        self.assertEqual(index.engine_used, "pdfplumber")
+
+    def test_engine_auto_falls_back_to_pymupdf_when_pdfplumber_missing(self):
+        """A missing pdfplumber library degrades to PyMuPDF, never raises."""
+        self.module.pdfplumber = None
+        fake_page = type("Page", (), {
+            "get_text": lambda self, mode, sort=False: [(0.0, 0.0, 30.0, 10.0, "Torque", 0, 0, 0)],
+        })()
+        fake_document = type("Document", (), {
+            "page_count": 1,
+            "__getitem__": lambda self, index: fake_page,
+            "close": lambda self: None,
+        })()
+        self.module.fitz = type("FakeFitz", (), {"open": staticmethod(lambda path: fake_document)})()
+
+        index = PdfRawTextIndex("fake.pdf", engine="auto")
+        region = index.text_at_bbox(1, {"x0": 0, "y0": 0, "x1": 50, "y1": 20})
+        self.assertEqual(region, "Torque")
+        self.assertEqual(index.engine_used, "pymupdf")
+
 
 if __name__ == "__main__":
     unittest.main()

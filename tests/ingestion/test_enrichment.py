@@ -30,6 +30,16 @@ def document(children):
         metadata=DocumentMetadata(document_family=DocumentFamily.WORKBOOK_BASED), root_nodes=[root])
 
 
+def typed_document(children, source_type=SourceType.XLSX, family=DocumentFamily.WORKBOOK_BASED):
+    """Builds a source document for non-Excel enrichment tests."""
+    root = CanonicalNode(node_id="root", node_type=NodeType.DOCUMENT_ROOT, children=children,
+        provenance=Provenance(document_id="doc", source_type=source_type, version="v1"))
+    return CanonicalDocument(document_id="doc", agent_id="adas", source_type=source_type, file_name="input",
+        source_path="input", source_name="input", version="v1", source_hash="sha256:test",
+        ingested_at=datetime.now(timezone.utc), parser_info=ParserInfo(parser_name="test", parser_version="v1"),
+        metadata=DocumentMetadata(document_family=family), root_nodes=[root])
+
+
 class CanonicalEnrichmentTests(unittest.TestCase):
     """Checks policy labels and registries without any external link requests."""
 
@@ -154,6 +164,182 @@ class CanonicalEnrichmentTests(unittest.TestCase):
             self.assertTrue(image.attributes["image_description_is_inferred"])
             self.assertEqual(image.attributes["image_description_model"], "gpt-4o-vision")
             self.assertIn("VISIBLE LABEL", provider.context)
+
+    def test_excel_image_candidate_receives_ocr_description_and_asset_status(self):
+        """Excel image-heavy candidates keep OCR text and add optional VLM description metadata."""
+        image = CanonicalNode(node_id="excel-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/excel.png", "ocr_text": "RADAR PAINT AREA",
+                        "needs_vision_description": True, "nearby_text": "Row 40: Radar Paint Requirement",
+                        "image_storage_status": "stored"},
+            provenance=Provenance(document_id="doc", source_type=SourceType.XLSX, version="v1",
+                                  parent_node_id="sheet", sheet_name="Radar Sensor"))
+
+        class FakeVisionProvider:
+            deployment = "gpt-4o-vision"
+
+            def describe(self, image_path, *, context):
+                self.context = context
+                return "Diagram shows radar paint requirement zones and visible labels."
+
+        with patch.object(Path, "is_file", return_value=True):
+            with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "true",
+                                           "JLR_IMAGE_DESCRIPTION_SCOPE": "vision_candidates"}):
+                provider = FakeVisionProvider()
+                count = ImageDescriptionEnrichment(provider).apply(document([image]))
+
+        self.assertEqual(count, 1)
+        self.assertEqual(image.attributes["ocr_text"], "RADAR PAINT AREA")
+        self.assertEqual(image.attributes["image_description_status"], "success")
+        self.assertIn("Radar Paint Requirement", provider.context)
+        VisualAssetRegistry().apply(document([image]))
+        self.assertEqual(image.attributes["visual_assets"][0]["status"], "description_success")
+
+    def test_vlm_transcription_is_used_when_ocr_has_no_text(self):
+        """VLM can supply visible image text when OCR fails or finds no text."""
+        image = CanonicalNode(node_id="excel-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/excel.png", "ocr_status": "no_text", "ocr_text": "",
+                        "needs_vision_description": True, "nearby_text": "Row 40: Radar Paint Requirement"},
+            provenance=Provenance(document_id="doc", source_type=SourceType.XLSX, version="v1",
+                                  parent_node_id="sheet", sheet_name="Radar Sensor"))
+
+        class FakeVisionProvider:
+            deployment = "gpt-4o-vision"
+
+            def describe(self, image_path, *, context):
+                return {"visible_text": "RADAR PAINT REQUIREMENT ZONE",
+                        "description": "Diagram shows radar paint area restrictions.",
+                        "uncertainty": "", "confidence": "high"}
+
+        with patch.object(Path, "is_file", return_value=True):
+            with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "true",
+                                           "JLR_IMAGE_DESCRIPTION_SCOPE": "vision_candidates"}):
+                count = ImageDescriptionEnrichment(FakeVisionProvider()).apply(document([image]))
+
+        self.assertEqual(count, 1)
+        self.assertEqual(image.attributes["ocr_text"], "")
+        self.assertEqual(image.attributes["vlm_transcribed_text"], "RADAR PAINT REQUIREMENT ZONE")
+        self.assertEqual(image.attributes["vlm_confidence"], "high")
+        chunks = ChunkingService().build(document([image])).chunks
+        self.assertEqual(chunks[0].chunk_type.value, "visual")
+        self.assertIn("VLM transcribed visible text: RADAR PAINT REQUIREMENT ZONE", chunks[0].content_text)
+
+    def test_required_vlm_candidate_is_blocked_when_description_is_disabled(self):
+        """Image-heavy content is preserved but blocked from embedding when required VLM is unavailable."""
+        image = CanonicalNode(node_id="excel-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/excel.png", "ocr_text": "",
+                        "needs_vision_description": True, "nearby_text": "Row 40: Radar Paint Requirement"},
+            provenance=Provenance(document_id="doc", source_type=SourceType.XLSX, version="v1",
+                                  parent_node_id="sheet", sheet_name="Radar Sensor"))
+        source = document([image])
+        with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "false"}):
+            self.assertEqual(ImageDescriptionEnrichment().apply(source), 0)
+
+        self.assertTrue(image.attributes["requires_review"])
+        self.assertFalse(image.attributes["retrieval_allowed"])
+        result = ChunkingService().build(source)
+        self.assertEqual(result.chunks, [])
+        self.assertEqual(result.rejected[0].node_id, "excel-image")
+
+    def test_image_description_loads_dotenv_before_enabled_check(self):
+        """The VLM enable flag can come from .env, not only preloaded process env."""
+        image = CanonicalNode(node_id="excel-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/excel.png", "ocr_text": "",
+                        "needs_vision_description": True},
+            provenance=Provenance(document_id="doc", source_type=SourceType.XLSX, version="v1",
+                                  parent_node_id="sheet", sheet_name="Radar Sensor"))
+
+        class FakeVisionProvider:
+            deployment = "gpt-4o-vision"
+
+            def describe(self, image_path, *, context):
+                return {"visible_text": "VISIBLE LABEL", "description": "Diagram description.",
+                        "uncertainty": "", "confidence": "high"}
+
+        with patch.object(Path, "is_file", return_value=True):
+            with patch("backend.ingestion.enrichment.image_description.AzureOpenAIVisionDescriptionProvider._load_dotenv_if_available") as load_dotenv:
+                with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "true",
+                                               "JLR_IMAGE_DESCRIPTION_SCOPE": "vision_candidates"}, clear=True):
+                    count = ImageDescriptionEnrichment(FakeVisionProvider()).apply(document([image]))
+
+        load_dotenv.assert_called_once()
+        self.assertEqual(count, 1)
+        self.assertEqual(image.attributes["vlm_transcribed_text"], "VISIBLE LABEL")
+
+    def test_pptx_image_only_slide_uses_required_vlm_policy(self):
+        """PowerPoint diagram-heavy slides follow the same OCR-failover-to-VLM rule."""
+        image = CanonicalNode(node_id="ppt-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/ppt.png", "ocr_status": "no_text", "ocr_text": ""},
+            provenance=Provenance(document_id="doc", source_type=SourceType.PPTX, version="v1",
+                                  parent_node_id="slide", slide_number=22))
+        slide = CanonicalNode(node_id="slide", node_type=NodeType.SLIDE, title="Slide 22", children=[image],
+            provenance=Provenance(document_id="doc", source_type=SourceType.PPTX, version="v1",
+                                  parent_node_id="root", slide_number=22))
+        source = typed_document([slide], SourceType.PPTX, DocumentFamily.SLIDE_BASED)
+
+        with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "false"}):
+            ImageDescriptionEnrichment().apply(source)
+
+        self.assertTrue(image.attributes["needs_vision_description"])
+        self.assertTrue(image.attributes["requires_review"])
+        self.assertFalse(image.attributes["retrieval_allowed"])
+
+    def test_pdf_required_vlm_image_can_create_visual_chunk_after_success(self):
+        """PDF images with weak local text can become visual chunks after VLM transcription."""
+        image = CanonicalNode(node_id="pdf-image", node_type=NodeType.IMAGE,
+            attributes={"saved_path": "storage/visual-assets/pdf.png", "ocr_status": "failed", "ocr_text": ""},
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1",
+                                  parent_node_id="page", page_number=2))
+        page = CanonicalNode(node_id="page", node_type=NodeType.PAGE, title="Page 2", children=[image],
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1",
+                                  parent_node_id="root", page_number=2))
+        source = typed_document([page], SourceType.PDF, DocumentFamily.HIERARCHICAL)
+
+        class FakeVisionProvider:
+            deployment = "gpt-4o-vision"
+
+            def describe(self, image_path, *, context):
+                return {"visible_text": "VOLUME RESISTIVITY 10^12 OHM CM",
+                        "description": "Material datasheet figure containing electrical property labels.",
+                        "uncertainty": "", "confidence": "high"}
+
+        with patch.object(Path, "is_file", return_value=True):
+            with patch.dict("os.environ", {"JLR_IMAGE_DESCRIPTION": "true",
+                                           "JLR_IMAGE_DESCRIPTION_SCOPE": "vision_candidates"}):
+                ImageDescriptionEnrichment(FakeVisionProvider()).apply(source)
+
+        self.assertEqual(image.attributes["vlm_transcribed_text"], "VOLUME RESISTIVITY 10^12 OHM CM")
+        self.assertNotIn("requires_review", image.attributes)
+        chunks = ChunkingService().build(source).chunks
+        self.assertEqual(chunks[0].chunk_type.value, "visual")
+        self.assertIn("VOLUME RESISTIVITY", chunks[0].content_text)
+
+    def test_pdf_image_ocr_persists_asset_before_standard_ocr(self):
+        """PDF image nodes get saved_path before OCR/VLM enrichment uses them."""
+        image = CanonicalNode(node_id="pdf-image", node_type=NodeType.IMAGE,
+            attributes={"xref": 17, "extension": "png"},
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1",
+                                  parent_node_id="page", page_number=2))
+        source = typed_document([image], SourceType.PDF, DocumentFamily.HIERARCHICAL)
+
+        class FakeOcr:
+            def __call__(self, image_bytes):
+                return type("OcrResult", (), {"txts": ("LOGO TEXT",), "scores": (0.94,), "boxes": None})()
+
+        def fake_persist(self, document, image_nodes):
+            image_nodes[0].attributes.update({
+                "saved_path": "storage/visual-assets/adas/doc/v1/page_002_image_001_abcd.png",
+                "image_storage_status": "stored",
+                "image_persistence_method": "pdf_xref",
+            })
+
+        with patch.object(ImageOcrEnrichment, "_persist_pdf_images", fake_persist):
+            with patch.object(Path, "is_file", return_value=True):
+                with patch.object(Path, "read_bytes", return_value=b"fake-pdf-image"):
+                    count = ImageOcrEnrichment(ocr_factory=FakeOcr).apply(source)
+
+        self.assertEqual(count, 1)
+        self.assertEqual(image.attributes["image_persistence_method"], "pdf_xref")
+        self.assertEqual(image.attributes["ocr_text"], "LOGO TEXT")
 
     def test_explicit_policy_override_wins_over_generic_column_rules(self):
         """Each agent can allow a business-specific column without modifying shared code."""
