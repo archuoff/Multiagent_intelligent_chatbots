@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function ConversationSidebar({
   sessions,
   activeSessionId,
@@ -6,6 +8,8 @@ export default function ConversationSidebar({
   onDeleteSession,
   onBackToAgents,
 }) {
+  const [collapsed, setCollapsed] = useState(false);
+
   function handleDelete(event, sessionId) {
     event.stopPropagation();
     if (window.confirm("Delete this chat? This can't be undone.")) {
@@ -13,11 +17,50 @@ export default function ConversationSidebar({
     }
   }
 
+  if (collapsed) {
+    return (
+      <div className="conversation-sidebar collapsed">
+        <button
+          type="button"
+          className="sidebar-collapse-btn"
+          title="Expand sidebar"
+          aria-label="Expand sidebar"
+          onClick={() => setCollapsed(false)}
+        >
+          &raquo;
+        </button>
+        <button type="button" className="sidebar-icon-btn" title="New chat" aria-label="New chat" onClick={onNewChat}>
+          +
+        </button>
+        <button
+          type="button"
+          className="sidebar-icon-btn"
+          title="Back to all agents"
+          aria-label="Back to all agents"
+          onClick={onBackToAgents}
+        >
+          &larr;
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="conversation-sidebar">
-      <button className="new-chat-btn" onClick={onNewChat}>
-        + New chat
-      </button>
+      <div className="sidebar-top-row">
+        <button className="new-chat-btn" onClick={onNewChat}>
+          + New chat
+        </button>
+        <button
+          type="button"
+          className="sidebar-collapse-btn"
+          title="Collapse sidebar"
+          aria-label="Collapse sidebar"
+          onClick={() => setCollapsed(true)}
+        >
+          &laquo;
+        </button>
+      </div>
       <div className="conversation-list">
         {sessions.map((session) => (
           <div
