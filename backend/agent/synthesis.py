@@ -40,13 +40,15 @@ _NO_CONTEXT_ANSWER = "I couldn't find anything relevant to answer that in the kn
 _LLM_FAILURE_ANSWER = "I found relevant information but couldn't generate an answer right now. Please try again."
 
 
-def synthesize_answer(query: str, chunks: list[RetrievedChunk],
-                       chat_client: AzureOpenAIChatClient | None = None) -> dict:
-    """Builds a source-grounded answer from the top reranked chunks, or a safe fallback message."""
-    top_chunks = chunks[:_MAX_CONTEXT_CHUNKS]
-    if not top_chunks:
-        return {"answer": _NO_CONTEXT_ANSWER, "sources": [], "model_used": None}
+def build_synthesis_messages(query: str, chunks: list[RetrievedChunk]) -> tuple[list[dict[str, str]], list[dict]]:
+    """Builds the synthesis prompt messages and parallel source-citation list.
 
+    Shared by synchronous synthesize_answer() and the streaming
+    stream_answer_tokens() generator so both paths build identical context
+    from identical chunks -- the only difference is how the LLM response is
+    consumed (one string vs. a token stream).
+    """
+    top_chunks = chunks[:_MAX_CONTEXT_CHUNKS]
     context_blocks = []
     sources = []
     for index, chunk in enumerate(top_chunks, start=1):
@@ -62,16 +64,47 @@ def synthesize_answer(query: str, chunks: list[RetrievedChunk],
             "image_path": chunk.image_path, "visual_object_type": chunk.visual_object_type,
             "score": chunk.rerank_score if chunk.rerank_score is not None else chunk.score,
         })
-
-    client = chat_client or get_chat_client()
     messages = [{"role": "system", "content": SYNTHESIS_SYSTEM_PROMPT},
         {"role": "user", "content": f"Context:\n\n{chr(10).join(context_blocks)}\n\nQuestion: {query}"}]
+    return messages, sources
+
+
+def synthesize_answer(query: str, chunks: list[RetrievedChunk],
+                       chat_client: AzureOpenAIChatClient | None = None) -> dict:
+    """Builds a source-grounded answer from the top reranked chunks, or a safe fallback message."""
+    if not chunks:
+        return {"answer": _NO_CONTEXT_ANSWER, "sources": [], "model_used": None}
+
+    messages, sources = build_synthesis_messages(query, chunks)
+    client = chat_client or get_chat_client()
     try:
         answer = client.complete(messages, temperature=0.1)
     except Exception as error:
         logger.error(f"[synthesize_answer] LLM call failed: {error}")
         return {"answer": _LLM_FAILURE_ANSWER, "sources": sources, "model_used": None}
     return {"answer": answer, "sources": sources, "model_used": client.deployment}
+
+
+def stream_answer_tokens(query: str, chunks: list[RetrievedChunk], chat_client: AzureOpenAIChatClient | None = None):
+    """Yields the answer incrementally as text deltas, for the streaming /chat/stream endpoint.
+
+    Mirrors synthesize_answer()'s prompt construction exactly (via
+    build_synthesis_messages) so a streamed answer is built from the same
+    context a non-streamed call would use. On an LLM failure mid-stream,
+    yields the same fallback message synthesize_answer() would have
+    returned, so the client still ends up with a sensible final answer.
+    """
+    if not chunks:
+        yield _NO_CONTEXT_ANSWER
+        return
+
+    messages, _sources = build_synthesis_messages(query, chunks)
+    client = chat_client or get_chat_client()
+    try:
+        yield from client.stream_complete(messages, temperature=0.1)
+    except Exception as error:
+        logger.error(f"[stream_answer_tokens] LLM call failed: {error}")
+        yield _LLM_FAILURE_ANSWER
 
 
 def _visual_context(chunk: RetrievedChunk) -> str:

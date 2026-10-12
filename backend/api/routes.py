@@ -7,16 +7,23 @@ generation stay inside the agent graph/retrieval modules.
 
 from __future__ import annotations
 
+import json
 import logging
 from uuid import uuid4
-from typing import Any
+from typing import Any, Generator
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 
 from backend.agent.config import get_agent_config, load_all_configs
-from backend.agent.graph import get_compiled_graph
+from backend.agent.decomposition import decompose_query
+from backend.agent.graph import get_compiled_graph, make_retrieve_node, make_rerank_node, _default_retrieval_service
+from backend.agent.nodes import classify_intent
+from backend.agent.synthesis import stream_answer_tokens
 from backend.api.dependencies import CurrentUser, get_current_user
 from backend.api.schemas import AgentSummary, ChatRequest, ChatResponse, Citation, RetrievedContext
+from backend.retrieval.contracts import RetrievedChunk
+from backend.retrieval.reranker import get_reranker
 
 logger = logging.getLogger(__name__)
 
@@ -89,6 +96,113 @@ def chat(request: ChatRequest, user: CurrentUser = Depends(get_current_user)) ->
         ) from error
 
     return _chat_response_from_state(request, result, session_id)
+
+
+@router.post("/chat/stream", tags=["chat"])
+def chat_stream(request: ChatRequest, user: CurrentUser = Depends(get_current_user)) -> StreamingResponse:
+    """Streams one answer as Server-Sent Events instead of waiting for the full response.
+
+    Kept entirely separate from POST /chat (which keeps working unchanged) --
+    this orchestrates the same classify -> (decompose) -> retrieve -> rerank
+    -> synthesize steps by calling the same node functions graph.py's
+    StateGraph wires together, but drives them directly in sequence instead
+    of through a compiled-graph invoke(), since only the final synthesis
+    step actually benefits from token-level streaming. Conversation history
+    is read from and written back to the same LangGraph checkpointer/thread
+    POST /chat uses (get_state/update_state), so history stays consistent
+    whichever endpoint a given turn used.
+    """
+    message = request.message.strip()
+    if not message:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Message cannot be empty.")
+    try:
+        get_agent_config(request.agent_id)
+    except KeyError as error:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
+
+    session_id = request.session_id or uuid4().hex
+    return StreamingResponse(
+        _chat_stream_events(request, user, message, session_id), media_type="text/event-stream")
+
+
+def _sse(event: str, data: dict[str, Any]) -> str:
+    """Formats one Server-Sent Event frame."""
+    return f"event: {event}\ndata: {json.dumps(data)}\n\n"
+
+
+def _chat_stream_events(request: ChatRequest, user: CurrentUser, message: str, session_id: str) -> Generator[str, None, None]:
+    """Generator driving the SSE response body for POST /chat/stream."""
+    graph = get_compiled_graph()
+    graph_config = {"configurable": {"thread_id": session_id}}
+    try:
+        history = _resolve_history(graph, graph_config, request)
+        state: dict[str, Any] = {
+            "agent_id": request.agent_id,
+            "user_query": message,
+            "conversation_history": history,
+            "principal_group_codes": list(user.groups),
+            "principal_user_id": user.user_id,
+        }
+        state.update(classify_intent(state))
+
+        if state["intent"] != "Domain_qn":
+            if state.get("needs_clarification"):
+                answer_text = state.get("ask_user") or "Could you clarify your question?"
+                response_status = "needs_clarification"
+            else:
+                answer_text = state.get("answer") or "I couldn't generate an answer for that request."
+                response_status = "success"
+            yield _sse("sources", {"retrieved_context": []})
+            yield _sse("delta", {"text": answer_text})
+            yield _sse("done", {"answer": answer_text, "session_id": session_id, "status": response_status})
+            _persist_turn(graph, graph_config, message, answer_text)
+            return
+
+        state["sub_queries"] = decompose_query(state.get("resolved_query") or message) if state.get("requires_decomposition") else []
+        state.update(make_retrieve_node(_default_retrieval_service())(state))
+        state.update(make_rerank_node(get_reranker())(state))
+
+        reranked = state.get("reranked_chunks") or []
+        contexts = [_context_from_chunk(item) for item in reranked]
+        yield _sse("sources", {"retrieved_context": [context.model_dump() for context in contexts]})
+
+        query_text = state.get("resolved_query") or message
+        chunks = [RetrievedChunk(**item) for item in reranked]
+        full_answer = ""
+        for token in stream_answer_tokens(query_text, chunks):
+            full_answer += token
+            yield _sse("delta", {"text": token})
+
+        if not full_answer:
+            full_answer = "I couldn't generate an answer for that request."
+        yield _sse("done", {"answer": full_answer, "session_id": session_id, "status": "success"})
+        _persist_turn(graph, graph_config, message, full_answer)
+    except Exception:
+        logger.exception("chat_stream_error")
+        yield _sse("error", {"detail": "Query pipeline failed. Please check backend logs."})
+
+
+def _resolve_history(graph: Any, graph_config: dict[str, Any], request: ChatRequest) -> list[dict[str, str]]:
+    """Loads prior turns from the checkpointer for an existing session, matching
+    POST /chat's own rule (ignore client-sent history once a session_id exists)."""
+    if not request.session_id:
+        return _safe_history(request.conversation_history)
+    snapshot = graph.get_state(graph_config)
+    if snapshot and snapshot.values:
+        return snapshot.values.get("conversation_history") or []
+    return []
+
+
+def _persist_turn(graph: Any, graph_config: dict[str, Any], user_query: str, assistant_text: str) -> None:
+    """Appends the completed turn to the checkpointer, mirroring graph.py's _record_turn_node
+    so history stays identical regardless of which endpoint produced a given turn."""
+    messages: list[dict[str, str]] = []
+    if user_query.strip():
+        messages.append({"role": "user", "content": user_query.strip()})
+    if assistant_text.strip():
+        messages.append({"role": "assistant", "content": assistant_text.strip()})
+    if messages:
+        graph.update_state(graph_config, {"conversation_history": messages})
 
 
 def _safe_history(history: list[dict[str, str]]) -> list[dict[str, str]]:

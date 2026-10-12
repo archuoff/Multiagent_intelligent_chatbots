@@ -41,6 +41,20 @@ class AzureOpenAIChatClient:
         response = self._client.chat.completions.create(model=self.deployment, messages=messages, temperature=temperature)
         return response.choices[0].message.content or ""
 
+    def stream_complete(self, messages: list[dict[str, str]], *, temperature: float = 0.1):
+        """Yields the assistant's text content incrementally as Azure generates it.
+
+        Used only by the streaming /chat/stream endpoint; synchronous call sites
+        (intent classification, decomposition) keep using complete()."""
+        stream = self._client.chat.completions.create(
+            model=self.deployment, messages=messages, temperature=temperature, stream=True)
+        for chunk in stream:
+            if not chunk.choices:
+                continue
+            delta = chunk.choices[0].delta.content
+            if delta:
+                yield delta
+
     @staticmethod
     def _load_dotenv_if_available() -> None:
         """Loads local variables for application execution without overwriting process settings."""
