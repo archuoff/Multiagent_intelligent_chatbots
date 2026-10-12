@@ -20,6 +20,60 @@ export async function postChat(apiBase, payload) {
   });
 }
 
+// Streams one answer from POST /chat/stream as Server-Sent Events. EventSource
+// can't be used here since it only supports GET, not a POST with a JSON body,
+// so the response body's ReadableStream is parsed by hand instead. Yields
+// {event, data} objects in arrival order: "sources" (once, with
+// retrieved_context), "delta" (repeated, {text}), then "done" ({answer,
+// session_id, status}) or "error" ({detail}).
+export async function* streamChat(apiBase, payload) {
+  const response = await fetch(apiBase + "/chat/stream", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok || !response.body) {
+    const detail = await safeErrorDetail(response);
+    throw new Error("Request failed (" + response.status + "): " + detail);
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let boundary = buffer.indexOf("\n\n");
+      while (boundary !== -1) {
+        const record = buffer.slice(0, boundary);
+        buffer = buffer.slice(boundary + 2);
+        const parsed = parseSseRecord(record);
+        if (parsed) yield parsed;
+        boundary = buffer.indexOf("\n\n");
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
+
+function parseSseRecord(record) {
+  let eventName = "message";
+  const dataLines = [];
+  for (const line of record.split("\n")) {
+    if (line.startsWith("event:")) eventName = line.slice(6).trim();
+    else if (line.startsWith("data:")) dataLines.push(line.slice(5).trim());
+  }
+  if (dataLines.length === 0) return null;
+  try {
+    return { event: eventName, data: JSON.parse(dataLines.join("\n")) };
+  } catch {
+    return null;
+  }
+}
+
 export async function safeErrorDetail(response) {
   try {
     const body = await response.json();

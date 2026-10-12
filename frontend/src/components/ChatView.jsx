@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { avatarColor, initials } from "../lib/avatar";
-import { postChat, safeErrorDetail, sourcesFromContext } from "../lib/api";
+import { streamChat, sourcesFromContext } from "../lib/api";
 import ConversationSidebar from "./ConversationSidebar";
 import MessageList from "./MessageList";
 import Composer from "./Composer";
@@ -8,10 +8,12 @@ import Composer from "./Composer";
 export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }) {
   const [inputValue, setInputValue] = useState("");
   const [typing, setTyping] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState(null);
 
   const sessions = sessionsApi.getSessionsForAgent(agent.agent_id);
   const activeSession = sessionsApi.getActiveSession(agent.agent_id);
   const messages = activeSession ? activeSession.messages : [];
+  const displayMessages = streamingMessage ? [...messages, streamingMessage] : messages;
 
   const description =
     agent.domain_description && agent.domain_description !== agent.display_name ? agent.domain_description : "";
@@ -30,36 +32,37 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
       .map((item) => ({ role: item.role, content: item.content }))
       .slice(-10);
 
+    let sources = [];
+    let answerText = "";
+
     try {
-      const response = await postChat(apiBase, {
+      for await (const { event, data } of streamChat(apiBase, {
         agent_id: agent.agent_id,
         message: text,
         session_id: sessionId,
         conversation_history: history,
-      });
-
-      if (!response.ok) {
-        const detail = await safeErrorDetail(response);
-        sessionsApi.appendMessage(agent.agent_id, sessionId, {
-          role: "error",
-          content: "Request failed (" + response.status + "): " + detail,
-        });
-        return;
+      })) {
+        if (event === "sources") {
+          sources = sourcesFromContext(data.retrieved_context);
+        } else if (event === "delta") {
+          answerText += data.text;
+          setTyping(false);
+          setStreamingMessage({ role: "assistant", content: answerText, sources });
+        } else if (event === "error") {
+          throw new Error(data.detail || "Streaming failed.");
+        }
+        // "done" carries the same final answer already assembled from delta
+        // events -- nothing further to apply beyond what's already streamed in.
       }
-
-      const data = await response.json();
-      sessionsApi.appendMessage(agent.agent_id, sessionId, {
-        role: "assistant",
-        content: data.answer,
-        sources: sourcesFromContext(data.retrieved_context),
-      });
+      sessionsApi.appendMessage(agent.agent_id, sessionId, { role: "assistant", content: answerText, sources });
     } catch (error) {
       sessionsApi.appendMessage(agent.agent_id, sessionId, {
         role: "error",
-        content: "Could not reach the backend: " + error.message,
+        content: answerText ? answerText + "\n\n(Response was interrupted: " + error.message + ")" : "Could not reach the backend: " + error.message,
       });
     } finally {
       setTyping(false);
+      setStreamingMessage(null);
     }
   }
 
@@ -83,8 +86,8 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
             <p>{description}</p>
           </div>
         </div>
-        <MessageList apiBase={apiBase} agentName={agent.display_name} messages={messages} typing={typing} />
-        <Composer value={inputValue} onChange={setInputValue} onSend={handleSend} disabled={typing} />
+        <MessageList apiBase={apiBase} agentName={agent.display_name} messages={displayMessages} typing={typing} />
+        <Composer value={inputValue} onChange={setInputValue} onSend={handleSend} disabled={typing || !!streamingMessage} />
       </div>
     </div>
   );
