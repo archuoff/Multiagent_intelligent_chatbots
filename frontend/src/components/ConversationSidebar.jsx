@@ -1,4 +1,18 @@
-export default function ConversationSidebar({ sessions, activeSessionId, onNewChat, onSelectSession, onBackToAgents }) {
+export default function ConversationSidebar({
+  sessions,
+  activeSessionId,
+  onNewChat,
+  onSelectSession,
+  onDeleteSession,
+  onBackToAgents,
+}) {
+  function handleDelete(event, sessionId) {
+    event.stopPropagation();
+    if (window.confirm("Delete this chat? This can't be undone.")) {
+      onDeleteSession(sessionId);
+    }
+  }
+
   return (
     <div className="conversation-sidebar">
       <button className="new-chat-btn" onClick={onNewChat}>
@@ -12,7 +26,16 @@ export default function ConversationSidebar({ sessions, activeSessionId, onNewCh
             onClick={() => onSelectSession(session.sessionId)}
             title={session.title}
           >
-            {session.title || "New chat"}
+            <span className="conversation-item-title">{session.title || "New chat"}</span>
+            <button
+              type="button"
+              className="conversation-delete-btn"
+              title="Delete chat"
+              aria-label="Delete chat"
+              onClick={(event) => handleDelete(event, session.sessionId)}
+            >
+              &times;
+            </button>
           </div>
         ))}
       </div>

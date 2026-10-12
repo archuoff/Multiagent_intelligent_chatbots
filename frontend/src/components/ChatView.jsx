@@ -70,6 +70,7 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
         activeSessionId={activeSession ? activeSession.sessionId : null}
         onNewChat={() => sessionsApi.createNewSession(agent.agent_id)}
         onSelectSession={(sessionId) => sessionsApi.setActiveSession(agent.agent_id, sessionId)}
+        onDeleteSession={(sessionId) => sessionsApi.deleteSession(agent.agent_id, sessionId)}
         onBackToAgents={onBackToAgents}
       />
       <div className="chat-main">

@@ -84,6 +84,15 @@ export function useSessions() {
     });
   }, []);
 
+  const deleteSession = useCallback((agentId, sessionId) => {
+    setSessions((prev) => {
+      const remaining = (prev[agentId] || []).filter((item) => item.sessionId !== sessionId);
+      if (remaining.length === 0) return { ...prev, [agentId]: [makeSession()] };
+      if (!remaining.some((item) => item.active)) remaining[0] = { ...remaining[0], active: true };
+      return { ...prev, [agentId]: remaining };
+    });
+  }, []);
+
   const getSessionsForAgent = useCallback((agentId) => sessions[agentId] || [], [sessions]);
 
   const getActiveSession = useCallback(
@@ -94,5 +103,13 @@ export function useSessions() {
     [sessions],
   );
 
-  return { ensureAgentSessions, createNewSession, setActiveSession, appendMessage, getSessionsForAgent, getActiveSession };
+  return {
+    ensureAgentSessions,
+    createNewSession,
+    setActiveSession,
+    appendMessage,
+    deleteSession,
+    getSessionsForAgent,
+    getActiveSession,
+  };
 }
