@@ -14,5 +14,12 @@ storage/test-temp/
 output/
 storage/qdrant/
 
+# new_ingestion: source documents, downloaded ML model weights, and
+# generated artifacts are not source code either.
+new_ingestion/data/
+new_ingestion/models/
+new_ingestion.zip
+xlsx_artifacts/
+
 # Local credentials and deployment settings must never be committed.
 .env
