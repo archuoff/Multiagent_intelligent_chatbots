@@ -75,9 +75,6 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
       />
       <div className="chat-main">
         <div className="chat-header">
-          <button className="back-btn" onClick={onBackToAgents}>
-            &larr; Back
-          </button>
           <div className="agent-avatar" style={{ background: avatarColor(agent.agent_id) }}>
             {initials(agent.display_name)}
           </div>

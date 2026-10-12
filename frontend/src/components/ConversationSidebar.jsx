@@ -40,7 +40,7 @@ export default function ConversationSidebar({
         ))}
       </div>
       <button className="back-to-agents-btn" onClick={onBackToAgents}>
-        &larr; All agents
+        &larr; Back
       </button>
     </div>
   );
