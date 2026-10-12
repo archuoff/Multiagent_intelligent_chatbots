@@ -1,3 +1,5 @@
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { visualAssetUrl } from "../lib/api";
 import SourceList from "./SourceList";
 
@@ -6,7 +8,9 @@ const IMAGE_PATH_PATTERN = /storage\/visual-assets\/[^\s]+?\.(?:png|jpg|jpeg|web
 // Splits answer text around any storage/visual-assets/...png|jpg|jpeg|webp
 // reference so it can render as safe React elements (an inline image card)
 // instead of frontend-old's string-built innerHTML -- same visible result,
-// no HTML-injection surface.
+// no HTML-injection surface. Surrounding text segments are then rendered as
+// markdown (the model's numbered sections/bullets/bold come through as real
+// structure instead of one flat paragraph of plain text).
 function splitAnswerText(text) {
   const parts = [];
   let lastIndex = 0;
@@ -25,7 +29,9 @@ function AnswerText({ apiBase, content }) {
     <div className="answer-text">
       {parts.map((part, index) =>
         part.type === "text" ? (
-          <span key={index}>{part.value}</span>
+          <ReactMarkdown key={index} remarkPlugins={[remarkGfm]}>
+            {part.value}
+          </ReactMarkdown>
         ) : (
           <div key={index} className="retrieved-image-card">
             <img src={visualAssetUrl(apiBase, part.path)} alt="Retrieved document visual" />
