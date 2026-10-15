@@ -21,6 +21,11 @@ class FieldPolicyResolver:
 
     _REFERENCE_PATTERN = re.compile(r"\b(link|url|webinar|presentation|ppt|pdf|document path|file path|reference location)\b", re.IGNORECASE)
     _INTERNAL_PATTERN = re.compile(r"\b(internal note|backend|system field|record id|database id|created by|modified by|internal owner|record owner|system owner|email|password|token|secret)\b", re.IGNORECASE)
+    _PERSON_DATE_PATTERN = re.compile(
+        r"\b(raised by|reported by|author|assigned to|owner name|engineer name|"
+        r"(raised|reported|closed|resolved|updated)[\s_]*(date|on|at))\b",
+        re.IGNORECASE,
+    )
 
     def __init__(self, overrides: Mapping[str, FieldPolicy | dict] | None = None) -> None:
         """Loads explicit per-agent column decisions ahead of the conservative defaults."""
@@ -38,6 +43,9 @@ class FieldPolicyResolver:
         if self._INTERNAL_PATTERN.search(label):
             return FieldPolicy(field_name=label, use=FieldUse.INTERNAL_ONLY, retrieval_allowed=False,
                 answer_visible=False, reason="Column name indicates operational or internal-only data.")
+        if self._PERSON_DATE_PATTERN.search(label):
+            return FieldPolicy(field_name=label, use=FieldUse.INTERNAL_ONLY, retrieval_allowed=True,
+                answer_visible=False, reason="Column name indicates personal attribution or a tracking date, excluded from synthesized answers.")
         return FieldPolicy(field_name=label, use=FieldUse.STANDARD, retrieval_allowed=True,
             answer_visible=True, reason="No restrictive field policy matched the column name.")
 

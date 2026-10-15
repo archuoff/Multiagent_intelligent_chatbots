@@ -59,6 +59,24 @@ class CanonicalEnrichmentTests(unittest.TestCase):
         self.assertEqual(row.children[2].attributes["references"][0]["status"], "unverified_remote")
         self.assertFalse(row.children[2].attributes["references"][0]["answer_eligible"])
 
+    def test_field_policy_hides_person_attribution_and_tracking_dates(self):
+        """Issue-tracker reporter names and raised/closed dates stay searchable but answer-hidden."""
+        row = node("row", NodeType.TABLE_ROW, parent="table", children=[
+            node("raised_by", NodeType.TABLE_CELL, text="Sagar Gagare", parent="row", attributes={"column_name": "Raised By", "value": "Sagar Gagare"}),
+            node("raised_date", NodeType.TABLE_CELL, text="2025-05-12", parent="row", attributes={"column_name": "Raised Date", "value": "2025-05-12"}),
+            node("closed_date", NodeType.TABLE_CELL, text="2025-07-21", parent="row", attributes={"column_name": "Closed Date", "value": "2025-07-21"}),
+            node("description", NodeType.TABLE_CELL, text="Orange peel on RH D Post finisher", parent="row", attributes={"column_name": "Issue Description", "value": "Orange peel on RH D Post finisher"}),
+        ])
+        source = document([node("table", NodeType.TABLE, parent="root", children=[row])])
+        CanonicalEnrichmentService().enrich(source)
+        for cell in row.children[:3]:
+            policy = cell.attributes["field_policy"]
+            self.assertFalse(policy["answer_visible"])
+            self.assertTrue(policy["retrieval_allowed"])
+        description_policy = row.children[3].attributes["field_policy"]
+        self.assertTrue(description_policy["answer_visible"])
+        self.assertTrue(description_policy["retrieval_allowed"])
+
     def test_reference_field_supports_windows_and_unc_paths_without_network_access(self):
         """Document locations are registered while network shares remain deliberately unverified."""
         row = node("row", NodeType.TABLE_ROW, parent="table", children=[
