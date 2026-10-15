@@ -6,6 +6,21 @@ export function normalizeApiBase(raw) {
   return (raw || "").trim().replace(/\/+$/, "");
 }
 
+// The synthesis LLM is instructed to put each numbered list item on its own
+// line, but it does not reliably comply -- it sometimes collapses a list into
+// one inline run like "...: 1. A [1] 2. B [2] 3. C [3]". Markdown requires a
+// newline before each list marker to render it as a list at all, so a prompt
+// fix alone can't guarantee this; this normalizer deterministically reflows
+// that specific pattern (a citation bracket immediately followed by the next
+// "N. ") onto separate lines before the text reaches ReactMarkdown. Text that
+// already has real line breaks is untouched (the \]\s\d+\.\s check is false).
+export function normalizeInlineLists(text) {
+  if (!text || !/\]\s\d+\.\s/.test(text)) return text;
+  return text
+    .replace(/:\s(\d+\.\s)/, ":\n$1")
+    .replace(/\]\s(\d+\.\s)/g, "]\n$1");
+}
+
 export async function loadAgents(apiBase) {
   const response = await fetch(apiBase + "/agents");
   if (!response.ok) throw new Error("HTTP " + response.status);

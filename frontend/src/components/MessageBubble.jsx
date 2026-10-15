@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { visualAssetUrl } from "../lib/api";
+import { normalizeInlineLists, visualAssetUrl } from "../lib/api";
 import SourceList from "./SourceList";
 
 const IMAGE_PATH_PATTERN = /storage\/visual-assets\/[^\s]+?\.(?:png|jpg|jpeg|webp)/gi;
@@ -24,7 +24,7 @@ function splitAnswerText(text) {
 }
 
 function AnswerText({ apiBase, content }) {
-  const parts = splitAnswerText(content);
+  const parts = splitAnswerText(normalizeInlineLists(content));
   return (
     <div className="answer-text">
       {parts.map((part, index) =>

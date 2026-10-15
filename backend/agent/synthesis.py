@@ -31,10 +31,23 @@ Rules:
   context (for example a unit conversion), clearly label it as inferred,
   not quoted from a source.
 - If a context passage includes a visual asset path and the user asks for an
-  image, figure, chart, diagram, or formula screenshot, provide the visual
-  asset path from the context instead of saying the image is unavailable.
+  image, figure, chart, diagram, or formula screenshot, output that exact
+  path on its own line, unmodified -- no markdown link syntax, no
+  rewording, no truncation. Copy it character-for-character from the
+  context's "Visual asset:" line.
 - Be concise and technical -- this is for an engineer, not a general
-  audience."""
+  audience.
+
+Formatting:
+- Use markdown to structure the answer, not a single flat paragraph.
+- If the answer has multiple distinct items or steps, use a numbered or
+  bulleted list -- one item per line, not comma-joined prose.
+- If the context contains tabular/comparison data (specs, dimensions,
+  multiple named values side by side), render it as a markdown table.
+- Use short headers (##/###) only when the answer naturally has more than
+  one section; skip headers for a short, single-topic answer.
+- Keep citation markers like "[1]" attached to the specific list item or
+  table row they support, not bunched at the end of the whole answer."""
 
 _NO_CONTEXT_ANSWER = "I couldn't find anything relevant to answer that in the knowledge base."
 _LLM_FAILURE_ANSWER = "I found relevant information but couldn't generate an answer right now. Please try again."
