@@ -2,11 +2,21 @@ import { useCallback, useEffect, useState } from "react";
 import TopBar from "./components/TopBar";
 import Landing from "./components/Landing";
 import ChatView from "./components/ChatView";
+import Login from "./components/Login";
 import { loadAgents, normalizeApiBase } from "./lib/api";
 import { useSessions } from "./lib/sessions";
 import "./App.css";
 
+const AUTH_KEY = "jlr-demo-authenticated";
+
 export default function App() {
+  const [authenticated, setAuthenticated] = useState(() => {
+    try {
+      return sessionStorage.getItem(AUTH_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
   const [apiBase, setApiBase] = useState("http://localhost:8000");
   const [agents, setAgents] = useState([]);
   const [connected, setConnected] = useState(false);
@@ -52,6 +62,20 @@ export default function App() {
   }
 
   const activeAgent = agents.find((agent) => agent.agent_id === activeAgentId) || null;
+
+  function handleLoginSuccess() {
+    try {
+      sessionStorage.setItem(AUTH_KEY, "true");
+    } catch {
+      // sessionStorage unavailable (e.g. private mode) -- auth still
+      // holds for this render via state, just won't survive a refresh.
+    }
+    setAuthenticated(true);
+  }
+
+  if (!authenticated) {
+    return <Login onSuccess={handleLoginSuccess} />;
+  }
 
   return (
     <div className="app-shell">
