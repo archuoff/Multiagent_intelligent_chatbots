@@ -143,6 +143,7 @@ def _chat_stream_events(request: ChatRequest, user: CurrentUser, message: str, s
             "principal_group_codes": list(user.groups),
             "principal_user_id": user.user_id,
         }
+        yield _sse("status", {"stage": "understanding", "label": "Thinking"})
         state.update(classify_intent(state))
 
         if state["intent"] != "Domain_qn":
@@ -159,13 +160,18 @@ def _chat_stream_events(request: ChatRequest, user: CurrentUser, message: str, s
             return
 
         state["sub_queries"] = decompose_query(state.get("resolved_query") or message) if state.get("requires_decomposition") else []
+
+        yield _sse("status", {"stage": "searching", "label": "Grepping"})
         state.update(make_retrieve_node(_default_retrieval_service())(state))
+
+        yield _sse("status", {"stage": "ranking", "label": "Verifying"})
         state.update(make_rerank_node(get_reranker())(state))
 
         reranked = state.get("reranked_chunks") or []
         contexts = [_context_from_chunk(item) for item in reranked]
         yield _sse("sources", {"retrieved_context": [context.model_dump() for context in contexts]})
 
+        yield _sse("status", {"stage": "writing", "label": "Answering"})
         query_text = state.get("resolved_query") or message
         chunks = [RetrievedChunk(**item) for item in reranked]
         full_answer = ""

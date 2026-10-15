@@ -8,6 +8,7 @@ import Composer from "./Composer";
 export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }) {
   const [inputValue, setInputValue] = useState("");
   const [typing, setTyping] = useState(false);
+  const [statusSteps, setStatusSteps] = useState([]);
   const [streamingMessage, setStreamingMessage] = useState(null);
 
   const sessions = sessionsApi.getSessionsForAgent(agent.agent_id);
@@ -26,6 +27,7 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
     sessionsApi.appendMessage(agent.agent_id, sessionId, { role: "user", content: text });
     setInputValue("");
     setTyping(true);
+    setStatusSteps([]);
 
     const history = [...messages, { role: "user", content: text }]
       .filter((item) => item.role === "user" || item.role === "assistant")
@@ -42,11 +44,14 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
         session_id: sessionId,
         conversation_history: history,
       })) {
-        if (event === "sources") {
+        if (event === "status") {
+          setStatusSteps((prev) => (prev.some((step) => step.stage === data.stage) ? prev : [...prev, data]));
+        } else if (event === "sources") {
           sources = sourcesFromContext(data.retrieved_context);
         } else if (event === "delta") {
           answerText += data.text;
           setTyping(false);
+          setStatusSteps([]);
           setStreamingMessage({ role: "assistant", content: answerText, sources });
         } else if (event === "error") {
           throw new Error(data.detail || "Streaming failed.");
@@ -62,6 +67,7 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
       });
     } finally {
       setTyping(false);
+      setStatusSteps([]);
       setStreamingMessage(null);
     }
   }
@@ -78,15 +84,23 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
       />
       <div className="chat-main">
         <div className="chat-header">
-          <div className="agent-avatar" style={{ background: avatarColor(agent.agent_id) }}>
-            {initials(agent.display_name)}
-          </div>
-          <div className="chat-header-titles">
-            <h2>{agent.display_name}</h2>
-            <p>{description}</p>
+          <div className="chat-header-inner">
+            <div className="agent-avatar" style={{ background: avatarColor(agent.agent_id) }}>
+              {initials(agent.display_name)}
+            </div>
+            <div className="chat-header-titles">
+              <h2>{agent.display_name}</h2>
+              <p>{description}</p>
+            </div>
           </div>
         </div>
-        <MessageList apiBase={apiBase} agentName={agent.display_name} messages={displayMessages} typing={typing} />
+        <MessageList
+          apiBase={apiBase}
+          agentName={agent.display_name}
+          messages={displayMessages}
+          typing={typing}
+          statusSteps={statusSteps}
+        />
         <Composer value={inputValue} onChange={setInputValue} onSend={handleSend} disabled={typing || !!streamingMessage} />
       </div>
     </div>

@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 import MessageBubble from "./MessageBubble";
+import StatusTrace from "./StatusTrace";
 
-export default function MessageList({ apiBase, agentName, messages, typing }) {
+export default function MessageList({ apiBase, agentName, messages, typing, statusSteps = [] }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
     if (containerRef.current) containerRef.current.scrollTop = containerRef.current.scrollHeight;
-  }, [messages, typing]);
+  }, [messages, typing, statusSteps]);
 
   return (
     <div className="messages" ref={containerRef}>
@@ -23,13 +24,19 @@ export default function MessageList({ apiBase, agentName, messages, typing }) {
             ))}
             {typing ? (
               <div className="msg-row assistant">
-                <div className="answer-card">
-                  <div className="typing-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                {statusSteps.length ? (
+                  <div className="answer-card status-card">
+                    <StatusTrace steps={statusSteps} />
                   </div>
-                </div>
+                ) : (
+                  <div className="answer-card">
+                    <div className="typing-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : null}
           </>

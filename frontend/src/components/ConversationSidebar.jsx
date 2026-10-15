@@ -61,7 +61,9 @@ export default function ConversationSidebar({
           &laquo;
         </button>
       </div>
+      <div className="sidebar-section-label">Chats</div>
       <div className="conversation-list">
+        {sessions.length === 0 ? <div className="sidebar-empty">No conversations yet</div> : null}
         {sessions.map((session) => (
           <div
             key={session.sessionId}

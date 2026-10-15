@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { normalizeInlineLists, visualAssetUrl } from "../lib/api";
+import { normalizeCitations, normalizeInlineLists, visualAssetUrl } from "../lib/api";
 import SourceList from "./SourceList";
 
 const IMAGE_PATH_PATTERN = /storage\/visual-assets\/[^\s]+?\.(?:png|jpg|jpeg|webp)/gi;
@@ -24,7 +24,7 @@ function splitAnswerText(text) {
 }
 
 function AnswerText({ apiBase, content }) {
-  const parts = splitAnswerText(normalizeInlineLists(content));
+  const parts = splitAnswerText(normalizeCitations(normalizeInlineLists(content)));
   return (
     <div className="answer-text">
       {parts.map((part, index) =>
@@ -52,15 +52,21 @@ export default function MessageBubble({ apiBase, message }) {
     );
   }
 
+  if (message.role === "error") {
+    return (
+      <div className="msg-row assistant">
+        <div className="answer-card error-card">
+          <div className="answer-text">{message.content}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="msg-row assistant">
-      <div className={"answer-card" + (message.role === "error" ? " error-card" : "")}>
-        {message.role === "assistant" ? (
-          <AnswerText apiBase={apiBase} content={message.content} />
-        ) : (
-          <div className="answer-text">{message.content}</div>
-        )}
-        {message.role === "assistant" ? <SourceList apiBase={apiBase} sources={message.sources} /> : null}
+      <div className="answer-flow">
+        <AnswerText apiBase={apiBase} content={message.content} />
+        <SourceList apiBase={apiBase} sources={message.sources} />
       </div>
     </div>
   );

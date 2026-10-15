@@ -30,6 +30,11 @@ function SourcePreviewImage({ apiBase, source }) {
   );
 }
 
+function sourceLabel(source, index) {
+  if (source.document_title) return source.document_title;
+  return "Source " + (index + 1);
+}
+
 export default function SourceList({ apiBase, sources }) {
   const unique = dedupeSources(sources);
   if (unique.length === 0) return null;
@@ -37,19 +42,18 @@ export default function SourceList({ apiBase, sources }) {
   return (
     <div className="sources">
       <div className="sources-title">Sources</div>
-      {unique.map((source, index) => (
-        <div key={index}>
-          <div className="source-item">
-            <span className="src-dot"></span>
-            <span>
-              <span className="src-title">{source.document_title || source.document_id || "Untitled source"}</span>
-              {source.location ? <span className="src-loc"> &middot; {source.location}</span> : null}
-              {source.visual_object_type ? <span className="src-loc"> &middot; {source.visual_object_type}</span> : null}
+      <div className="source-chip-row">
+        {unique.map((source, index) => (
+          <div key={index} className="source-chip" title={source.document_id || ""}>
+            <span className="source-chip-index">{index + 1}</span>
+            <span className="source-chip-text">
+              {sourceLabel(source, index)}
+              {source.location ? <span className="source-chip-loc"> &middot; {source.location}</span> : null}
             </span>
           </div>
-          {source.image_path ? <SourcePreviewImage apiBase={apiBase} source={source} /> : null}
-        </div>
-      ))}
+        ))}
+      </div>
+      {unique.map((source, index) => (source.image_path ? <SourcePreviewImage key={index} apiBase={apiBase} source={source} /> : null))}
     </div>
   );
 }
