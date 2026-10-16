@@ -10,7 +10,13 @@ class AgentState(TypedDict):
     enhanced_query:str
     conversation_history:Annotated[list[dict], add]
 
+    principal_group_codes: list[str]  # Requesting user's active group codes, for the ACL check in retrieval.
+    principal_user_id: str  # Requesting user's id, for the allowed_users ACL check in retrieval.
+
     intent: str  # Domain_qn/normal_qn/clarification_qn
+    resolved_query: str  # Self-contained, history-resolved version of user_query.
+    requires_decomposition: bool  # Set by classify_intent; true only routes through decompose.
+    sub_queries: list[str]  # Set by decompose_query when requires_decomposition is true.
     needs_clarification: bool
     ask_user: str  # The question to ask the user for clarification.
 

@@ -1,7 +1,7 @@
 """Source parser that assembles canonical PowerPoint documents.
 
-This file uses Docling as the primary extractor for PPT/PPTX files and falls
-back to python-pptx when Docling is unavailable.
+This file uses python-pptx as the native structural source of truth for
+PPT/PPTX files and uses Docling as semantic enrichment when available.
 """
 
 from __future__ import annotations
@@ -46,37 +46,32 @@ class PowerPointParser(SourceParser):
         document_id = source.document_id or make_id("doc")
         root_node_id = make_id("document")
         docling_used = False
-        parser_name = "ppt_python_pptx_fallback_parser"
-        extraction_mode = "fallback_library"
+        parser_name = "ppt_python_pptx_native_parser"
+        extraction_mode = "native_structure"
         processing_details: dict[str, Any] = {}
         requires_review = False
 
+        native = self._fallback.extract(source.file_path)
+        extracted = native
+        warnings = list(native.warnings)
         if self._docling.is_available():
             try:
-                extracted = self._docling.extract(source.file_path)
-                native = self._fallback.extract(source.file_path)
-                if extracted.pages and {p.number for p in extracted.pages} == {p.number for p in native.pages}:
-                    from backend.ingestion.extraction.merger import ExtractionResultMerger
-                    extracted = ExtractionResultMerger().merge(extracted, native)
-                else:
-                    extracted = native
-                slide_nodes = self._build_extracted_slides(document_id, root_node_id, source, extracted)
-                warnings = list(extracted.warnings)
-                processing_details = extracted.processing_details
-                requires_review = extracted.requires_review
+                semantic = self._docling.extract(source.file_path)
+                extracted = self._enrich_native_extraction(native, semantic)
+                warnings = [*warnings, *semantic.warnings]
+                processing_details = {
+                    **semantic.processing_details,
+                    "native_extractor": native.extractor_name,
+                    "semantic_extractor": semantic.extractor_name,
+                    "pptx_reconciliation": "native_structure_with_docling_semantics",
+                }
+                requires_review = semantic.requires_review
                 docling_used = True
-                parser_name = "ppt_docling_parser"
-                extraction_mode = extracted.extraction_mode if extracted is not native else "fallback_library"
-                if extracted is native:
-                    parser_name = "ppt_python_pptx_recovery_parser"
+                parser_name = "ppt_native_docling_semantic_parser"
+                extraction_mode = "native_structure_semantic_enriched"
             except Exception as error:
-                fallback = self._fallback.extract(source.file_path)
-                slide_nodes = self._build_extracted_slides(document_id, root_node_id, source, fallback)
-                warnings = [f"Docling PPTX extraction failed; python-pptx fallback used: {type(error).__name__}", *fallback.warnings]
-        else:
-            fallback = self._fallback.extract(source.file_path)
-            slide_nodes = self._build_extracted_slides(document_id, root_node_id, source, fallback)
-            warnings = fallback.warnings
+                warnings = [f"Docling PPTX semantic enrichment failed; native python-pptx extraction used: {type(error).__name__}", *warnings]
+        slide_nodes = self._build_extracted_slides(document_id, root_node_id, source, extracted)
 
         return CanonicalDocument(
             document_id=document_id,
@@ -205,13 +200,14 @@ class PowerPointParser(SourceParser):
                     confidence=0.88,
                 ))
             children.extend(
-                self._builder.build_matrix_table_node(document_id=document_id, source_type=source.source_type, version=source.version, parent_node_id=slide_node_id, table_index=index, rows=rows, slide_number=extracted_slide.number)
-                for index, rows in enumerate(extracted_slide.tables, start=1) if rows
+                self._table_node(document_id, source, slide_node_id, extracted_slide.number, index, table)
+                for index, table in enumerate(extracted_slide.tables, start=1) if table
             )
-            children.extend(CanonicalNode(
-                node_id=make_id("image"), node_type=NodeType.IMAGE, attributes=image,
-                provenance=Provenance(document_id=document_id, source_type=source.source_type, version=source.version, parent_node_id=slide_node_id, slide_number=extracted_slide.number), confidence=0.8,
-            ) for image in extracted_slide.images)
+            slide_text = "\n".join(str(child.text or child.title or "") for child in children if child.node_type != NodeType.IMAGE)
+            children.extend(
+                self._image_node(document_id, source, slide_node_id, extracted_slide.number, index, image, slide_text)
+                for index, image in enumerate(extracted_slide.images, start=1)
+            )
             if extracted_slide.notes:
                 children.append(CanonicalNode(
                     node_id=make_id("note"), node_type=NodeType.NOTE_BLOCK, text=extracted_slide.notes,
@@ -225,6 +221,91 @@ class PowerPointParser(SourceParser):
                 confidence=0.91 if children else 0.55,
             ))
         return slide_nodes
+
+    def _enrich_native_extraction(self, native: ExtractionResult, semantic: ExtractionResult) -> ExtractionResult:
+        """Keeps native PPTX objects authoritative while adding Docling semantic evidence."""
+        semantic_pages = {page.number: page for page in semantic.pages}
+        for page in native.pages:
+            semantic_page = semantic_pages.get(page.number)
+            if semantic_page is None:
+                continue
+            page.reconciliation.append({
+                "type": "semantic_enrichment",
+                "native_text_blocks": len(page.text_blocks),
+                "docling_text_blocks": len(semantic_page.text_blocks),
+                "native_tables": len(page.tables),
+                "docling_tables": len(semantic_page.tables),
+                "native_images": len(page.images),
+                "docling_images": len(semantic_page.images),
+            })
+            if not page.text_blocks and semantic_page.text_blocks:
+                page.text_blocks = [{**block, "extractor_role": "docling_semantic_recovery"} for block in semantic_page.text_blocks]
+                page.text = "\n".join(normalize_text(str(block.get("text") or "")) or "" for block in page.text_blocks)
+            if not page.tables and semantic_page.tables:
+                page.tables = [self._mark_docling_table(table) for table in semantic_page.tables]
+            if not page.images and semantic_page.images:
+                page.images = [{**image, "extractor_role": "docling_semantic_recovery"} for image in semantic_page.images]
+            for image in page.images:
+                image.setdefault("docling_image_count_on_slide", len(semantic_page.images))
+                if semantic_page.images:
+                    image.setdefault("docling_visual_hint", True)
+        return ExtractionResult(
+            extractor_name="python-pptx+docling",
+            extraction_mode="native_structure_semantic_enriched",
+            pages=native.pages,
+            markdown=semantic.markdown,
+            exported=semantic.exported,
+            blocks=[*native.blocks, *semantic.blocks],
+            tables=[table for page in native.pages for table in page.tables],
+            images=[image for page in native.pages for image in page.images],
+            warnings=[*native.warnings, *semantic.warnings],
+            requires_review=semantic.requires_review,
+            processing_details={**semantic.processing_details, "base_extractor": native.extractor_name},
+        )
+
+    def _mark_docling_table(self, table: Any) -> Any:
+        """Labels Docling tables used only when no native table exists on a slide."""
+        if isinstance(table, dict):
+            return {**table, "extractor_role": "docling_semantic_recovery"}
+        return table
+
+    def _table_node(self, document_id: str, source: IngestionSource, slide_node_id: str, slide_number: int,
+                    table_index: int, table: Any) -> CanonicalNode:
+        """Builds a table node while preserving native PPTX shape metadata."""
+        if isinstance(table, dict) and "rows" in table:
+            node = self._builder.build_matrix_table_node(
+                document_id=document_id, source_type=source.source_type, version=source.version,
+                parent_node_id=slide_node_id, table_index=table_index, rows=table["rows"], slide_number=slide_number,
+            )
+            node.attributes.update(table.get("metadata", {}))
+            node.attributes["source_table_type"] = "native_pptx_table"
+            return node
+        return self._builder.build_matrix_table_node(
+            document_id=document_id, source_type=source.source_type, version=source.version,
+            parent_node_id=slide_node_id, table_index=table_index, rows=table, slide_number=slide_number,
+        )
+
+    def _image_node(self, document_id: str, source: IngestionSource, slide_node_id: str, slide_number: int,
+                    image_index: int, image: dict[str, Any], slide_text: str) -> CanonicalNode:
+        """Builds one canonical image-like node under the source slide with local context."""
+        attributes = dict(image)
+        attributes.update({
+            "slide_number": slide_number,
+            "image_index": image_index,
+            "nearby_text": normalize_text("\n".join([slide_text, str(attributes.get("chart_title") or "")])) or "",
+            "image_storage_status": attributes.get("image_storage_status", "metadata_only"),
+        })
+        title = normalize_text(str(attributes.get("chart_title") or attributes.get("shape_name") or "")) or f"Image {image_index}"
+        node_type = NodeType.EMBEDDED_DATASET if attributes.get("image_type") == "chart" else NodeType.IMAGE
+        node_prefix = "chart" if node_type == NodeType.EMBEDDED_DATASET else "image"
+        return CanonicalNode(
+            node_id=make_id(node_prefix), node_type=node_type, title=title,
+            text=normalize_text(str(attributes.get("description") or attributes.get("caption") or attributes.get("chart_title") or "")),
+            attributes=attributes,
+            provenance=Provenance(document_id=document_id, source_type=source.source_type, version=source.version,
+                                  parent_node_id=slide_node_id, slide_number=slide_number),
+            confidence=0.84 if attributes.get("extractor_role") == "native_structure" else 0.72,
+        )
 
     # This function collects warning signals from Docling slide extraction.
     def _collect_docling_warnings(self, exported: dict[str, Any], markdown: str) -> list[str]:

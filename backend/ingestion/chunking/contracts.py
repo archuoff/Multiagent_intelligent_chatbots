@@ -18,6 +18,7 @@ class ChunkType(str, Enum):
 
     NARRATIVE = "narrative"
     TABLE_ROW = "table_row"
+    VISUAL = "visual"
 
 
 class ChunkingPolicy(BaseModel):

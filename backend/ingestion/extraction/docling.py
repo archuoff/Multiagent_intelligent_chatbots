@@ -27,6 +27,21 @@ class DoclingContentAdapter:
         self._converter = None
         self._timeout_policy = timeout_policy or PdfTimeoutPolicy()
 
+    def _log_docling_runtime(self, message: str) -> None:
+        """Prints explicit Docling model/config progress during ingestion debugging."""
+        if os.getenv("JLR_DOCLING_VERBOSE", "true").lower() == "true":
+            print(f"[docling] {message}", flush=True)
+
+    def _loaded_ml_runtime_modules(self) -> list[str]:
+        """Reports loaded ML runtimes without importing extra packages."""
+        import sys
+        names = []
+        for name in sys.modules:
+            root = name.split(".", 1)[0]
+            if root in {"torch", "onnxruntime", "transformers", "tokenizers", "rapidocr", "docling_ibm_models"}:
+                names.append(root)
+        return sorted(set(names))
+
     # This function configures Docling PDF processing for text-based enterprise documents.
     def _build_converter(self, timeout_seconds: int = 120) -> Any:
         from docling.datamodel.base_models import InputFormat
@@ -37,6 +52,21 @@ class DoclingContentAdapter:
         pipeline_options.do_ocr = os.getenv("JLR_DOCLING_OCR", "false").lower() == "true"
         pipeline_options.do_table_structure = True
         pipeline_options.table_structure_options.mode = TableFormerMode.ACCURATE
+        pipeline_options.do_chart_extraction = os.getenv("JLR_DOCLING_CHART_EXTRACTION", "false").lower() == "true"
+        pipeline_options.do_formula_enrichment = os.getenv("JLR_DOCLING_FORMULA_ENRICHMENT", "true").lower() == "true"
+        pipeline_options.do_code_enrichment = os.getenv("JLR_DOCLING_CODE_ENRICHMENT", "false").lower() == "true"
+        pipeline_options.code_formula_options.extract_formulas = pipeline_options.do_formula_enrichment
+        pipeline_options.code_formula_options.extract_code = pipeline_options.do_code_enrichment
+        self._log_docling_runtime(
+            "config: "
+            f"ocr={pipeline_options.do_ocr}, "
+            f"table_structure={pipeline_options.do_table_structure}, "
+            f"tableformer_mode={pipeline_options.table_structure_options.mode}, "
+            f"chart_extraction={pipeline_options.do_chart_extraction}, "
+            f"formula_enrichment={pipeline_options.do_formula_enrichment}, "
+            f"code_enrichment={pipeline_options.do_code_enrichment}, "
+            f"timeout={timeout_seconds}s"
+        )
         pipeline_options.generate_page_images = False
         pipeline_options.generate_picture_images = False
         pipeline_options.document_timeout = timeout_seconds
@@ -44,6 +74,8 @@ class DoclingContentAdapter:
         artifacts_path = os.getenv("DOCLING_ARTIFACTS_PATH")
         if artifacts_path:
             pipeline_options.artifacts_path = Path(artifacts_path)
+            self._log_docling_runtime(f"artifacts_path={artifacts_path}")
+        self._log_docling_runtime("creating DocumentConverter; Docling models load lazily during convert()")
         return DocumentConverter(
             format_options={
                 InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options),
@@ -115,7 +147,12 @@ class DoclingContentAdapter:
             for attempt in range(2):
                 try:
                     converter = self._build_converter(allowance)
+                    self._log_docling_runtime(f"convert start: source={Path(source_path).name}, timeout={allowance}s")
                     candidate = converter.convert(str(source_path), raises_on_error=False)
+                    self._log_docling_runtime(
+                        f"convert done: status={self._status(candidate)}, "
+                        f"loaded_ml_modules={self._loaded_ml_runtime_modules()}"
+                    )
                 except Exception as error:
                     if result is None:
                         raise
@@ -138,7 +175,12 @@ class DoclingContentAdapter:
         else:
             if self._converter is None:
                 self._converter = self._build_converter()
+            self._log_docling_runtime(f"convert start: source={Path(source_path).name}")
             result = self._converter.convert(str(source_path))
+            self._log_docling_runtime(
+                f"convert done: status={self._status(result)}, "
+                f"loaded_ml_modules={self._loaded_ml_runtime_modules()}"
+            )
         status = self._status(result)
         requires_review = status != "success"
         details["conversion_status"] = status
@@ -147,6 +189,13 @@ class DoclingContentAdapter:
         document = result.document
         exported = document.export_to_dict()
         pages = self._extract_pages(document)
+        self._log_docling_runtime(
+            f"outputs: pages={len(pages)}, "
+            f"text_blocks={sum(len(page.text_blocks) for page in pages)}, "
+            f"tables={sum(len(page.tables) for page in pages)}, "
+            f"pictures={sum(len(page.images) for page in pages)}, "
+            f"status={status}"
+        )
         try:
             markdown = document.export_to_markdown() or ""
         except Exception as error:
@@ -183,6 +232,7 @@ class DoclingContentAdapter:
     # This function reads Docling's live hierarchy, tables, and pictures into a stable raw contract.
     def _extract_pages(self, document: Any) -> list[ExtractedPage]:
         page_map: dict[int, ExtractedPage] = {number: ExtractedPage(number=number) for number in getattr(document, "pages", {})}
+        page_heights = self._page_heights(document)
         for item in document.iterate_items():
             element, level = item if isinstance(item, tuple) else (item, 0)
             page_number = self._page_number(element)
@@ -192,7 +242,7 @@ class DoclingContentAdapter:
             text = self._element_text(element)
             if text:
                 block = {"text": text, "type": self._element_type(element), "level": level}
-                bbox = self._element_bbox(element)
+                bbox = self._element_bbox(element, page_heights.get(page_number))
                 if bbox:
                     block["bbox"] = bbox
                 page.text_blocks.append(block)
@@ -203,14 +253,31 @@ class DoclingContentAdapter:
             if page_number is None:
                 continue
             page = page_map.setdefault(page_number, ExtractedPage(number=page_number))
-            page.tables.append(self._extract_table(table, document))
+            extracted_table = self._extract_table(table, document)
+            bbox = self._element_bbox(table, page_heights.get(page_number))
+            if bbox:
+                extracted_table["bbox"] = bbox
+            page.tables.append(extracted_table)
         for picture in getattr(document, "pictures", []):
             page_number = self._page_number(picture)
             if page_number is None:
                 continue
             page = page_map.setdefault(page_number, ExtractedPage(number=page_number))
-            page.images.append(self._picture_metadata(picture))
+            page.images.append(self._picture_metadata(picture, page_heights.get(page_number)))
         return [page_map[number] for number in sorted(page_map)]
+
+    def _page_heights(self, document: Any) -> dict[int, float]:
+        """Reads each page's height once, used to convert a bottom-left-origin
+        Docling bbox into the same top-left/y-down space PyMuPDF's raw word
+        positions use -- without this, bbox-overlap comparisons could
+        silently check a vertically mirrored region of the page."""
+        heights: dict[int, float] = {}
+        for number, page_item in getattr(document, "pages", {}).items():
+            size = getattr(page_item, "size", None)
+            height = getattr(size, "height", None) if size is not None else None
+            if isinstance(height, (int, float)):
+                heights[int(number)] = float(height)
+        return heights
 
     # Preserve the source structure first; a matrix is only a compatibility recovery.
     def _extract_table(self, table: Any, document: Any) -> dict[str, Any]:
@@ -243,7 +310,7 @@ class DoclingContentAdapter:
             return {"source_table": payload, "warnings": warnings, "requires_review": True}
 
     # This function preserves Docling picture metadata without exporting images or invoking vision models.
-    def _picture_metadata(self, picture: Any) -> dict[str, Any]:
+    def _picture_metadata(self, picture: Any, page_height: float | None = None) -> dict[str, Any]:
         metadata: dict[str, Any] = {"caption": "", "description": "", "classification": "", "bbox": None}
         caption = getattr(picture, "caption", None)
         if caption is not None:
@@ -261,17 +328,12 @@ class DoclingContentAdapter:
                 right = getattr(bbox, "r", None)
                 bottom = getattr(bbox, "b", None)
                 if all(isinstance(value, (int, float)) for value in (left, top, right, bottom)):
-                    metadata["bbox"] = {
-                        "left": min(left, right),
-                        "top": min(top, bottom),
-                        "width": abs(right - left),
-                        "height": abs(bottom - top),
-                    }
-                else:
-                    metadata["bbox"] = None
+                    metadata["bbox"] = self._normalize_docling_bbox(
+                        left, top, right, bottom, getattr(bbox, "coord_origin", None), page_height
+                    )
         return metadata
 
-    def _element_bbox(self, element: Any) -> dict[str, float] | None:
+    def _element_bbox(self, element: Any, page_height: float | None = None) -> dict[str, float] | None:
         """Reads the first Docling provenance bbox for text-level verification."""
         provenance = getattr(element, "prov", None)
         if not provenance:
@@ -285,7 +347,39 @@ class DoclingContentAdapter:
         bottom = getattr(bbox, "b", None)
         if not all(isinstance(value, (int, float)) for value in (left, top, right, bottom)):
             return None
-        return {"left": min(left, right), "top": min(top, bottom), "width": abs(right - left), "height": abs(bottom - top)}
+        return self._normalize_docling_bbox(left, top, right, bottom, getattr(bbox, "coord_origin", None), page_height)
+
+    def _normalize_docling_bbox(
+        self,
+        left: float,
+        top: float,
+        right: float,
+        bottom: float,
+        coord_origin: Any,
+        page_height: float | None,
+    ) -> dict[str, Any]:
+        """Converts a Docling bbox into the same top-left/y-down coordinate
+        space PyMuPDF's raw word positions use, so bbox-overlap comparisons
+        (conflict verification, new-content checks) compare the same physical
+        page region instead of silently mirroring it vertically.
+
+        Docling's PDF-backend provenance is commonly bottom-left-origin
+        (native PDF convention, where a larger y is physically higher on the
+        page); PyMuPDF's `get_text("words")` is top-left-origin (y increases
+        downward). Flipping requires the page height, which is only available
+        when Docling exposes page geometry -- when it isn't, this returns
+        `coord_space: "unknown"` rather than guessing, so callers can skip
+        bbox-based verification instead of trusting a possibly-mirrored box.
+        """
+        origin = str(coord_origin or "").upper()
+        is_bottom_left = "BOTTOM" in origin or (not origin and top > bottom)
+        as_is = {"left": min(left, right), "top": min(top, bottom), "width": abs(right - left), "height": abs(top - bottom)}
+        if not is_bottom_left:
+            return {**as_is, "coord_space": "top_left", "source_coord_origin": origin or "inferred_top_left"}
+        if isinstance(page_height, (int, float)) and page_height > 0:
+            flipped_top = page_height - max(top, bottom)
+            return {**as_is, "top": flipped_top, "coord_space": "top_left", "source_coord_origin": origin or "inferred_bottom_left"}
+        return {**as_is, "coord_space": "unknown", "source_coord_origin": origin or "inferred_bottom_left"}
 
     def _picture_description(self, picture: Any) -> str:
         """Reads Docling picture descriptions from current and deprecated metadata fields."""

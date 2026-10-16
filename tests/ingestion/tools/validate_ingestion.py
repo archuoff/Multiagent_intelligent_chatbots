@@ -8,6 +8,7 @@ persist an immutable local Master JSON artifact.
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 import sys
 
@@ -21,6 +22,7 @@ from backend.ingestion.models import CanonicalDocument
 from backend.ingestion.models import CanonicalNode
 from backend.ingestion.models import SourceType
 from backend.ingestion.service import IngestionService
+from backend.ingestion.block_graph import BlockGraphBuilder
 from backend.ingestion.extraction.timeout_policy import PDF_PROCESSING_CAPTION
 
 
@@ -49,12 +51,18 @@ def count_nodes(node: CanonicalNode) -> int:
 
 
 # This function writes a requested inspection artifact without creating a production store.
-def write_inspection_json(document: CanonicalDocument, output_path: Path) -> None:
+def write_inspection_json(document: CanonicalDocument, output_path: Path) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         document.model_dump_json(indent=2),
         encoding="utf-8",
     )
+    block_graph_path = output_path.with_name(f"{output_path.stem}.block_graph{output_path.suffix}")
+    block_graph_path.write_text(
+        json.dumps(BlockGraphBuilder().build(document), indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    return block_graph_path
 
 
 # This function executes one ingestion pass and displays extraction and quality evidence.
@@ -79,8 +87,9 @@ def main() -> int:
             source_type=SourceType(arguments.source_type),
             file_path=arguments.source_path,
         )
+    block_graph_path = None
     if arguments.output:
-        write_inspection_json(document, arguments.output)
+        block_graph_path = write_inspection_json(document, arguments.output)
     total_nodes = sum(count_nodes(root) for root in document.root_nodes)
     print(f"File: {document.file_name}")
     print(f"Parser: {document.parser_info.parser_name}")
@@ -94,6 +103,7 @@ def main() -> int:
     print(f"Errors: {len(document.quality.errors)}")
     if arguments.output:
         print(f"Canonical JSON: {arguments.output}")
+        print(f"BlockGraph JSON: {block_graph_path}")
     if persisted_artifact:
         print(f"Stored Master JSON: {persisted_artifact.master_json_path}")
         print(f"Stored manifest: {persisted_artifact.manifest_path}")

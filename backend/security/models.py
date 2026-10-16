@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Table, UniqueConstraint, func
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Table, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -22,8 +22,8 @@ class Base(DeclarativeBase):
 user_group_memberships = Table(
     "user_group_memberships",
     Base.metadata,
-    mapped_column("user_id", PostgreSQLUUID(as_uuid=True), ForeignKey("app_users.id", ondelete="CASCADE"), primary_key=True),
-    mapped_column("group_id", PostgreSQLUUID(as_uuid=True), ForeignKey("app_groups.id", ondelete="CASCADE"), primary_key=True),
+    Column("user_id", PostgreSQLUUID(as_uuid=True), ForeignKey("app_users.id", ondelete="CASCADE"), primary_key=True),
+    Column("group_id", PostgreSQLUUID(as_uuid=True), ForeignKey("app_groups.id", ondelete="CASCADE"), primary_key=True),
 )
 
 

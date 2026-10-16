@@ -143,6 +143,29 @@ class StructuredTableTests(unittest.TestCase):
         merged = ExtractionResultMerger().merge(primary, fallback)
         self.assertEqual(len(merged.pages[0].tables), 1)
         self.assertIn("conflict", [event["decision"] for event in merged.pages[0].reconciliation])
+        # A single, isolated low-confidence event no longer blocks the whole
+        # document (that was the old, overly blunt behavior) -- the
+        # conflicting table is already excluded (never appended), so there's
+        # nothing unsafe left in this document to review. See
+        # test_broad_table_conflicts_still_require_review for the case that
+        # still correctly escalates.
+        self.assertFalse(merged.requires_review)
+        conflict_event = next(e for e in merged.pages[0].reconciliation if e["decision"] == "conflict")
+        self.assertEqual(conflict_event["confidence_tier"], "low")
+
+    def test_broad_table_conflicts_still_require_review(self):
+        """Enough low-confidence conflicts (here, several disputed tables)
+        still correctly escalate to document-wide review -- the new gate
+        catches broad problems, it just no longer over-reacts to one."""
+        primary = ExtractionResult("docling", "primary", pages=[
+            ExtractedPage(number, tables=[[["Property", "Value"], [f"Density {number}", "1.08"]]])
+            for number in range(1, 5)
+        ])
+        fallback = ExtractionResult("pdfplumber", "fallback", pages=[
+            ExtractedPage(number, tables=[[["Property", "Value"], [f"Density {number}", "1.09"]]])
+            for number in range(1, 5)
+        ])
+        merged = ExtractionResultMerger().merge(primary, fallback)
         self.assertTrue(merged.requires_review)
 
     def test_pdf_suspicious_numeric_values_are_marked_non_retrievable(self):

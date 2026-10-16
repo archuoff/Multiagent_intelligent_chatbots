@@ -162,14 +162,51 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(merged.pages[0].images[0]["bbox"], {"left": 3522900.0, "top": 798467.0, "width": 5346283.0, "height": 4507200.0})
         self.assertIn("duplicate", [event["decision"] for event in merged.pages[0].reconciliation])
 
-    def test_quality_validator_reports_canonical_conflict(self):
-        """Canonical validation converts retained conflict evidence into a blocking issue."""
+    def test_quality_validator_reports_legacy_conflict_as_a_warning_not_an_error(self):
+        """A reconciliation event with no confidence_tier (persisted before
+        the confidence-tier scheme existed) is treated as low-confidence for
+        safety, but surfaced as a warning rather than the old hard error --
+        re-loading existing Master JSON must not newly start rejecting it
+        outright just because the schema gained a field it doesn't have."""
         root = CanonicalNode(node_id="root", node_type=NodeType.DOCUMENT_ROOT, provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1"))
-        page = CanonicalNode(node_id="page", node_type=NodeType.PAGE, provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1", parent_node_id="root", page_number=1), attributes={"reconciliation": [{"decision": "conflict"}]})
+        page = CanonicalNode(node_id="page", node_type=NodeType.PARAGRAPH, text="Readable page content so the unrelated no_extracted_content check doesn't also fire.",
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1", parent_node_id="root", page_number=1),
+            attributes={"reconciliation": [{"decision": "conflict"}]})
         root.children.append(page)
         document = CanonicalDocument(document_id="doc", agent_id="agent", source_type=SourceType.PDF, file_name="test.pdf", source_path="test.pdf", source_name="test", version="v1", ingested_at=datetime.now(timezone.utc), source_hash="sha256:test", parser_info=ParserInfo(parser_name="test", parser_version="v1"), metadata=DocumentMetadata(document_family=DocumentFamily.PAGE_CENTRIC), root_nodes=[root])
         issues = CanonicalQualityValidator().validate(document).issues
-        self.assertTrue(any(issue.code == "extraction_conflict" and issue.severity == "error" for issue in issues))
+        self.assertTrue(any(issue.code == "extraction_conflict" and issue.severity == "warning" for issue in issues))
+        self.assertFalse(any(issue.severity == "error" for issue in issues))
+
+    def test_quality_validator_reports_low_confidence_node_left_retrievable_as_an_error(self):
+        """A node explicitly tagged low-confidence (the current schema) that
+        was NOT excluded from retrieval (retrieval_allowed left unset) is a
+        real problem -- the node-level exclusion mechanism is what's
+        supposed to make this content safe, and if it didn't run, that's
+        still an error, not a warning."""
+        root = CanonicalNode(node_id="root", node_type=NodeType.DOCUMENT_ROOT, provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1"))
+        page = CanonicalNode(node_id="page", node_type=NodeType.PARAGRAPH, text="Suspect value",
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1", parent_node_id="root", page_number=1),
+            attributes={"extraction_confidence": "low", "reconciliation": {"decision": "conflict", "confidence_tier": "low"}})
+        root.children.append(page)
+        document = CanonicalDocument(document_id="doc", agent_id="agent", source_type=SourceType.PDF, file_name="test.pdf", source_path="test.pdf", source_name="test", version="v1", ingested_at=datetime.now(timezone.utc), source_hash="sha256:test", parser_info=ParserInfo(parser_name="test", parser_version="v1"), metadata=DocumentMetadata(document_family=DocumentFamily.PAGE_CENTRIC), root_nodes=[root])
+        issues = CanonicalQualityValidator().validate(document).issues
+        self.assertTrue(any(issue.code == "low_confidence_retrievable" and issue.severity == "error" for issue in issues))
+
+    def test_quality_validator_reports_excluded_low_confidence_node_as_a_warning_only(self):
+        """The common, working case: a low-confidence node that WAS excluded
+        (retrieval_allowed=False) is a warning, not a blocking error --
+        the exclusion already made it safe."""
+        root = CanonicalNode(node_id="root", node_type=NodeType.DOCUMENT_ROOT, provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1"))
+        page = CanonicalNode(node_id="page", node_type=NodeType.LOW_CONFIDENCE_BLOCK, text="Suspect value",
+            provenance=Provenance(document_id="doc", source_type=SourceType.PDF, version="v1", parent_node_id="root", page_number=1),
+            attributes={"extraction_confidence": "low", "retrieval_allowed": False,
+                        "reconciliation": {"decision": "conflict", "confidence_tier": "low"}})
+        root.children.append(page)
+        document = CanonicalDocument(document_id="doc", agent_id="agent", source_type=SourceType.PDF, file_name="test.pdf", source_path="test.pdf", source_name="test", version="v1", ingested_at=datetime.now(timezone.utc), source_hash="sha256:test", parser_info=ParserInfo(parser_name="test", parser_version="v1"), metadata=DocumentMetadata(document_family=DocumentFamily.PAGE_CENTRIC), root_nodes=[root])
+        issues = CanonicalQualityValidator().validate(document).issues
+        self.assertTrue(any(issue.code == "low_confidence_excluded" and issue.severity == "warning" for issue in issues))
+        self.assertFalse(any(issue.severity == "error" for issue in issues))
 
 
 class DoclingPictureMetadataTests(unittest.TestCase):
@@ -184,4 +221,11 @@ class DoclingPictureMetadataTests(unittest.TestCase):
         picture = type("Picture", (), {"caption": None, "classification": "diagram", "meta": meta, "annotations": [], "prov": [provenance]})()
         metadata = DoclingContentAdapter()._picture_metadata(picture)
         self.assertEqual(metadata["description"], "Diagram showing fixing clip spacing of 100-150 mm.")
-        self.assertEqual(metadata["bbox"], {"left": 10, "top": 20, "width": 40, "height": 70})
+        # No page_height was supplied, so a bottom-left-origin bbox (t > b, no
+        # coord_origin attribute) cannot be safely flipped -- coord_space
+        # stays "unknown" rather than guessing. See test_bbox_axis.py for the
+        # flip-with-page-height behavior.
+        self.assertEqual(metadata["bbox"], {
+            "left": 10, "top": 20, "width": 40, "height": 70,
+            "coord_space": "unknown", "source_coord_origin": "inferred_bottom_left",
+        })

@@ -6,10 +6,15 @@ remain responsible for canonical-node construction and provenance assignment.
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 from typing import Any
 
 from docx import Document as DocxDocument
+from docx.document import Document as DocxDocumentType
+from docx.oxml.ns import qn
+from docx.table import Table as DocxTable
+from docx.text.paragraph import Paragraph as DocxParagraph
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pypdf import PdfReader
@@ -105,31 +110,97 @@ class PdfFallbackExtractor:
 
 
 class DocxFallbackExtractor:
-    """Extracts DOCX paragraphs and tables locally with python-docx."""
+    """Extracts DOCX structure locally with python-docx/OOXML."""
 
-    # This function preserves paragraph style signals and table matrices for canonical assembly.
+    # This function preserves document order, paragraph styles, table matrices, and image references.
     def extract(self, source_path: str | Path) -> ExtractionResult:
         document = DocxDocument(str(source_path))
-        blocks = [
-            {
-                "text": normalize_text(paragraph.text) or "",
-                "style_name": paragraph.style.name if paragraph.style else "",
-            }
-            for paragraph in document.paragraphs
-            if normalize_text(paragraph.text)
-        ]
-        tables = [
-            [[normalize_text(cell.text) or "" for cell in row.cells] for row in table.rows]
-            for table in document.tables
-        ]
-        warnings = [] if blocks else ["No paragraph text detected in DOCX file"]
+        blocks: list[dict[str, Any]] = []
+        tables: list[list[list[str]]] = []
+        images: list[dict[str, Any]] = []
+        paragraph_index = 0
+        table_index = 0
+        image_index = 0
+        for item in self._iter_body_items(document):
+            if isinstance(item, DocxParagraph):
+                paragraph_index += 1
+                text = normalize_text(item.text) or ""
+                image_refs = self._paragraph_image_refs(item)
+                if text:
+                    blocks.append({
+                        "block_type": "paragraph",
+                        "text": text,
+                        "style_name": item.style.name if item.style else "",
+                        "paragraph_index": paragraph_index,
+                        "extractor_role": "native_structure",
+                    })
+                for image_ref in image_refs:
+                    image_index += 1
+                    image = {
+                        "block_type": "image",
+                        "image_index": image_index,
+                        "paragraph_index": paragraph_index,
+                        "relationship_id": image_ref.get("relationship_id"),
+                        "media_name": image_ref.get("media_name"),
+                        "nearby_text": text,
+                        "extractor_role": "native_structure",
+                        "image_storage_status": "pending",
+                    }
+                    blocks.append(image)
+                    images.append(image)
+            elif isinstance(item, DocxTable):
+                table_index += 1
+                rows = [[normalize_text(cell.text) or "" for cell in row.cells] for row in item.rows]
+                table_block = {
+                    "block_type": "table",
+                    "table_index": table_index,
+                    "rows": rows,
+                    "style_name": item.style.name if item.style else "",
+                    "extractor_role": "native_structure",
+                }
+                blocks.append(table_block)
+                tables.append(rows)
+        warnings = [] if any(block.get("text") for block in blocks) or tables or images else ["No DOCX content detected"]
         return ExtractionResult(
             extractor_name="python-docx",
-            extraction_mode="fallback_library",
+            extraction_mode="native_structure",
             blocks=blocks,
             tables=tables,
+            images=images,
             warnings=warnings,
+            processing_details={
+                "paragraph_count": paragraph_index,
+                "table_count": table_index,
+                "image_count": image_index,
+                "native_extractor": "python-docx",
+            },
         )
+
+    def _iter_body_items(self, document: DocxDocumentType):
+        """Yields paragraphs and tables in DOCX body order."""
+        body = document.element.body
+        for child in body.iterchildren():
+            if child.tag == qn("w:p"):
+                yield DocxParagraph(child, document)
+            elif child.tag == qn("w:tbl"):
+                yield DocxTable(child, document)
+
+    def _paragraph_image_refs(self, paragraph: DocxParagraph) -> list[dict[str, str | None]]:
+        """Returns embedded image relationship ids referenced by one paragraph."""
+        refs: list[dict[str, str | None]] = []
+        namespace = qn("r:embed")
+        for element in paragraph._element.iter():
+            relationship_id = element.attrib.get(namespace)
+            if not relationship_id:
+                continue
+            media_name = None
+            try:
+                part = paragraph.part.related_parts.get(relationship_id)
+                media_name = str(getattr(part, "partname", "") or "").lstrip("/") or None
+            except Exception:
+                media_name = None
+            refs.append({"relationship_id": relationship_id, "media_name": media_name})
+        return refs
 
 
 class PowerPointFallbackExtractor:
@@ -144,32 +215,38 @@ class PowerPointFallbackExtractor:
             blocks: list[dict[str, Any]] = []
             tables: list[list[list[str]]] = []
             images: list[dict[str, Any]] = []
-            for shape in self._walk_shapes(slide.shapes):
+            for shape_index, shape in enumerate(self._walk_shapes(slide.shapes), start=1):
+                shape_metadata = self._shape_metadata(shape, shape_index)
                 if getattr(shape, "has_text_frame", False):
-                    for paragraph in shape.text_frame.paragraphs:
+                    for paragraph_index, paragraph in enumerate(shape.text_frame.paragraphs, start=1):
                         text = normalize_text(paragraph.text)
                         if text:
                             blocks.append(
                                 {
+                                    **shape_metadata,
                                     "text": text,
                                     "level": paragraph.level,
+                                    "paragraph_index": paragraph_index,
                                     "is_title": bool(
                                         getattr(shape, "is_placeholder", False)
                                         and shape.placeholder_format.idx == 0
                                     ),
+                                    "extractor_role": "native_structure",
                                 }
                             )
                 elif getattr(shape, "has_table", False):
                     tables.append(
-                        [[normalize_text(cell.text) or "" for cell in row.cells] for row in shape.table.rows]
-                    )
-                elif shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
-                    images.append(
                         {
-                            "shape_name": shape.name,
-                            "bbox": {"left": shape.left, "top": shape.top, "width": shape.width, "height": shape.height},
+                            "rows": [[normalize_text(cell.text) or "" for cell in row.cells] for row in shape.table.rows],
+                            "metadata": {**shape_metadata, "extractor_role": "native_structure"},
                         }
                     )
+                elif getattr(shape, "has_chart", False):
+                    images.append({**shape_metadata, **self._chart_metadata(shape), "image_type": "chart",
+                                   "needs_vision_description": True, "vision_reason": "Native PPTX chart may require visual description for retrieval."})
+                elif shape.shape_type == MSO_SHAPE_TYPE.PICTURE:
+                    image_metadata = self._picture_metadata(shape)
+                    images.append({**shape_metadata, **image_metadata, "image_type": "picture"})
             note_text = self._extract_notes(slide)
             if not blocks:
                 warnings.append(f"Low-text or visual-only slide detected: {slide_number}")
@@ -197,6 +274,41 @@ class PowerPointFallbackExtractor:
                 yield from self._walk_shapes(shape.shapes)
             else:
                 yield shape
+
+    def _shape_metadata(self, shape: Any, shape_index: int) -> dict[str, Any]:
+        """Returns stable native PPTX identity and position metadata for a slide shape."""
+        return {
+            "shape_index": shape_index,
+            "shape_id": getattr(shape, "shape_id", None),
+            "shape_name": normalize_text(str(getattr(shape, "name", "") or "")) or f"shape_{shape_index}",
+            "bbox": {"left": shape.left, "top": shape.top, "width": shape.width, "height": shape.height},
+            "extractor_role": "native_structure",
+        }
+
+    def _picture_metadata(self, shape: Any) -> dict[str, Any]:
+        """Reads native picture metadata without decoding visual meaning."""
+        image = getattr(shape, "image", None)
+        blob = bytes(getattr(image, "blob", b"") or b"") if image is not None else b""
+        return {
+            "image_hash": hashlib.sha256(blob).hexdigest() if blob else None,
+            "image_extension": normalize_text(str(getattr(image, "ext", "") or "")) or "png",
+            "image_storage_status": "pending",
+        }
+
+    def _chart_metadata(self, shape: Any) -> dict[str, Any]:
+        """Preserves lightweight native chart metadata when PowerPoint exposes it."""
+        chart = getattr(shape, "chart", None)
+        title = ""
+        try:
+            if chart is not None and chart.has_title:
+                title = normalize_text(chart.chart_title.text_frame.text) or ""
+        except Exception:
+            title = ""
+        return {
+            "chart_title": title,
+            "classification": "chart",
+            "image_storage_status": "metadata_only",
+        }
 
     # This function extracts speaker-note text without treating it as slide-body content.
     def _extract_notes(self, slide: Any) -> str | None:
