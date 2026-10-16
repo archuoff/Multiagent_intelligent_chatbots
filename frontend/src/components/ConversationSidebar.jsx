@@ -1,6 +1,15 @@
 import { useMemo, useState } from "react";
 import { groupSessions } from "../lib/sessions";
 
+function SidebarToggleIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1.5" y="2.5" width="13" height="11" rx="2.2" />
+      <line x1="6" y1="2.5" x2="6" y2="13.5" />
+    </svg>
+  );
+}
+
 function ConversationGroup({ group, activeSessionId, onSelectSession, onRequestDelete, onTogglePin }) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -117,24 +126,24 @@ export default function ConversationSidebar({
       <div className="conversation-sidebar collapsed">
         <button
           type="button"
-          className="sidebar-collapse-btn"
-          title="Expand sidebar"
-          aria-label="Expand sidebar"
-          onClick={() => setCollapsed(false)}
-        >
-          &raquo;
-        </button>
-        <button type="button" className="sidebar-icon-btn" title="New chat" aria-label="New chat" onClick={onNewChat}>
-          +
-        </button>
-        <button
-          type="button"
           className="sidebar-icon-btn"
           title="Back to all agents"
           aria-label="Back to all agents"
           onClick={onBackToAgents}
         >
           &larr;
+        </button>
+        <button
+          type="button"
+          className="sidebar-collapse-btn"
+          title="Expand sidebar"
+          aria-label="Expand sidebar"
+          onClick={() => setCollapsed(false)}
+        >
+          <SidebarToggleIcon />
+        </button>
+        <button type="button" className="sidebar-icon-btn" title="New chat" aria-label="New chat" onClick={onNewChat}>
+          +
         </button>
       </div>
     );
@@ -143,8 +152,16 @@ export default function ConversationSidebar({
   return (
     <div className="conversation-sidebar">
       <div className="sidebar-top-row">
-        <button className="new-chat-btn" onClick={onNewChat}>
-          + New chat
+        <button
+          type="button"
+          className="sidebar-icon-btn"
+          title="Back to all agents"
+          aria-label="Back to all agents"
+          onClick={onBackToAgents}
+        >
+          <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 2.5 4.5 7 9 11.5" />
+          </svg>
         </button>
         <button
           type="button"
@@ -153,7 +170,7 @@ export default function ConversationSidebar({
           aria-label="Collapse sidebar"
           onClick={() => setCollapsed(true)}
         >
-          &laquo;
+          <SidebarToggleIcon />
         </button>
       </div>
       <div className="sidebar-search">
@@ -168,6 +185,12 @@ export default function ConversationSidebar({
           onChange={(event) => setQuery(event.target.value)}
         />
       </div>
+      <button type="button" className="new-chat-btn" onClick={onNewChat}>
+        <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M7 2v10M2 7h10" />
+        </svg>
+        New chat
+      </button>
       <div className="conversation-groups">
         {groups.length === 0 ? <div className="sidebar-empty">No conversations yet</div> : null}
         {groups.map((group) => (
@@ -184,17 +207,6 @@ export default function ConversationSidebar({
       <div className="sidebar-profile-chip">
         <span className="sidebar-profile-avatar">DU</span>
         <span className="sidebar-profile-name">Demo User</span>
-        <button
-          type="button"
-          className="sidebar-profile-back-btn"
-          title="Back to all agents"
-          aria-label="Back to all agents"
-          onClick={onBackToAgents}
-        >
-          <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 2.5 4.5 7 9 11.5" />
-          </svg>
-        </button>
       </div>
       {pendingDelete ? (
         <DeleteChatModal session={pendingDelete} onConfirm={confirmDelete} onCancel={() => setPendingDelete(null)} />
