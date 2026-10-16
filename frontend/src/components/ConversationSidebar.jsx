@@ -1,19 +1,17 @@
 import { useMemo, useState } from "react";
 import { groupSessions } from "../lib/sessions";
 
-function ConversationGroup({ group, activeSessionId, onSelectSession, onDeleteSession, onTogglePin }) {
+function ConversationGroup({ group, activeSessionId, onSelectSession, onRequestDelete, onTogglePin }) {
   const [collapsed, setCollapsed] = useState(false);
-
-  function handleDelete(event, sessionId) {
-    event.stopPropagation();
-    if (window.confirm("Delete this chat? This can't be undone.")) {
-      onDeleteSession(sessionId);
-    }
-  }
 
   function handlePin(event, sessionId) {
     event.stopPropagation();
     onTogglePin(sessionId);
+  }
+
+  function handleDeleteClick(event, session) {
+    event.stopPropagation();
+    onRequestDelete(session);
   }
 
   return (
@@ -53,14 +51,37 @@ function ConversationGroup({ group, activeSessionId, onSelectSession, onDeleteSe
                 className="conversation-delete-btn"
                 title="Delete chat"
                 aria-label="Delete chat"
-                onClick={(event) => handleDelete(event, session.sessionId)}
+                onClick={(event) => handleDeleteClick(event, session)}
               >
-                &times;
+                <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2.5 4h9M5.3 4V2.6h3.4V4M3.4 4l.5 8.2a1 1 0 0 0 1 .9h4.2a1 1 0 0 0 1-.9l.5-8.2" />
+                </svg>
               </button>
             </div>
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function DeleteChatModal({ session, onConfirm, onCancel }) {
+  return (
+    <div className="modal-backdrop" onClick={onCancel}>
+      <div className="modal-card" onClick={(event) => event.stopPropagation()}>
+        <h3>Delete this chat?</h3>
+        <p>
+          "{session.title || "New chat"}" will be permanently deleted. This can't be undone.
+        </p>
+        <div className="modal-actions">
+          <button type="button" className="modal-btn-secondary" onClick={onCancel}>
+            Cancel
+          </button>
+          <button type="button" className="modal-btn-danger" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -76,6 +97,7 @@ export default function ConversationSidebar({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [query, setQuery] = useState("");
+  const [pendingDelete, setPendingDelete] = useState(null);
 
   const filtered = useMemo(() => {
     const trimmed = query.trim().toLowerCase();
@@ -84,6 +106,11 @@ export default function ConversationSidebar({
   }, [sessions, query]);
 
   const groups = useMemo(() => groupSessions(filtered), [filtered]);
+
+  function confirmDelete() {
+    onDeleteSession(pendingDelete.sessionId);
+    setPendingDelete(null);
+  }
 
   if (collapsed) {
     return (
@@ -149,7 +176,7 @@ export default function ConversationSidebar({
             group={group}
             activeSessionId={activeSessionId}
             onSelectSession={onSelectSession}
-            onDeleteSession={onDeleteSession}
+            onRequestDelete={setPendingDelete}
             onTogglePin={onTogglePin}
           />
         ))}
@@ -157,6 +184,9 @@ export default function ConversationSidebar({
       <button className="back-to-agents-btn" onClick={onBackToAgents}>
         &larr; Back
       </button>
+      {pendingDelete ? (
+        <DeleteChatModal session={pendingDelete} onConfirm={confirmDelete} onCancel={() => setPendingDelete(null)} />
+      ) : null}
     </div>
   );
 }

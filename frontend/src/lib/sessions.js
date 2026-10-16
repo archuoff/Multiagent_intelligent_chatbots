@@ -27,8 +27,8 @@ export function groupSessions(sessions) {
     const updated = new Date(item.updatedAt || item.createdAt).getTime();
     const daysAgo = Math.floor((startOfToday - updated) / DAY_MS);
     if (updated >= startOfToday) groups.today.push(item);
-    else if (daysAgo === 1) groups.yesterday.push(item);
-    else if (daysAgo <= 7) groups.previous7.push(item);
+    else if (daysAgo === 0) groups.yesterday.push(item);
+    else if (daysAgo <= 6) groups.previous7.push(item);
     else groups.older.push(item);
   }
 

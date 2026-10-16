@@ -373,9 +373,6 @@
   flex: 1;
   display: flex;
   min-height: 0;
-  width: 100%;
-  max-width: 1180px;
-  margin: 0 auto;
 }
 
 .conversation-sidebar {
@@ -1201,6 +1198,68 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
   cursor: default;
 }
+/* ---------- Delete-chat confirmation modal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 21, 38, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 110;
+  animation: lightbox-fade-in 0.12s ease;
+}
+.modal-card {
+  width: min(360px, calc(100vw - 48px));
+  background: #fff;
+  border-radius: 16px;
+  padding: 22px 22px 18px;
+  box-shadow: 0 24px 60px rgba(16, 24, 40, 0.25);
+}
+.modal-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--ink);
+}
+.modal-card p {
+  margin: 0 0 20px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.modal-btn-secondary {
+  background: #f1f3f8;
+  color: var(--ink);
+  border: none;
+  border-radius: 9px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.modal-btn-secondary:hover {
+  background: #e4e7ec;
+}
+.modal-btn-danger {
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.modal-btn-danger:hover {
+  background: #b42318;
+}
+
 .lightbox-close {
   position: absolute;
   top: 20px;
