@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { avatarColor, initials } from "../lib/avatar";
 import { streamChat, sourcesFromContext } from "../lib/api";
 import ConversationSidebar from "./ConversationSidebar";
 import MessageList from "./MessageList";
@@ -15,9 +14,6 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
   const activeSession = sessionsApi.getActiveSession(agent.agent_id);
   const messages = activeSession ? activeSession.messages : [];
   const displayMessages = streamingMessage ? [...messages, streamingMessage] : messages;
-
-  const description =
-    agent.domain_description && agent.domain_description !== agent.display_name ? agent.domain_description : "";
 
   async function handleSend(overrideText) {
     const text = (overrideText !== undefined ? overrideText : inputValue).trim();
@@ -84,17 +80,6 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
         onBackToAgents={onBackToAgents}
       />
       <div className="chat-main">
-        <div className="chat-header">
-          <div className="chat-header-inner">
-            <div className="agent-avatar" style={{ background: avatarColor(agent.agent_id) }}>
-              {initials(agent.display_name)}
-            </div>
-            <div className="chat-header-titles">
-              <h2>{agent.display_name}</h2>
-              <p>{description}</p>
-            </div>
-          </div>
-        </div>
         <MessageList
           apiBase={apiBase}
           agent={agent}

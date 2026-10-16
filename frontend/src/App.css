@@ -162,6 +162,80 @@
   color: var(--muted);
 }
 
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  min-width: 0;
+}
+.topbar-agent {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.topbar-agent-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.topbar-agent-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.status-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 650;
+}
+.status-pill-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-pill-badge.ok {
+  background: #ecfdf3;
+  color: #067647;
+}
+.status-pill-badge.ok .status-pill-badge-dot {
+  background: var(--success);
+}
+.status-pill-badge.bad {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+.status-pill-badge.bad .status-pill-badge-dot {
+  background: var(--danger);
+}
+.theme-toggle-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
 .topbar-right {
   display: flex;
   align-items: center;
@@ -378,8 +452,8 @@
 .conversation-sidebar {
   width: 260px;
   flex-shrink: 0;
-  background: #f7f8fa;
-  border-right: 1px solid var(--border);
+  background: linear-gradient(180deg, #2b3b4f 0%, #22303f 100%);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   padding: 16px 12px;
@@ -622,6 +696,88 @@
 .sidebar-profile-back-btn:hover {
   background: #e9ecf3;
   color: var(--ink);
+}
+
+/* ---------- Dark navy sidebar theme (scoped overrides) ---------- */
+.conversation-sidebar .sidebar-collapse-btn,
+.conversation-sidebar .sidebar-icon-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a9b7c9;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+.conversation-sidebar .sidebar-collapse-btn:hover,
+.conversation-sidebar .sidebar-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.conversation-sidebar .sidebar-search {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a9b7c9;
+  transition: border-color 150ms ease;
+}
+.conversation-sidebar .sidebar-search:focus-within {
+  border-color: var(--accent);
+}
+.conversation-sidebar .sidebar-search input {
+  color: #e6ebf2;
+}
+.conversation-sidebar .sidebar-search input::placeholder {
+  color: #7f8fa4;
+}
+.conversation-sidebar .sidebar-section-label,
+.conversation-sidebar .conversation-group-header {
+  color: #8a9bb0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.conversation-sidebar .sidebar-empty {
+  color: #7f8fa4;
+}
+.conversation-sidebar .conversation-item {
+  color: #e6ebf2;
+  border-left: 3px solid transparent;
+  padding-left: 8px;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.conversation-sidebar .conversation-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.conversation-sidebar .conversation-item.active {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--accent);
+  color: #fff;
+  font-weight: 650;
+}
+.conversation-sidebar .conversation-item-icon {
+  color: #a9b7c9;
+}
+.conversation-sidebar .conversation-pin-btn,
+.conversation-sidebar .conversation-delete-btn {
+  color: #a9b7c9;
+}
+.conversation-sidebar .conversation-pin-btn:hover,
+.conversation-sidebar .conversation-delete-btn:hover {
+  color: #fff;
+}
+.conversation-sidebar .conversation-pin-btn.pinned {
+  color: var(--pink);
+}
+.conversation-sidebar .sidebar-profile-chip {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.conversation-sidebar .sidebar-profile-name {
+  color: #fff;
+}
+.conversation-sidebar .sidebar-profile-back-btn {
+  color: #a9b7c9;
+  transition: color 150ms ease, background 150ms ease;
+}
+.conversation-sidebar .sidebar-profile-back-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
 }
 
 .chat-main {

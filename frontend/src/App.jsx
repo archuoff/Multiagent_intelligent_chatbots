@@ -85,6 +85,7 @@ export default function App() {
         connected={connected}
         connText={connText}
         onBrandClick={backToAgents}
+        agent={activeAgent}
       />
       {activeAgent ? (
         <ChatView
