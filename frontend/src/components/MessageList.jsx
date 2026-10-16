@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import MessageBubble from "./MessageBubble";
 import StatusTrace from "./StatusTrace";
+import WelcomeState from "./WelcomeState";
 
-export default function MessageList({ apiBase, agentName, messages, typing, statusSteps = [] }) {
+export default function MessageList({ apiBase, agent, messages, typing, statusSteps = [], onSuggestedPrompt }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -13,10 +14,7 @@ export default function MessageList({ apiBase, agentName, messages, typing, stat
     <div className="messages" ref={containerRef}>
       <div className="messages-inner">
         {messages.length === 0 && !typing ? (
-          <div className="empty-state">
-            <h3>Ask {agentName} something</h3>
-            <p>Answers are generated live from your ingested documents, with citations back to the source.</p>
-          </div>
+          <WelcomeState agent={agent} onSuggestedPrompt={onSuggestedPrompt} />
         ) : (
           <>
             {messages.map((message, index) => (

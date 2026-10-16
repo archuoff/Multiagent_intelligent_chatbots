@@ -11,6 +11,36 @@ import { useCallback, useEffect, useState } from "react";
 const STORAGE_KEY = "jlr-chat-sessions-v1";
 const TITLE_MAX_LENGTH = 42;
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Buckets a list of sessions into Pinned + recency-based groups for the
+// sidebar. Plain date math against "now" -- no date library needed for
+// four coarse buckets.
+export function groupSessions(sessions) {
+  const pinned = sessions.filter((item) => item.pinned);
+  const rest = sessions.filter((item) => !item.pinned);
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+  const groups = { today: [], yesterday: [], previous7: [], older: [] };
+  for (const item of rest) {
+    const updated = new Date(item.updatedAt || item.createdAt).getTime();
+    const daysAgo = Math.floor((startOfToday - updated) / DAY_MS);
+    if (updated >= startOfToday) groups.today.push(item);
+    else if (daysAgo === 1) groups.yesterday.push(item);
+    else if (daysAgo <= 7) groups.previous7.push(item);
+    else groups.older.push(item);
+  }
+
+  return [
+    { key: "pinned", label: "Pinned", sessions: pinned },
+    { key: "today", label: "Today", sessions: groups.today },
+    { key: "yesterday", label: "Yesterday", sessions: groups.yesterday },
+    { key: "previous7", label: "Previous 7 Days", sessions: groups.previous7 },
+    { key: "older", label: "Older", sessions: groups.older },
+  ].filter((group) => group.sessions.length > 0);
+}
+
 function newSessionId() {
   return crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(16).slice(2);
 }
@@ -35,7 +65,7 @@ function persistSessions(sessions) {
 
 function makeSession() {
   const now = new Date().toISOString();
-  return { sessionId: newSessionId(), title: "New chat", createdAt: now, updatedAt: now, active: true, messages: [] };
+  return { sessionId: newSessionId(), title: "New chat", createdAt: now, updatedAt: now, active: true, pinned: false, messages: [] };
 }
 
 export function useSessions() {
@@ -84,6 +114,13 @@ export function useSessions() {
     });
   }, []);
 
+  const togglePin = useCallback((agentId, sessionId) => {
+    setSessions((prev) => {
+      const list = prev[agentId] || [];
+      return { ...prev, [agentId]: list.map((item) => (item.sessionId === sessionId ? { ...item, pinned: !item.pinned } : item)) };
+    });
+  }, []);
+
   const deleteSession = useCallback((agentId, sessionId) => {
     setSessions((prev) => {
       const remaining = (prev[agentId] || []).filter((item) => item.sessionId !== sessionId);
@@ -109,6 +146,7 @@ export function useSessions() {
     setActiveSession,
     appendMessage,
     deleteSession,
+    togglePin,
     getSessionsForAgent,
     getActiveSession,
   };

@@ -22,6 +22,7 @@ export default function TopBar({ apiBase, onApiBaseChange, connected, connText, 
   return (
     <div className="topbar">
       <div className="brand" onClick={onBrandClick}>
+        <span className="brand-mark">JK</span>
         <div className="brand-titles">
           <h1>JLR Knowledge Platform</h1>
           <p>Tata Technologies</p>

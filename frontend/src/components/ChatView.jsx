@@ -19,8 +19,8 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
   const description =
     agent.domain_description && agent.domain_description !== agent.display_name ? agent.domain_description : "";
 
-  async function handleSend() {
-    const text = inputValue.trim();
+  async function handleSend(overrideText) {
+    const text = (overrideText !== undefined ? overrideText : inputValue).trim();
     if (!text || !activeSession) return;
 
     const sessionId = activeSession.sessionId;
@@ -80,6 +80,7 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
         onNewChat={() => sessionsApi.createNewSession(agent.agent_id)}
         onSelectSession={(sessionId) => sessionsApi.setActiveSession(agent.agent_id, sessionId)}
         onDeleteSession={(sessionId) => sessionsApi.deleteSession(agent.agent_id, sessionId)}
+        onTogglePin={(sessionId) => sessionsApi.togglePin(agent.agent_id, sessionId)}
         onBackToAgents={onBackToAgents}
       />
       <div className="chat-main">
@@ -96,10 +97,11 @@ export default function ChatView({ apiBase, agent, sessionsApi, onBackToAgents }
         </div>
         <MessageList
           apiBase={apiBase}
-          agentName={agent.display_name}
+          agent={agent}
           messages={displayMessages}
           typing={typing}
           statusSteps={statusSteps}
+          onSuggestedPrompt={(prompt) => handleSend(prompt)}
         />
         <Composer value={inputValue} onChange={setInputValue} onSend={handleSend} disabled={typing || !!streamingMessage} />
       </div>

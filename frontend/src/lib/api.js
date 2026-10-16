@@ -21,19 +21,6 @@ export function normalizeInlineLists(text) {
     .replace(/\]\s(\d+\.\s)/g, "]\n$1");
 }
 
-const SUPERSCRIPT_DIGITS = { 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴",
-  5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
-
-// Turns bracketed citation markers like "[1]" or "[12]" into small Unicode
-// superscript numerals (e.g. "¹") -- reads as a footnote instead of a
-// clunky inline bracket, with no extra markup or library needed since these
-// are just plain characters that flow through markdown rendering untouched.
-export function normalizeCitations(text) {
-  if (!text) return text;
-  return text.replace(/\[(\d{1,2})\]/g, (_match, digits) =>
-    digits.split("").map((digit) => SUPERSCRIPT_DIGITS[digit]).join(""));
-}
-
 export async function loadAgents(apiBase) {
   const response = await fetch(apiBase + "/agents");
   if (!response.ok) throw new Error("HTTP " + response.status);
