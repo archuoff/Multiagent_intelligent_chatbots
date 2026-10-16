@@ -181,9 +181,21 @@ export default function ConversationSidebar({
           />
         ))}
       </div>
-      <button className="back-to-agents-btn" onClick={onBackToAgents}>
-        &larr; Back
-      </button>
+      <div className="sidebar-profile-chip">
+        <span className="sidebar-profile-avatar">DU</span>
+        <span className="sidebar-profile-name">Demo User</span>
+        <button
+          type="button"
+          className="sidebar-profile-back-btn"
+          title="Back to all agents"
+          aria-label="Back to all agents"
+          onClick={onBackToAgents}
+        >
+          <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 2.5 4.5 7 9 11.5" />
+          </svg>
+        </button>
+      </div>
       {pendingDelete ? (
         <DeleteChatModal session={pendingDelete} onConfirm={confirmDelete} onCancel={() => setPendingDelete(null)} />
       ) : null}
